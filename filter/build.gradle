@@ -7,6 +7,8 @@ repositories {
 }
 
 dependencies {
+    compile project(':shared')
+
     compile 'javax:javaee-api:7.0'
     compile 'org.jboss.logging:jboss-logging:3.3.0.Final'
     compile 'org.jboss.logging:jboss-logging-annotations:2.0.1.Final'

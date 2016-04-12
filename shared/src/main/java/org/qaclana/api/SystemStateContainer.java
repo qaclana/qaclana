@@ -14,13 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.backend.entity;
+package org.qaclana.api;
+
+import javax.inject.Singleton;
 
 /**
- * An enum with all the known system states.
+ * Stores the current system state.
  *
  * @author Juraci Paixão Kröhling
  */
-public enum SystemState {
-    DISABLED, PERMISSIVE, ENFORCING
+@Singleton
+public class SystemStateContainer {
+    private SystemState state = SystemState.DISABLED;
+
+    public SystemState getState() {
+        return state;
+    }
+
+    public void setState(SystemState state) {
+        this.state = state;
+    }
 }

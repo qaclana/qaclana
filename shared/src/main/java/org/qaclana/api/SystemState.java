@@ -14,24 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.filter.control;
-
-import org.qaclana.filter.entity.SystemState;
-
-import javax.inject.Singleton;
+package org.qaclana.api;
 
 /**
  * @author Juraci Paixão Kröhling
  */
-@Singleton
-public class SystemStateContainer {
-    private SystemState state = SystemState.DISABLED;
-
-    public SystemState getState() {
-        return state;
-    }
-
-    public void setState(SystemState state) {
-        this.state = state;
-    }
+public enum SystemState {
+    DISABLED, PERMISSIVE, ENFORCING
 }

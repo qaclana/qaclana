@@ -10,7 +10,7 @@
  */
 
 rootProject.name = 'qaclana'
-include 'api'
+include 'shared'
 include 'backend'
 include 'client'
 include 'filter'

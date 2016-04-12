@@ -16,7 +16,7 @@
  */
 package org.qaclana.backend.entity.event;
 
-import org.qaclana.backend.entity.SystemState;
+import org.qaclana.api.SystemState;
 
 import java.util.UUID;
 

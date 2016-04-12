@@ -16,9 +16,9 @@
  */
 package org.qaclana.backend.boundary;
 
+import org.qaclana.api.SystemState;
+import org.qaclana.api.SystemStateContainer;
 import org.qaclana.backend.control.MsgLogger;
-import org.qaclana.backend.control.SystemStateContainer;
-import org.qaclana.backend.entity.SystemState;
 import org.qaclana.backend.entity.event.SystemStateChange;
 import org.qaclana.backend.entity.rest.ErrorResponse;
 import org.qaclana.backend.entity.rest.SystemStateRequest;

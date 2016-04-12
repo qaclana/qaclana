@@ -1,6 +1,6 @@
 apply plugin: 'java'
 
-jar.baseName = 'qaclana-api'
+jar.baseName = 'qaclana-shared'
 
 repositories {
     mavenCentral()

@@ -16,10 +16,10 @@
  */
 package org.qaclana.filter.boundary;
 
+import org.qaclana.api.SystemStateContainer;
 import org.qaclana.filter.control.MsgLogger;
 import org.qaclana.filter.control.Recorder;
 import org.qaclana.filter.control.SocketClient;
-import org.qaclana.filter.control.SystemStateContainer;
 
 import javax.inject.Inject;
 import javax.servlet.*;

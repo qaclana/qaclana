@@ -16,6 +16,8 @@
  */
 package org.qaclana.backend.control;
 
+import org.qaclana.api.SystemStateContainer;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;

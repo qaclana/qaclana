@@ -16,7 +16,7 @@
  */
 package org.qaclana.backend.entity.ws;
 
-import org.qaclana.backend.entity.SystemState;
+import org.qaclana.api.SystemState;
 
 /**
  * A message sent to be sent via web sockets with new system states.

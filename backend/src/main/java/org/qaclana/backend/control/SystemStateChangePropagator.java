@@ -16,6 +16,7 @@
  */
 package org.qaclana.backend.control;
 
+import org.qaclana.api.SystemStateContainer;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
 import org.qaclana.backend.entity.event.SendMessage;
 import org.qaclana.backend.entity.event.SystemStateChange;

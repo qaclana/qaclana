@@ -23,7 +23,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.qaclana.backend.entity.SystemState;
+import org.qaclana.api.SystemState;
 import org.qaclana.backend.entity.event.SystemStateChange;
 import org.qaclana.backend.entity.ws.BasicMessage;
 
