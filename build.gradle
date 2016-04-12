@@ -10,3 +10,16 @@ repositories {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
 }
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.fowlie:gradle-jenkins-test:+'
+    }
+}
+
+allprojects {
+    apply plugin: com.github.fowlie.GradleJenkinsTestPlugin
+}
