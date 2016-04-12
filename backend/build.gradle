@@ -1,0 +1,33 @@
+apply plugin: 'war'
+
+war.baseName = 'qaclana-backend'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    wildfly
+}
+
+dependencies {
+    providedCompile 'javax:javaee-api:7.0'
+    providedCompile 'org.jboss.logging:jboss-logging:3.3.0.Final'
+    providedCompile 'org.jboss.logging:jboss-logging-annotations:2.0.1.Final'
+    providedCompile 'org.jboss.logging:jboss-logging-processor:2.0.1.Final'
+
+    wildfly "org.wildfly:wildfly-dist:10.0.0.Final@zip"
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.jboss.arquillian.junit:arquillian-junit-container:1.1.10.Final'
+    testCompile 'org.wildfly.arquillian:wildfly-arquillian-container-managed:2.0.0.Final'
+}
+
+task downloadWildfly(type: Copy) {
+    outputs.dir new File(buildDir, "wildfly-10.0.0.Final")
+    destinationDir = file("${project.buildDir}")
+    from { zipTree(configurations.wildfly.singleFile) }
+}
+
+test.dependsOn downloadWildfly
+test.systemProperty 'java.util.logging.manager', 'org.jboss.logmanager.LogManager'
