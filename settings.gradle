@@ -9,7 +9,7 @@
  * in the user guide at http://gradle.org/docs/2.5/userguide/multi_project_builds.html
  */
 
-rootProject.name = 'qaclana-gradle'
+rootProject.name = 'qaclana'
 include 'api'
 include 'backend'
 include 'client'
