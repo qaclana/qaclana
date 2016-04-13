@@ -35,13 +35,13 @@ import javax.ejb.Stateless;
 import javax.websocket.*;
 import java.net.URI;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static java.util.Arrays.asList;
 import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 import static org.junit.Assert.assertEquals;
 
@@ -89,7 +89,7 @@ public class NewFirewallInstanceTriggersEventTest {
 
         ClientEndpointConfig.Configurator configurator = new ClientEndpointConfig.Configurator() {
             public void beforeRequest(Map<String, List<String>> headers) {
-                headers.put("Authorization", asList("Basic " + printBase64Binary("admin:admin".getBytes())));
+                headers.put("Authorization", Collections.singletonList("Basic " + printBase64Binary("admin:admin".getBytes())));
             }
         };
         ClientEndpointConfig authorizationConfiguration = ClientEndpointConfig.Builder.create()
