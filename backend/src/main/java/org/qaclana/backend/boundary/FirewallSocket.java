@@ -39,7 +39,7 @@ import java.util.Map;
  */
 @ServerEndpoint("/ws/instance")
 @Stateless
-@RolesAllowed("user")
+@RolesAllowed("admin")
 public class FirewallSocket {
     private static final MsgLogger log = MsgLogger.LOGGER;
 

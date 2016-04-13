@@ -23,6 +23,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.jboss.arquillian.junit:arquillian-junit-container:1.1.10.Final'
     testCompile 'org.wildfly.arquillian:wildfly-arquillian-container-managed:2.0.0.Final'
+    testCompile 'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api:2.2.2'
+    testCompile 'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-impl-maven:2.2.2'
+    testCompile 'org.mockito:mockito-all:1.10.19'
 }
 
 task downloadWildfly(type: Copy) {

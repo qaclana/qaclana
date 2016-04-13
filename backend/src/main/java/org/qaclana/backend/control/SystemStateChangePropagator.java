@@ -68,6 +68,10 @@ public class SystemStateChangePropagator {
         propagateTo(firewallSessionsInstance.get(), message);
     }
 
+    /**
+     * Whenever we get a new instance registered, we want to propagate the current state of the system to it.
+     * @param newFirewallInstanceRegistered    the event with the new session
+     */
     @Asynchronous
     public void propagate(@Observes NewFirewallInstanceRegistered newFirewallInstanceRegistered) {
         BasicMessage message = new SystemStateChangeMessage(systemStateInstance.getState());

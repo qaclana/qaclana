@@ -67,7 +67,7 @@ public class NewFirewallInstanceTriggersEventTest {
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
-    @Test @Ignore("This test is ignored because of a possible bug in Wildfly, related to WS + JAAS.")
+    @Test @Ignore("This test is ignored because of a possible bug in Wildfly: WFLY-3313")
     public void makeNewConnection() throws Exception {
         String url = "ws://"+baseURL.getHost()+":"+baseURL.getPort()+baseURL.getPath()+"ws/instance";
 

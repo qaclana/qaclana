@@ -37,7 +37,7 @@ import java.util.Map;
  */
 @ServerEndpoint("/ws/frontend")
 @Stateless
-@RolesAllowed("user")
+@RolesAllowed("admin")
 public class FrontendSocket {
     private static final MsgLogger log = MsgLogger.LOGGER;
 
