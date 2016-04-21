@@ -37,7 +37,8 @@ public class SocketClient {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, endpointURI);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            // TODO: the server is not available. Schedule a retry.
+            log.cannotOpenSocketToServer(e);
         }
     }
 
@@ -53,6 +54,7 @@ public class SocketClient {
 
     @OnClose
     public void onClose(Session session) {
+        // TODO: schedule a retry.
         log.firewallSocketClosed();
     }
 }

@@ -17,13 +17,15 @@
 package org.qaclana.filter.boundary;
 
 import org.qaclana.api.SystemStateContainer;
+import org.qaclana.filter.control.Firewall;
 import org.qaclana.filter.control.MsgLogger;
-import org.qaclana.filter.control.Recorder;
 import org.qaclana.filter.control.SocketClient;
+import org.qaclana.filter.entity.FirewallOutcome;
 
 import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -42,34 +44,58 @@ public class FirewallFilter implements Filter {
     SystemStateContainer systemStateContainer;
 
     @Inject
-    Recorder recorder;
+    Firewall firewall;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        log.filterInitialized();
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         switch (systemStateContainer.getState()) {
             case DISABLED:
+                chain.doFilter(request, response);
                 return;
             case PERMISSIVE:
-                recorder.record(request);
+                firewall.processAsync(request);
                 chain.doFilter(request, response);
-                recorder.record(response);
+                firewall.processAsync(request, response);
                 return;
             case ENFORCING:
-                // TODO: we have to wait for an answer, for now, return true as well
+                FirewallOutcome outcome;
+                outcome = firewall.process(request);
+
+                if (FirewallOutcome.ACCEPT.equals(outcome)) {
+                    chain.doFilter(request, response);
+                    outcome = firewall.process(request, response);
+                    if (FirewallOutcome.REJECT.equals(outcome)) {
+                        reject(response);
+                        return;
+                    }
+                } else {
+                    reject(response);
+                    return;
+                }
                 return;
             default:
-                //noinspection UnnecessaryReturnStatement
-                return;
+                throw new IllegalStateException("Unknown system state.");
+        }
+    }
+
+    private void reject(ServletResponse response) throws IOException {
+        if (response instanceof HttpServletResponse) {
+            HttpServletResponse httpResponse = (HttpServletResponse) response;
+            httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        } else {
+            // we don't know how to tell the client that this request is blocked, but we do know that
+            // we want to reset the response
+            response.reset();
         }
     }
 
     @Override
     public void destroy() {
-
+        log.filterDestroyed();
     }
 }
