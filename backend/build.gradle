@@ -1,6 +1,8 @@
 apply plugin: 'war'
+apply plugin: 'maven-publish'
 
-war.baseName = 'qaclana-backend'
+group = 'org.qaclana'
+version = "0.0.1${buildNumber}"
 
 repositories {
     mavenCentral()
@@ -32,6 +34,47 @@ task downloadWildfly(type: Copy) {
     outputs.dir new File(buildDir, "wildfly-10.0.0.Final")
     destinationDir = file("${project.buildDir}")
     from { zipTree(configurations.wildfly.singleFile) }
+}
+
+task sourceJar(type: War) {
+    from sourceSets.main.allJava
+}
+
+task packageJavadoc(type: War, dependsOn: 'javadoc') {
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.web
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+
+            artifact packageJavadoc {
+                classifier "javadoc"
+            }
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            if(project.version.endsWith('-SNAPSHOT')) {
+                url 'https://repository.jboss.org/nexus/content/repositories/snapshots/'
+            } else {
+                url 'https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/'
+            }
+            credentials {
+                username = jbossNexusUsername
+                password = jbossNexusPassword
+            }
+        }
+    }
 }
 
 test.dependsOn downloadWildfly
