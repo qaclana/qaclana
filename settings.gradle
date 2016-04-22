@@ -12,6 +12,4 @@
 rootProject.name = 'qaclana'
 include 'shared'
 include 'backend'
-include 'client'
 include 'filter'
-include 'proxy'

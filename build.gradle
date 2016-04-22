@@ -1,15 +1,18 @@
-apply plugin: 'java'
+apply from: './libraries.gradle'
+apply from: './arquillian.gradle'
+apply from: './jar-specifics.gradle'
 
-repositories {
-    mavenCentral()
-}
+def buildNumber = System.env.BUILD_NUMBER ? ".${System.env.BUILD_NUMBER}" : "-SNAPSHOT"
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.5'
+    gradleVersion = '2.12'
 }
 
-ext {
-    buildNumber = System.env.BUILD_NUMBER ? ".${System.env.BUILD_NUMBER}" : "-SNAPSHOT"
+allprojects { it ->
+    repositories {
+        mavenCentral()
+    }
+
+    group = 'org.qaclana'
     version = "0.0.1${buildNumber}"
 }
-

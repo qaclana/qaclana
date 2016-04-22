@@ -1,0 +1,27 @@
+def projectsWithArquillian = ['backend', 'filter']
+projectsWithArquillian.each { it ->
+    project(it) {
+        apply plugin: 'java'
+
+        configurations {
+            wildfly
+        }
+
+        task downloadWildfly(type: Copy) {
+            outputs.dir new File(buildDir, "wildfly-10.0.0.Final")
+            destinationDir = file("${project.buildDir}")
+            from { zipTree(configurations.wildfly.singleFile) }
+        }
+
+        dependencies {
+            wildfly libraries['wildflyZip']
+            testCompile libraries['junit']
+            testCompile libraries['arquillian']
+            testCompile libraries['mockito']
+        }
+
+        test.dependsOn downloadWildfly
+        test.systemProperty 'java.util.logging.manager', 'org.jboss.logmanager.LogManager'
+    }
+}
+

@@ -1,38 +1,10 @@
 apply plugin: 'java'
 
-jar.baseName = 'qaclana-filter'
-
-repositories {
-    mavenCentral()
-}
-
-configurations {
-    wildfly
-}
+description = 'Filter components for Qaclana'
 
 dependencies {
     compile project(':shared')
 
-    compile 'javax:javaee-api:7.0'
-    compile 'org.jboss.logging:jboss-logging:3.3.0.Final'
-    compile 'org.jboss.logging:jboss-logging-annotations:2.0.1.Final'
-    compile 'org.jboss.logging:jboss-logging-processor:2.0.1.Final'
-
-    wildfly "org.wildfly:wildfly-dist:10.0.0.Final@zip"
-
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.jboss.arquillian.junit:arquillian-junit-container:1.1.10.Final'
-    testCompile 'org.wildfly.arquillian:wildfly-arquillian-container-managed:2.0.0.Final'
-    testCompile 'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api:2.2.2'
-    testCompile 'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-impl-maven:2.2.2'
-    testCompile 'org.mockito:mockito-all:1.10.19'
+    compile libraries['javaee']
+    compile libraries['jbossLogging']
 }
-
-task downloadWildfly(type: Copy) {
-    outputs.dir new File(buildDir, "wildfly-10.0.0.Final")
-    destinationDir = file("${project.buildDir}")
-    from { zipTree(configurations.wildfly.singleFile) }
-}
-
-test.dependsOn downloadWildfly
-test.systemProperty 'java.util.logging.manager', 'org.jboss.logmanager.LogManager'

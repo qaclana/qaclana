@@ -1,0 +1,23 @@
+ext {
+    libraries = [
+            junit: 'junit:junit:4.12',
+            mockito: 'org.mockito:mockito-all:1.10.19',
+            wildflyZip: 'org.wildfly:wildfly-dist:10.0.0.Final@zip',
+            javaee: 'javax:javaee-api:7.0',
+            jbossLogging: [
+                    'org.jboss.logging:jboss-logging:3.3.0.Final',
+                    'org.jboss.logging:jboss-logging-annotations:2.0.1.Final',
+                    'org.jboss.logging:jboss-logging-processor:2.0.1.Final',
+            ],
+            shrinkwrap: [
+                    'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api:2.2.2',
+                    'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-impl-maven:2.2.2',
+            ],
+            arquillian: [
+                    'org.jboss.arquillian.junit:arquillian-junit-container:1.1.10.Final',
+                    'org.wildfly.arquillian:wildfly-arquillian-container-managed:2.0.0.Final',
+            ],
+    ]
+
+    libraries['arquillian'] << libraries['shrinkwrap']
+}

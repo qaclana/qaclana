@@ -1,0 +1,94 @@
+ext {
+    pomCustom = {
+        url 'https://qaclana.org'
+        licenses {
+            license {
+                name 'Apache License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+        scm {
+            url 'https://github.com/qaclana/qaclana'
+            connection 'scm:git:https://github.com/qaclana/qaclana'
+            developerConnection 'scm:git:git@github.com:qaclana/qaclana.git'
+        }
+        developers {
+            developer {
+                id 'jpkroehling'
+                name 'Juraci Paixão Kröhling'
+                timezone '+01:00'
+            }
+        }
+    }
+}
+
+def jarProjects = ['shared', 'filter']
+def warProjects = ['backend']
+
+def publishedProjects = []
+publishedProjects.addAll(jarProjects)
+publishedProjects.addAll(warProjects)
+
+publishedProjects.each { it ->
+    def projectName = it // for some reason, "it" won't work inside the publishing/publications/mavenJava
+    project(projectName) {
+        if (warProjects.contains(projectName)) {
+            apply plugin: 'war'
+        } else {
+            apply plugin: 'java'
+        }
+
+        apply plugin: 'maven-publish'
+
+        task sourceJar(type: Jar) {
+            from sourceSets.main.allJava
+        }
+
+        task packageJavadoc(type: Jar, dependsOn: 'javadoc') {
+            from javadoc.destinationDir
+            classifier = 'javadoc'
+        }
+
+        publishing {
+            publications {
+                mavenJava(MavenPublication) {
+                    if (warProjects.contains(projectName)) {
+                        from components.web
+                    } else {
+                        from components.java
+                    }
+
+                    artifact sourceJar {
+                        classifier "sources"
+                    }
+
+                    artifact packageJavadoc {
+                        classifier "javadoc"
+                    }
+
+                    pom.withXml {
+                        asNode().children().last() + pomCustom
+                        asNode().appendNode( 'description', project.description )
+                        asNode().appendNode( 'name', project.name )
+                    }
+                }
+            }
+        }
+        publishing {
+            repositories {
+                maven {
+                    if(project.version.endsWith('-SNAPSHOT')) {
+                        url 'https://repository.jboss.org/nexus/content/repositories/snapshots/'
+                    } else {
+                        url 'https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/'
+                    }
+                    credentials {
+                        username = jbossNexusUsername
+                        password = jbossNexusPassword
+                    }
+                }
+            }
+        }
+    }
+}
