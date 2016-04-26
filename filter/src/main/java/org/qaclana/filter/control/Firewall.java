@@ -24,6 +24,7 @@ import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -37,6 +38,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @Stateless
 public class Firewall {
+    public static final String HTTP_HEADER_REQUEST_ID = "Firewall-RequestID";
+
     MsgLogger log = MsgLogger.LOGGER;
 
     @Inject
@@ -77,11 +80,11 @@ public class Firewall {
         }
 
         String requestId;
-        if (null != request.getAttribute("Firewall-RequestID")) {
-            requestId = request.getAttribute("Firewall-RequestID").toString();
+        if (null != request.getAttribute(HTTP_HEADER_REQUEST_ID)) {
+            requestId = request.getAttribute(HTTP_HEADER_REQUEST_ID).toString();
         } else {
             requestId = UUID.randomUUID().toString();
-            request.setAttribute("Firewall-RequestID", requestId);
+            request.setAttribute(HTTP_HEADER_REQUEST_ID, requestId);
         }
 
         if (null == response) {

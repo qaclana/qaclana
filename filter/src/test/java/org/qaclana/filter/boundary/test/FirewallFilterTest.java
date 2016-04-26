@@ -24,6 +24,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.mockito.stubbing.OngoingStubbing;
 import org.qaclana.api.SystemState;
 import org.qaclana.api.SystemStateContainer;
 import org.qaclana.filter.boundary.FirewallFilter;
@@ -37,21 +40,26 @@ import javax.ejb.Singleton;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Juraci Paixão Kröhling
  */
 @Singleton
 @RunWith(Arquillian.class)
-public class FilterTest {
+public class FirewallFilterTest {
     private static CountDownLatch latch;
     private static IncomingHttpRequest requestEvent;
     private static OutgoingHttpResponse responseEvent;
@@ -105,6 +113,44 @@ public class FilterTest {
         latch.await(500, TimeUnit.MILLISECONDS);
         assertNotNull(requestEvent);
         assertNotNull(responseEvent);
+    }
+
+    @Test
+    public void everyRequestReceivesAnId() throws IOException, ServletException {
+        latch = new CountDownLatch(2); // ignored on this test
+
+        systemStateContainer.setState(SystemState.ENFORCING);
+        ServletResponse response = mock(ServletResponse.class);
+        ServletRequest request = mock(HttpServletRequest.class);
+        FilterChain chain = mock(FilterChain.class);
+
+        String idForSecondCall = UUID.randomUUID().toString();
+        when(request.getAttribute(Firewall.HTTP_HEADER_REQUEST_ID))
+                .thenReturn(null) // on the first call, no ID is there
+                .thenReturn(idForSecondCall); // on the subsequent calls, there is an ID
+
+        filter.doFilter(request, response, chain);
+
+        verify(request, atLeast(2)).getAttribute(eq(Firewall.HTTP_HEADER_REQUEST_ID));
+        verify(request).setAttribute(eq(Firewall.HTTP_HEADER_REQUEST_ID), any()); // we expect exactly one set call
+    }
+
+    @Test
+    public void keepExistingId() throws IOException, ServletException {
+        latch = new CountDownLatch(2); // ignored on this test
+
+        systemStateContainer.setState(SystemState.ENFORCING);
+        ServletResponse response = mock(ServletResponse.class);
+        ServletRequest request = mock(HttpServletRequest.class);
+        FilterChain chain = mock(FilterChain.class);
+
+        String requestId = UUID.randomUUID().toString();
+        when(request.getAttribute(Firewall.HTTP_HEADER_REQUEST_ID)).thenReturn(requestId);
+
+        filter.doFilter(request, response, chain);
+
+        verify(request, atLeast(2)).getAttribute(eq(Firewall.HTTP_HEADER_REQUEST_ID));
+        verify(request, never()).setAttribute(eq(Firewall.HTTP_HEADER_REQUEST_ID), any()); // we expect exactly one set call
     }
 
     public void getMessage(@Observes IncomingHttpRequest event) {

@@ -72,7 +72,7 @@ public class RejectedOutcomeFilterTest {
     @Test
     public void ensureResponseGetsRejected() {
         ServletRequest request = mock(ServletRequest.class);
-        when(request.getAttribute("Firewall-RequestID")).thenReturn(UUID.randomUUID().toString());
+        when(request.getAttribute(Firewall.HTTP_HEADER_REQUEST_ID)).thenReturn(UUID.randomUUID().toString());
         ServletResponse response = mock(ServletResponse.class);
         FirewallOutcome outcome = firewall.process(request, response);
         assertEquals(FirewallOutcome.REJECT, outcome);
