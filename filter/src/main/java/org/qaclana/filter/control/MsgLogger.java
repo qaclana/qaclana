@@ -115,4 +115,8 @@ public interface MsgLogger {
     @LogMessage(level = Logger.Level.FATAL)
     @Message(id = 110021, value = "Cannot process a request/response pair without a request.")
     void cannotAcceptProcessingWithoutRequest();
+
+    @LogMessage(level = Logger.Level.INFO)
+    @Message(id = 110022, value = "Execution of %s#%s() took %dms to complete.")
+    void overheadReporter(String className, String methodName, long nanoSeconds);
 }

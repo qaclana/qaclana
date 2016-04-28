@@ -24,13 +24,13 @@ import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Juraci Paixão Kröhling
@@ -94,61 +94,31 @@ public class Firewall {
             recorder.record(response);
         }
 
-        // if we have *one* processor that rejects this response, we cancel/interrupt all the future tasks and
-        // accept "REJECT" as outcome
-        AtomicBoolean rejected = new AtomicBoolean(false);
+        CompletionService<FirewallOutcome> completionService = new ExecutorCompletionService<>(executor);
+        List<Future<FirewallOutcome>> listOfFutureOutcomes = new ArrayList<>(processors.size());
+        FirewallOutcome outcome = FirewallOutcome.ACCEPT; // if no processors reject the request, we accept it
 
-        // we use a latch to signal that we finished running all processors
-        CountDownLatch latch = new CountDownLatch(processors.size());
-
-        // we use a condition to signal that a reject outcome has reached *or* the latch reached 0, meaning, we finished
-        // processing everything
-        CountDownLatch rejectReachedOrProcessingFinished = new CountDownLatch(1);
-
-        // we'll run all processors asynchronously. if any of them renders a REJECT as outcome, we signal our condition
-        // no matter the outcome, we decrease the latch
-        log.startQueueingProcessors(processors.size());
-        for (Processor processor : processors) {
-            CompletableFuture
-                    .supplyAsync(
-                            () -> {
-                                log.startProcessor(processor.getClass().getName(), requestId);
-                                return response == null ? processor.process(request) : processor.process(response);
-                            }
-                    )
-                    .thenAccept((firewallOutcome -> {
-                        log.finishedProcessor(processor.getClass().getName(), requestId, firewallOutcome.toString());
-                        if (FirewallOutcome.REJECT.equals(firewallOutcome)) {
-                            rejected.set(true);
-                            rejectReachedOrProcessingFinished.countDown();
-                        }
-                        latch.countDown();
-                    }));
-        }
-
-        // here, we wait wait for the processing to finish and, once it happens, we signal to the condition
-        CompletableFuture.runAsync(() -> {
-            try {
-                log.waitingForProcessors(requestId);
-                latch.await(5, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                log.waitInterruptedForProcessors(requestId, e);
-            }
-            log.finishedWaitingForProcessors(requestId);
-            rejectReachedOrProcessingFinished.countDown();
-        });
-
-        // we wait for the condition to be reached: either everything processed fined, or at least one processor reached
-        // a REJECTED outcome
         try {
-            log.waitingForOutcomeOfRequest(requestId);
-            rejectReachedOrProcessingFinished.await(10, TimeUnit.SECONDS);
-            log.finishedWaitingForOutcomeOfRequest(requestId);
-        } catch (InterruptedException e) {
-            log.waitInterruptedForOutcome(requestId, e);
+            processors
+                    .stream()
+                    .forEach(processor -> listOfFutureOutcomes
+                            .add(completionService.submit(
+                                    () -> response == null ? processor.process(request) : processor.process(response))
+                            )
+                    );
+
+            for (int i = 0 ; i < processors.size() ; i++) {
+                try {
+                    outcome = completionService.take().get();
+                    if (FirewallOutcome.REJECT.equals(outcome)) {
+                        break;
+                    }
+                } catch (InterruptedException | ExecutionException ignored) {}
+            }
+        } finally {
+            listOfFutureOutcomes.stream().forEach(future -> future.cancel(true));
         }
 
-        FirewallOutcome outcome = rejected.get() ? FirewallOutcome.REJECT : FirewallOutcome.ACCEPT;
         log.finalOutcomeForRequest(requestId, outcome.toString());
         return outcome;
     }

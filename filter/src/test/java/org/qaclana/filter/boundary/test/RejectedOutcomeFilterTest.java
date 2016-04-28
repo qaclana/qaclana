@@ -28,6 +28,8 @@ import org.qaclana.api.SystemStateContainer;
 import org.qaclana.filter.boundary.FirewallFilter;
 import org.qaclana.filter.control.Firewall;
 import org.qaclana.filter.control.test.RejectAllProcessor;
+import org.qaclana.filter.control.test.SleepAndAccept;
+import org.qaclana.filter.control.test.SleepAndReject;
 import org.qaclana.filter.entity.FirewallOutcome;
 
 import javax.ejb.Singleton;
@@ -57,8 +59,11 @@ public class RejectedOutcomeFilterTest {
                 .addPackage(Firewall.class.getPackage())
                 .addPackage(FirewallOutcome.class.getPackage())
                 .addPackage(SystemStateContainer.class.getPackage())
+                .addClass(SleepAndReject.class)
+                .addClass(SleepAndAccept.class)
                 .addClass(RejectAllProcessor.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource("META-INF/ejb-jar.xml", "ejb-jar.xml")
                 .addAsLibraries(Maven.resolver().resolve("org.mockito:mockito-all:1.10.19").withoutTransitivity().as(File.class));
     }
 
