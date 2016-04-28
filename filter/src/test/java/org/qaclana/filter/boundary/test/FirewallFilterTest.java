@@ -19,19 +19,19 @@ package org.qaclana.filter.boundary.test;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.mockito.stubbing.OngoingStubbing;
 import org.qaclana.api.SystemState;
 import org.qaclana.api.SystemStateContainer;
 import org.qaclana.filter.boundary.FirewallFilter;
 import org.qaclana.filter.control.Firewall;
-import org.qaclana.filter.control.Processor;
+import org.qaclana.filter.control.SocketClient;
+import org.qaclana.filter.control.test.ApplicationResourcesForTest;
+import org.qaclana.filter.control.test.ContextPathContainer;
+import org.qaclana.filter.control.test.ServletContextStartupListener;
+import org.qaclana.filter.control.test.SocketServer;
 import org.qaclana.filter.entity.FirewallOutcome;
 import org.qaclana.filter.entity.IncomingHttpRequest;
 import org.qaclana.filter.entity.OutgoingHttpResponse;
@@ -44,6 +44,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.DeploymentException;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -51,7 +52,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
@@ -70,6 +72,9 @@ public class FirewallFilterTest {
     @Inject
     SystemStateContainer systemStateContainer;
 
+    @Inject
+    SocketClient socketClient;
+
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
@@ -77,7 +82,11 @@ public class FirewallFilterTest {
                 .addPackage(Firewall.class.getPackage())
                 .addPackage(FirewallOutcome.class.getPackage())
                 .addPackage(SystemStateContainer.class.getPackage())
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addClass(ContextPathContainer.class)
+                .addClass(ServletContextStartupListener.class)
+                .addClass(ApplicationResourcesForTest.class)
+                .addClass(SocketServer.class)
+                .addAsWebInfResource("beans.xml", "beans.xml")
                 .addAsLibraries(Maven.resolver().resolve("org.mockito:mockito-all:1.10.19").withoutTransitivity().as(File.class));
     }
 
@@ -136,7 +145,7 @@ public class FirewallFilterTest {
     }
 
     @Test
-    public void keepExistingId() throws IOException, ServletException {
+    public void keepExistingId() throws IOException, ServletException, DeploymentException {
         latch = new CountDownLatch(2); // ignored on this test
 
         systemStateContainer.setState(SystemState.ENFORCING);
@@ -162,5 +171,4 @@ public class FirewallFilterTest {
         responseEvent = event;
         latch.countDown();
     }
-
 }

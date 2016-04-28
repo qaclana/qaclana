@@ -37,8 +37,8 @@ public interface MsgLogger {
     void firewallSocketMessage();
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 110002, value = "Web Socket closed.")
-    void firewallSocketClosed();
+    @Message(id = 110002, value = "Web Socket closed. Reason: [%s]")
+    void firewallSocketClosed(String reason);
 
     @LogMessage(level = Logger.Level.INFO)
     @Message(id = 110003, value = "Firewall told us to not process this request.")
