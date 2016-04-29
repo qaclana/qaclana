@@ -86,6 +86,7 @@ public class FirewallFilterTest {
                 .addClass(ServletContextStartupListener.class)
                 .addClass(ApplicationResourcesForTest.class)
                 .addClass(SocketServer.class)
+                .addAsWebInfResource("META-INF/ejb-jar.xml", "ejb-jar.xml")
                 .addAsWebInfResource("beans.xml", "beans.xml")
                 .addAsLibraries(Maven.resolver().resolve("org.mockito:mockito-all:1.10.19").withoutTransitivity().as(File.class));
     }

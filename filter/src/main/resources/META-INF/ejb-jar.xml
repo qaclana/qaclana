@@ -12,5 +12,9 @@
             <ejb-name>Firewall</ejb-name>
             <interceptor-class>org.qaclana.filter.control.FilterOverheadMeasurer</interceptor-class>
         </interceptor-binding>
+        <interceptor-binding>
+            <ejb-name>SystemStateBasedFirewall</ejb-name>
+            <interceptor-class>org.qaclana.filter.control.FilterOverheadMeasurer</interceptor-class>
+        </interceptor-binding>
     </assembly-descriptor>
 </ejb-jar>

@@ -16,15 +16,12 @@
  */
 package org.qaclana.filter.boundary;
 
-import org.qaclana.api.SystemStateContainer;
-import org.qaclana.filter.control.Firewall;
 import org.qaclana.filter.control.MsgLogger;
-import org.qaclana.filter.entity.FirewallOutcome;
+import org.qaclana.filter.control.SystemStateBasedFirewall;
 
 import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -37,10 +34,7 @@ public class FirewallFilter implements Filter {
     MsgLogger log = MsgLogger.LOGGER;
 
     @Inject
-    SystemStateContainer systemStateContainer;
-
-    @Inject
-    Firewall firewall;
+    SystemStateBasedFirewall systemStateBasedFirewall;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -49,45 +43,10 @@ public class FirewallFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        switch (systemStateContainer.getState()) {
-            case DISABLED:
-                chain.doFilter(request, response);
-                return;
-            case PERMISSIVE:
-                firewall.processAsync(request);
-                chain.doFilter(request, response);
-                firewall.processAsync(request, response);
-                return;
-            case ENFORCING:
-                FirewallOutcome outcome;
-                outcome = firewall.process(request);
-
-                if (FirewallOutcome.ACCEPT.equals(outcome)) {
-                    chain.doFilter(request, response);
-                    outcome = firewall.process(request, response);
-                    if (FirewallOutcome.REJECT.equals(outcome)) {
-                        reject(response);
-                        return;
-                    }
-                } else {
-                    reject(response);
-                    return;
-                }
-                return;
-            default:
-                throw new IllegalStateException("Unknown system state.");
-        }
-    }
-
-    private void reject(ServletResponse response) throws IOException {
-        if (response instanceof HttpServletResponse) {
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
-            httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            // we don't know how to tell the client that this request is blocked, but we do know that
-            // we want to reset the response
-            response.reset();
-        }
+        // what can I say... I love EJBs!
+        // the main reason for performing the filter on an EJB is to have monitoring capabilities + an unified way
+        // to handle interceptors
+        systemStateBasedFirewall.doFilter(request, response, chain);
     }
 
     @Override
