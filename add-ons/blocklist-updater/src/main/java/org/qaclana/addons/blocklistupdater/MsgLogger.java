@@ -14,19 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.filter.control;
+package org.qaclana.addons.blocklistupdater;
 
-import org.qaclana.filter.entity.FirewallOutcome;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import org.jboss.logging.Logger;
+import org.jboss.logging.annotations.*;
 
 /**
  * @author Juraci Paixão Kröhling
  */
-public interface Processor {
-    // TODO: we will need different types of processors, such as score-based processor, accept/reject processor
+@MessageLogger(projectCode = "QCLN")
+@ValidIdRange(min = 10200, max = 10219)
+public interface MsgLogger {
+    MsgLogger LOGGER = Logger.getMessageLogger(MsgLogger.class, MsgLogger.class.getPackage().getName());
 
-    FirewallOutcome process(ServletRequest request);
-    FirewallOutcome process(ServletResponse response);
+    @LogMessage(level = Logger.Level.INFO)
+    @Message(id = 10200, value = "Batch job started.")
+    void batchJobStarted();
+
+    @LogMessage(level = Logger.Level.INFO)
+    @Message(id = 10201, value = "Batch job finished.")
+    void batchJobFinished();
 }

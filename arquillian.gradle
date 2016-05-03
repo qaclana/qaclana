@@ -1,4 +1,4 @@
-def projectsWithArquillian = ['backend', 'filter']
+def projectsWithArquillian = ['backend', 'filter', 'services/jpa', 'add-ons/blocklist-updater']
 projectsWithArquillian.each { it ->
     project(it) {
         apply plugin: 'java'
@@ -8,8 +8,8 @@ projectsWithArquillian.each { it ->
         }
 
         task downloadWildfly(type: Copy) {
-            outputs.dir new File(buildDir, "wildfly-10.0.0.Final")
-            destinationDir = file("${project.buildDir}")
+            outputs.dir new File(rootProject.buildDir, "wildfly-10.0.0.Final")
+            destinationDir = file("${rootProject.buildDir}")
             from { zipTree(configurations.wildfly.singleFile) }
         }
 
@@ -22,6 +22,8 @@ projectsWithArquillian.each { it ->
 
         test.dependsOn downloadWildfly
         test.systemProperty 'java.util.logging.manager', 'org.jboss.logmanager.LogManager'
+        test.systemProperty 'jboss.home', "${rootProject.buildDir}/wildfly-10.0.0.Final"
+        test.systemProperty 'allowConnectingToRunningServer', 'true'
     }
 }
 

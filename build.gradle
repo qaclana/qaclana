@@ -1,3 +1,7 @@
+plugins {
+    id 'org.inferred.processors' version '1.2.1'
+}
+
 apply from: './libraries.gradle'
 apply from: './arquillian.gradle'
 apply from: './jar-specifics.gradle'

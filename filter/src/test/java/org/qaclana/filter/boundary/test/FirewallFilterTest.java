@@ -23,6 +23,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.qaclana.api.FirewallOutcome;
 import org.qaclana.api.SystemState;
 import org.qaclana.api.SystemStateContainer;
 import org.qaclana.filter.boundary.FirewallFilter;
@@ -32,7 +33,6 @@ import org.qaclana.filter.control.test.ApplicationResourcesForTest;
 import org.qaclana.filter.control.test.ContextPathContainer;
 import org.qaclana.filter.control.test.ServletContextStartupListener;
 import org.qaclana.filter.control.test.SocketServer;
-import org.qaclana.filter.entity.FirewallOutcome;
 import org.qaclana.filter.entity.IncomingHttpRequest;
 import org.qaclana.filter.entity.OutgoingHttpResponse;
 
@@ -82,6 +82,7 @@ public class FirewallFilterTest {
                 .addPackage(Firewall.class.getPackage())
                 .addPackage(FirewallOutcome.class.getPackage())
                 .addPackage(SystemStateContainer.class.getPackage())
+                .addPackage(IncomingHttpRequest.class.getPackage())
                 .addClass(ContextPathContainer.class)
                 .addClass(ServletContextStartupListener.class)
                 .addClass(ApplicationResourcesForTest.class)

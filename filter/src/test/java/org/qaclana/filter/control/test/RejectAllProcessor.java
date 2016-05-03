@@ -16,9 +16,9 @@
  */
 package org.qaclana.filter.control.test;
 
-import org.qaclana.filter.control.ProcessorRegistration;
-import org.qaclana.filter.control.Processor;
-import org.qaclana.filter.entity.FirewallOutcome;
+import org.qaclana.api.FirewallOutcome;
+import org.qaclana.api.Processor;
+import org.qaclana.api.ProcessorRegistry;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
@@ -34,11 +34,11 @@ import javax.servlet.ServletResponse;
 @Startup
 public class RejectAllProcessor implements Processor {
     @Inject
-    ProcessorRegistration registration;
+    ProcessorRegistry registry;
 
     @PostConstruct
     public void register() {
-        registration.register(this);
+        registry.register(this);
     }
 
     @Override

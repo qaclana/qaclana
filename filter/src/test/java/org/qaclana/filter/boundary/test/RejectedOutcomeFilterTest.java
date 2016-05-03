@@ -30,7 +30,8 @@ import org.qaclana.filter.control.Firewall;
 import org.qaclana.filter.control.test.RejectAllProcessor;
 import org.qaclana.filter.control.test.SleepAndAccept;
 import org.qaclana.filter.control.test.SleepAndReject;
-import org.qaclana.filter.entity.FirewallOutcome;
+import org.qaclana.api.FirewallOutcome;
+import org.qaclana.filter.entity.IncomingHttpRequest;
 
 import javax.ejb.Singleton;
 import javax.inject.Inject;
@@ -59,6 +60,7 @@ public class RejectedOutcomeFilterTest {
                 .addPackage(Firewall.class.getPackage())
                 .addPackage(FirewallOutcome.class.getPackage())
                 .addPackage(SystemStateContainer.class.getPackage())
+                .addPackage(IncomingHttpRequest.class.getPackage())
                 .addClass(SleepAndReject.class)
                 .addClass(SleepAndAccept.class)
                 .addClass(RejectAllProcessor.class)

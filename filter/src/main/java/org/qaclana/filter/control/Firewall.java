@@ -16,7 +16,8 @@
  */
 package org.qaclana.filter.control;
 
-import org.qaclana.filter.entity.FirewallOutcome;
+import org.qaclana.api.Processor;
+import org.qaclana.api.FirewallOutcome;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;

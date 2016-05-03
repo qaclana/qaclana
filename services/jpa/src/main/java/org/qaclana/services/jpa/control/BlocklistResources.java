@@ -14,11 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.filter.entity;
+package org.qaclana.services.jpa.control;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * @author Juraci Paixão Kröhling
  */
-public enum FirewallOutcome {
-    ACCEPT, REJECT
+@ApplicationScoped
+public class BlocklistResources {
+    @Produces
+    @PersistenceContext(unitName = "qaclana-services-jpa")
+    private EntityManager entityManager;
 }

@@ -11,5 +11,8 @@
 
 rootProject.name = 'qaclana'
 include 'shared'
+include 'services/jpa'
+include 'processors/blocklist-processor'
+include 'add-ons/blocklist-updater'
 include 'backend'
 include 'filter'

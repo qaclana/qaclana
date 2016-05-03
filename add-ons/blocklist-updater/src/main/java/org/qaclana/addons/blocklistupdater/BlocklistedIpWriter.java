@@ -14,40 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.filter.control.processor;
+package org.qaclana.addons.blocklistupdater;
 
-import org.qaclana.filter.control.Processor;
-import org.qaclana.filter.entity.FirewallOutcome;
-import org.qaclana.filter.control.ProcessorRegistration;
+import org.qaclana.api.control.BlocklistService;
+import org.qaclana.api.entity.IpRange;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+import javax.batch.api.chunk.ItemWriter;
 import javax.inject.Inject;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.inject.Named;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Juraci Paixão Kröhling
  */
-@Singleton
-@Startup
-public class BlacklistProcessor implements Processor {
+@Named
+public class BlocklistedIpWriter implements ItemWriter {
     @Inject
-    ProcessorRegistration registration;
+    BlocklistService blocklistService;
 
-    @PostConstruct
-    public void register() {
-        registration.register(this);
+    @Override
+    public void writeItems(List<Object> items) throws Exception {
+        items.stream().map(i -> (IpRange) i).forEach(blocklistService::add);
     }
 
     @Override
-    public FirewallOutcome process(ServletRequest request) {
-        return FirewallOutcome.ACCEPT;
+    public void open(Serializable checkpoint) throws Exception {
     }
 
     @Override
-    public FirewallOutcome process(ServletResponse response) {
-        return FirewallOutcome.ACCEPT;
+    public void close() throws Exception {
+    }
+
+    @Override
+    public Serializable checkpointInfo() throws Exception {
+        return null;
     }
 }

@@ -14,28 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.filter.control;
+package org.qaclana.addons.blocklistupdater;
 
-import javax.ejb.Singleton;
+import org.qaclana.addons.blocklistupdater.entity.EmergingThreats;
+
+import javax.ejb.Stateless;
+import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Juraci Paixão Kröhling
  */
-@Singleton
-public class ProcessorRegistration {
-    private List<Processor> processorList = new ArrayList<>();
-
-    @Produces
-    public List<Processor> getProcessorList() {
-        return Collections.unmodifiableList(processorList);
+@Stateless
+@Alternative
+public class EmergingThreatsInputStreamAlternativeProvider {
+    @Produces @EmergingThreats
+    public InputStream produceEmergingThreatsInputStream() throws IOException {
+        return this.getClass().getResourceAsStream("/emerging-Block-IPs.txt");
     }
-
-    public void register(Processor processor) {
-        this.processorList.add(processor);
-    }
-
 }

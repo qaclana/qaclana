@@ -23,59 +23,59 @@ import org.jboss.logging.annotations.*;
  * @author Juraci Paixão Kröhling
  */
 @MessageLogger(projectCode = "QCLN")
-@ValidIdRange(min = 100000, max = 109999)
+@ValidIdRange(min = 10000, max = 10099)
 public interface MsgLogger {
     MsgLogger LOGGER = Logger.getMessageLogger(MsgLogger.class, MsgLogger.class.getPackage().getName());
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 100000, value = "Web Socket opened for a Firewall worker.")
+    @Message(id = 10000, value = "Web Socket opened for a Firewall worker.")
     void firewallSocketOpened();
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 100001, value = "A Firewall worker sent a message.")
+    @Message(id = 10001, value = "A Firewall worker sent a message.")
     void firewallSocketMessage();
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 100002, value = "Web Socket closed for a Firewall worker.")
+    @Message(id = 10002, value = "Web Socket closed for a Firewall worker.")
     void firewallSocketClosed();
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 100003, value = "Web Socket opened for a Frontend worker.")
+    @Message(id = 10003, value = "Web Socket opened for a Frontend worker.")
     void frontendSocketOpened();
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 100004, value = "A Frontend worker sent a message.")
+    @Message(id = 10004, value = "A Frontend worker sent a message.")
     void frontendSocketMessage();
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 100005, value = "Web Socket closed for a Frontend worker.")
+    @Message(id = 10005, value = "Web Socket closed for a Frontend worker.")
     void frontendSocketClosed();
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 100006, value = "System state change request received. New state: [%s]")
+    @Message(id = 10006, value = "System state change request received. New state: [%s]")
     void systemStateChangeRequestReceived(String newState);
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 100007, value = "System state change applied to this system. New state: [%s]")
+    @Message(id = 10007, value = "System state change applied to this system. New state: [%s]")
     void systemStateChangeApplied(String newState);
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 100008, value = "Sending message to [%s]. Message type: [%s]")
+    @Message(id = 10008, value = "Sending message to [%s]. Message type: [%s]")
     void sendingMessageToDestination(String destination, String messageType);
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 100009, value = "Propagating system state change. New state: [%s]")
+    @Message(id = 10009, value = "Propagating system state change. New state: [%s]")
     void propagatingSystemStateChange(String newState);
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 100010, value = "qaclana initialized.")
+    @Message(id = 10010, value = "qaclana initialized.")
     void applicationInitialized();
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 100011, value = "qaclana is shutting down.")
+    @Message(id = 10011, value = "qaclana is shutting down.")
     void applicationShuttingDown();
 
     @LogMessage(level = Logger.Level.WARN)
-    @Message(id = 100012, value = "Could not send close message to socket [%s]. Reason: ")
+    @Message(id = 10012, value = "Could not send close message to socket [%s]. Reason: ")
     void failedToProperlyCloseSession(String sessionId, @Cause Throwable t);
 }
