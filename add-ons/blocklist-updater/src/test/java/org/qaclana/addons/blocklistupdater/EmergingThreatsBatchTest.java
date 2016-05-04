@@ -27,14 +27,11 @@ import org.qaclana.addons.blocklistupdater.entity.JobFinished;
 import org.qaclana.api.control.BlocklistService;
 import org.qaclana.api.entity.IpRange;
 
-import javax.batch.operations.JobOperator;
-import javax.batch.runtime.BatchRuntime;
 import javax.batch.runtime.BatchStatus;
 import javax.batch.runtime.JobExecution;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.io.File;
-import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -49,6 +46,9 @@ public class EmergingThreatsBatchTest {
 
     @Inject
     BlocklistService blocklistService;
+
+    @Inject
+    EmergingThreatsJobStarter emergingThreatsJobStarter;
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -67,9 +67,7 @@ public class EmergingThreatsBatchTest {
 
     @Test
     public void checkBatchRuns() throws InterruptedException {
-        JobOperator jobOperator = BatchRuntime.getJobOperator();
-        Long executionId = jobOperator.start("emerging-threats-updater", new Properties());
-        JobExecution jobExecution = jobOperator.getJobExecution(executionId);
+        JobExecution jobExecution = emergingThreatsJobStarter.start();
 
         // we don't know anythign about this IP yet
         assertFalse(blocklistService.isInBlockList(IpRange.fromString("1.178.179.217")));
