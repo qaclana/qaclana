@@ -23,7 +23,7 @@ ext {
     }
 }
 
-def jarProjects = ['shared', 'filter']
+def jarProjects = ['api', 'filter']
 def warProjects = ['backend']
 
 def publishedProjects = []

@@ -10,7 +10,7 @@
  */
 
 rootProject.name = 'qaclana'
-include 'shared'
+include 'api'
 include 'services/jpa'
 include 'processors/blocklist-processor'
 include 'add-ons/blocklist-updater'

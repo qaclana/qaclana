@@ -4,7 +4,7 @@ apply plugin: 'org.inferred.processors'
 description = 'Services implemented with JPA as backend'
 
 dependencies {
-    compile project(':shared')
+    compile project(':api')
 
     compile libraries['javaee']
     compile libraries['jbossLogging']

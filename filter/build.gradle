@@ -3,7 +3,7 @@ apply plugin: 'java'
 description = 'Filter components for Qaclana'
 
 dependencies {
-    compile project(':shared')
+    compile project(':api')
 
     compile libraries['javaee']
     compile libraries['jbossLogging']
