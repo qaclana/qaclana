@@ -12,6 +12,7 @@
 rootProject.name = 'qaclana'
 include 'api'
 include 'services/jpa'
+include 'services/settings'
 include 'processors/blocklist-processor'
 include 'add-ons/blocklist-updater'
 include 'backend'

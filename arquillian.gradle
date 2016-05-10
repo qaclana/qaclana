@@ -1,4 +1,10 @@
-def projectsWithArquillian = ['backend', 'filter', 'services/jpa', 'add-ons/blocklist-updater']
+def projectsWithArquillian = [
+        'backend',
+        'filter',
+        'services/jpa',
+        'services/settings',
+        'add-ons/blocklist-updater',
+]
 projectsWithArquillian.each { it ->
     project(it) {
         apply plugin: 'java'

@@ -1,0 +1,10 @@
+apply plugin: 'java'
+
+description = 'Settings for Qaclana'
+
+dependencies {
+    compile project(':api')
+
+    compile libraries['javaee']
+    compile libraries['jbossLogging']
+}
