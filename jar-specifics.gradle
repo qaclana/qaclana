@@ -23,8 +23,15 @@ ext {
     }
 }
 
-def jarProjects = ['api', 'filter']
-def warProjects = ['backend']
+def jarProjects = [
+        'api',
+        'services/jpa',
+        'services/settings',
+        'processors/blocklist-processor',
+        'add-ons/blocklist-updater',
+        'filter',
+]
+def warProjects = ['backend', 'example-filter']
 
 def publishedProjects = []
 publishedProjects.addAll(jarProjects)
@@ -39,7 +46,23 @@ publishedProjects.each { it ->
             apply plugin: 'java'
         }
 
+        apply plugin: 'org.inferred.processors'
         apply plugin: 'maven-publish'
+
+        dependencies {
+            processor libraries['jbossLogging']
+        }
+
+        processors {
+            sourceOutputDir = "${projectDir}/src/main/generated-src"
+        }
+
+        compileJava.dependsOn task('adjustGeneratedSourceDir', {
+            doLast {
+                new File(processors.sourceOutputDir).mkdirs()
+                compileJava.options.compilerArgs += ["-s", processors.sourceOutputDir]
+            }
+        })
 
         task sourceJar(type: Jar) {
             from sourceSets.main.allJava

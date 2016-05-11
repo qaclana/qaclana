@@ -14,32 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.filter.control;
+package org.qaclana.api.control;
 
-import javax.websocket.*;
+import org.qaclana.api.entity.IpRange;
+
+import java.util.List;
 
 /**
- * A web socket client for communicating with the server.
- *
  * @author Juraci Paixão Kröhling
  */
-@ClientEndpoint
-public class SocketClient {
-    MsgLogger log = MsgLogger.LOGGER;
-
-    @OnOpen
-    public void onOpen(Session session) {
-        log.firewallSocketOpened(session.getId());
-    }
-
-    @OnMessage
-    public void onMessage(Session session, String payload) {
-        log.firewallSocketMessage();
-    }
-
-    @OnClose
-    public void onClose(Session session, CloseReason reason) {
-        // TODO: schedule a retry.
-        log.firewallSocketClosed(reason.toString());
-    }
+public interface WhitelistService {
+    List<IpRange> list();
+    void add(IpRange ipRange);
+    void remove(IpRange ipRange);
+    boolean isInWhitelist(IpRange ipRange);
 }

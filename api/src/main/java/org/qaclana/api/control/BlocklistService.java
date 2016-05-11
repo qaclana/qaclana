@@ -18,11 +18,14 @@ package org.qaclana.api.control;
 
 import org.qaclana.api.entity.IpRange;
 
+import java.util.List;
+
 /**
  * @author Juraci Paixão Kröhling
  */
 public interface BlocklistService {
+    List<IpRange> list();
     void add(IpRange ipRange);
     void remove(IpRange ipRange);
-    boolean isInBlockList(IpRange ipRange);
+    boolean isInBlocklist(IpRange ipRange);
 }

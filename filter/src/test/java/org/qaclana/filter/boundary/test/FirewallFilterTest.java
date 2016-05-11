@@ -27,8 +27,7 @@ import org.qaclana.api.FirewallOutcome;
 import org.qaclana.api.SystemState;
 import org.qaclana.api.SystemStateContainer;
 import org.qaclana.filter.boundary.FirewallFilter;
-import org.qaclana.filter.control.Firewall;
-import org.qaclana.filter.control.SocketClient;
+import org.qaclana.filter.control.*;
 import org.qaclana.filter.control.test.ApplicationResourcesForTest;
 import org.qaclana.filter.control.test.ContextPathContainer;
 import org.qaclana.filter.control.test.ServletContextStartupListener;
@@ -78,8 +77,15 @@ public class FirewallFilterTest {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
+                .addClass(Firewall.class)
+                .addClass(MsgLogger.class)
+                .addClass(MsgLogger_$logger.class)
+                .addClass(SystemStateBasedFirewall.class)
+                .addClass(SocketClient.class)
+                .addClass(Recorder.class)
+                .addClass(FilterOverheadMeasurer.class)
+                .addClass(OverheadMeasureReporter.class)
                 .addPackage(FirewallFilter.class.getPackage())
-                .addPackage(Firewall.class.getPackage())
                 .addPackage(FirewallOutcome.class.getPackage())
                 .addPackage(SystemStateContainer.class.getPackage())
                 .addPackage(IncomingHttpRequest.class.getPackage())

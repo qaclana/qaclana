@@ -16,12 +16,15 @@
  */
 package org.qaclana.backend.control;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.qaclana.backend.entity.event.SendMessage;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
+import javax.websocket.Session;
+import java.io.IOException;
 
 /**
  * Sends messages to socket destinations.
@@ -29,13 +32,27 @@ import javax.enterprise.event.Observes;
  * @author Juraci Paixão Kröhling
  */
 @Stateless
-@RolesAllowed("admin")
 public class MessageSender {
     private static final MsgLogger log = MsgLogger.LOGGER;
+    private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
     @Asynchronous
     public void send(@Observes SendMessage event) {
         log.sendingMessageToDestination(event.getDestination().getId(), event.getMessage().getType());
-        // TODO: send the message!
+
+        String messageAsJson;
+        try {
+            messageAsJson = JSON_MAPPER.writeValueAsString(event.getMessage());
+        } catch (JsonProcessingException e) {
+            log.failedToConvertMessageToJson(event.getMessage().toString(), e);
+            return;
+        }
+
+        Session session = event.getDestination();
+        try {
+            session.getBasicRemote().sendText(messageAsJson);
+        } catch (IOException e) {
+            log.failedToSendMessageToDestination(session.getId(), e);
+        }
     }
 }

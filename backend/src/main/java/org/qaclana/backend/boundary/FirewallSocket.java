@@ -20,7 +20,6 @@ import org.qaclana.backend.control.Firewall;
 import org.qaclana.backend.control.MsgLogger;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Instance;
@@ -39,7 +38,6 @@ import java.util.Map;
  */
 @ServerEndpoint("/ws/instance")
 @Stateless
-@RolesAllowed("admin")
 public class FirewallSocket {
     private static final MsgLogger log = MsgLogger.LOGGER;
 

@@ -1,0 +1,10 @@
+apply plugin: 'war'
+
+description = 'Example of how to consume the filter'
+
+dependencies {
+    compile project(':filter')
+
+    providedCompile libraries['javaee']
+    providedCompile libraries['jbossLogging']
+}

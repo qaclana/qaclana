@@ -19,6 +19,7 @@ package org.qaclana.services.jpa.entity;
 import org.qaclana.api.entity.IpRange;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import java.math.BigInteger;
 
 /**
@@ -29,9 +30,16 @@ public class IpRangeEntity extends QaclanaEntity {
     private BigInteger start;
     private BigInteger end;
 
-    public IpRangeEntity(IpRange ipRange) {
+    @Enumerated
+    private IpRangeType ipRangeType;
+
+    protected IpRangeEntity() {
+    }
+
+    public IpRangeEntity(IpRange ipRange, IpRangeType ipRangeType) {
         this.start = ipRange.getStart();
         this.end = ipRange.getEnd();
+        this.ipRangeType = ipRangeType;
     }
 
     public BigInteger getStart() {
@@ -42,12 +50,17 @@ public class IpRangeEntity extends QaclanaEntity {
         return end;
     }
 
+    public IpRangeType getIpRangeType() {
+        return ipRangeType;
+    }
+
     @Override
     public String toString() {
         return "IpRangeEntity{" +
                 "id=" + getId() +
                 ", start=" + start +
                 ", end=" + end +
+                ", type=" + ipRangeType +
                 "} ";
     }
 

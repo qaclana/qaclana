@@ -24,6 +24,8 @@ import java.net.URISyntaxException;
 /**
  * Place where application resources are defined.
  *
+ * TODO: make use of the settings module
+ *
  * @author Juraci Paixão Kröhling
  */
 @ApplicationScoped
@@ -32,7 +34,7 @@ public class ApplicationResources {
 
     @Produces @SocketServerEndpointUri
     public URI getSocketServerEndpointUri() throws URISyntaxException {
-        String uri = System.getProperty("org.qaclana.server.socket.endpoint", "ws://localhost:8080/backend/v1/ws/instance");
+        String uri = System.getProperty("org.qaclana.server.socket.endpoint", "ws://localhost:8080/backend-0.0.1-SNAPSHOT/ws/instance");
         return new URI(uri);
     }
 }

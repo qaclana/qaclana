@@ -1,6 +1,3 @@
-apply plugin: 'java'
-apply plugin: 'org.inferred.processors'
-
 description = 'Services implemented with JPA as backend'
 
 dependencies {

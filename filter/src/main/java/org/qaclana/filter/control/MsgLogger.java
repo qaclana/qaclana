@@ -28,8 +28,8 @@ public interface MsgLogger {
     MsgLogger LOGGER = Logger.getMessageLogger(MsgLogger.class, MsgLogger.class.getPackage().getName());
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 10100, value = "Web Socket opened. Ready to get information from the server.")
-    void firewallSocketOpened();
+    @Message(id = 10100, value = "Web Socket opened. Ready to get information from the server. My ID: [%s]")
+    void firewallSocketOpened(String id);
 
     @LogMessage(level = Logger.Level.INFO)
     @Message(id = 10101, value = "Got a message via Web Socket from the server.")

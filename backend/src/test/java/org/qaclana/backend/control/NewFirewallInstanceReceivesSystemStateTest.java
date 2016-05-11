@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qaclana.api.SystemState;
 import org.qaclana.backend.boundary.FirewallSocket;
+import org.qaclana.backend.boundary.SystemStateEndpoint;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
 import org.qaclana.backend.entity.event.SendMessage;
 import org.qaclana.backend.entity.event.SystemStateChange;
@@ -44,9 +45,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -74,7 +73,8 @@ public class NewFirewallInstanceReceivesSystemStateTest {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
-                .addPackage(FirewallSocket.class.getPackage())
+                .addClass(FirewallSocket.class)
+                .addClass(SystemStateEndpoint.class)
                 .addPackage(SystemStateRequest.class.getPackage())
                 .addPackage(SystemStateChangePropagator.class.getPackage())
                 .addPackage(SystemStateChange.class.getPackage())

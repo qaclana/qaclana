@@ -25,13 +25,16 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qaclana.api.control.BlocklistService;
+import org.qaclana.api.control.WhitelistService;
 import org.qaclana.api.entity.IpRange;
-import org.qaclana.services.jpa.control.BlocklistResources;
 import org.qaclana.services.jpa.control.BlocklistServiceJPA;
+import org.qaclana.services.jpa.control.JpaServiceResources;
 import org.qaclana.services.jpa.entity.IpRangeEntity;
 
 import javax.inject.Inject;
 import java.io.File;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Juraci Paixão Kröhling
@@ -42,11 +45,14 @@ public class BasicPersistenceTest {
     @Inject
     BlocklistService blocklistService;
 
+    @Inject
+    WhitelistService whitelistService;
+
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
                 .addPackage(BlocklistServiceJPA.class.getPackage())
-                .addPackage(BlocklistResources.class.getPackage())
+                .addPackage(JpaServiceResources.class.getPackage())
                 .addPackage(IpRangeEntity.class.getPackage())
                 .addPackage(BlocklistService.class.getPackage())
                 .addPackage(IpRange.class.getPackage())
@@ -56,7 +62,11 @@ public class BasicPersistenceTest {
     }
 
     @Test
-    public void simplePersistenceTestForIpRange() {
+    public void simplePersistenceTestForIpRange() throws Exception {
+        whitelistService.add(IpRange.fromString("192.168.1.0/24"));
         blocklistService.add(IpRange.fromString("192.168.1.0/24"));
+
+        assertTrue(whitelistService.isInWhitelist(IpRange.fromString("192.168.1.0/24")));
+        assertTrue(blocklistService.isInBlocklist(IpRange.fromString("192.168.1.0/24")));
     }
 }

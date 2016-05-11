@@ -24,7 +24,6 @@ import org.qaclana.backend.entity.ws.BasicMessage;
 import org.qaclana.backend.entity.ws.SystemStateChangeMessage;
 
 import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.enterprise.concurrent.ManagedExecutorService;
@@ -41,7 +40,6 @@ import java.util.Map;
  * @author Juraci Paixão Kröhling
  */
 @Stateless
-@RolesAllowed("admin")
 public class SystemStateChangePropagator {
     private static final MsgLogger log = MsgLogger.LOGGER;
 

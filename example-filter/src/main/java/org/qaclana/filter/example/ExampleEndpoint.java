@@ -14,19 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.services.jpa.control;
+package org.qaclana.filter.example;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Juraci Paixão Kröhling
  */
-@ApplicationScoped
-public class BlocklistResources {
-    @Produces
-    @PersistenceContext(unitName = "qaclana-services-jpa")
-    private EntityManager entityManager;
+@Path("foo")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+public class ExampleEndpoint {
+    @GET
+    public Response list() {
+        List<String> listOfFoos = new ArrayList<>();
+        listOfFoos.add("bar");
+        listOfFoos.add("baz");
+        return Response.ok(listOfFoos).build();
+    }
 }

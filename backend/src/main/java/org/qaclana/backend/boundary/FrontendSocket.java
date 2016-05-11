@@ -19,7 +19,6 @@ package org.qaclana.backend.boundary;
 import org.qaclana.backend.control.Frontend;
 import org.qaclana.backend.control.MsgLogger;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -37,7 +36,6 @@ import java.util.Map;
  */
 @ServerEndpoint("/ws/frontend")
 @Stateless
-@RolesAllowed("admin")
 public class FrontendSocket {
     private static final MsgLogger log = MsgLogger.LOGGER;
 

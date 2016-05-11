@@ -29,7 +29,7 @@ import java.io.IOException;
  *
  * @author Juraci Paixão Kröhling
  */
-@WebFilter
+@WebFilter(urlPatterns = "/*", filterName = "QaclanaFilter")
 public class FirewallFilter implements Filter {
     MsgLogger log = MsgLogger.LOGGER;
 

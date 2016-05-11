@@ -1,4 +1,8 @@
 build
 .gradle
 .idea
-generated_src
+generated-src
+*.iml
+*.ipr
+*.iws
+out

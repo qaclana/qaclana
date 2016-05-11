@@ -78,4 +78,12 @@ public interface MsgLogger {
     @LogMessage(level = Logger.Level.WARN)
     @Message(id = 10012, value = "Could not send close message to socket [%s]. Reason: ")
     void failedToProperlyCloseSession(String sessionId, @Cause Throwable t);
+
+    @LogMessage(level = Logger.Level.WARN)
+    @Message(id = 10013, value = "Could not convert the message to JSON. Message: [%s]. Reason: ")
+    void failedToConvertMessageToJson(String message, @Cause Throwable t);
+
+    @LogMessage(level = Logger.Level.WARN)
+    @Message(id = 10014, value = "Failed to send message to destination [%s]. Reason: ")
+    void failedToSendMessageToDestination(String destination, @Cause Throwable t);
 }

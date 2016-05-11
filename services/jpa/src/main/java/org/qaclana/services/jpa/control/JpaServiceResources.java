@@ -14,32 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.filter.control;
+package org.qaclana.services.jpa.control;
 
-import javax.websocket.*;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
- * A web socket client for communicating with the server.
- *
  * @author Juraci Paixão Kröhling
  */
-@ClientEndpoint
-public class SocketClient {
-    MsgLogger log = MsgLogger.LOGGER;
-
-    @OnOpen
-    public void onOpen(Session session) {
-        log.firewallSocketOpened(session.getId());
-    }
-
-    @OnMessage
-    public void onMessage(Session session, String payload) {
-        log.firewallSocketMessage();
-    }
-
-    @OnClose
-    public void onClose(Session session, CloseReason reason) {
-        // TODO: schedule a retry.
-        log.firewallSocketClosed(reason.toString());
-    }
+@ApplicationScoped
+public class JpaServiceResources {
+    @Produces
+    @PersistenceContext(unitName = "qaclana-services-jpa")
+    private EntityManager entityManager;
 }

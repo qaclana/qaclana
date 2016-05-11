@@ -16,30 +16,36 @@
  */
 package org.qaclana.filter.control;
 
-import javax.websocket.*;
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.inject.Inject;
+import javax.websocket.ContainerProvider;
+import javax.websocket.DeploymentException;
+import javax.websocket.WebSocketContainer;
+import java.io.IOException;
+import java.net.URI;
 
 /**
- * A web socket client for communicating with the server.
- *
  * @author Juraci Paixão Kröhling
  */
-@ClientEndpoint
-public class SocketClient {
+@Startup
+@Singleton
+public class SocketClientStarter {
     MsgLogger log = MsgLogger.LOGGER;
 
-    @OnOpen
-    public void onOpen(Session session) {
-        log.firewallSocketOpened(session.getId());
-    }
+    @Inject
+    @SocketServerEndpointUri
+    URI uri;
 
-    @OnMessage
-    public void onMessage(Session session, String payload) {
-        log.firewallSocketMessage();
-    }
+    @PostConstruct
+    public void connect() {
+        try {
+            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+            container.connectToServer(SocketClient.class, uri);
+        } catch (DeploymentException | IOException e) {
+            log.cannotOpenSocketToServer(e);
+        }
 
-    @OnClose
-    public void onClose(Session session, CloseReason reason) {
-        // TODO: schedule a retry.
-        log.firewallSocketClosed(reason.toString());
     }
 }

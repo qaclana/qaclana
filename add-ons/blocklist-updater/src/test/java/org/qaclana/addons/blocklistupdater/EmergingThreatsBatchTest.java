@@ -70,14 +70,14 @@ public class EmergingThreatsBatchTest {
         JobExecution jobExecution = emergingThreatsJobStarter.start();
 
         // we don't know anythign about this IP yet
-        assertFalse(blocklistService.isInBlockList(IpRange.fromString("1.178.179.217")));
+        assertFalse(blocklistService.isInBlocklist(IpRange.fromString("1.178.179.217")));
 
         // we wait at most 5 seconds for the job to complete
         countDownLatch.await(5, TimeUnit.SECONDS);
         assertEquals(BatchStatus.COMPLETED, jobExecution.getBatchStatus());
 
-        assertFalse(blocklistService.isInBlockList(IpRange.fromString("127.0.0.1")));
-        assertTrue(blocklistService.isInBlockList(IpRange.fromString("1.178.179.217")));
+        assertFalse(blocklistService.isInBlocklist(IpRange.fromString("127.0.0.1")));
+        assertTrue(blocklistService.isInBlocklist(IpRange.fromString("1.178.179.217")));
     }
 
     public void observes(@Observes JobFinished ignored) {

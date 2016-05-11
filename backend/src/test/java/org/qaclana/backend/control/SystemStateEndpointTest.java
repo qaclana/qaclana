@@ -39,9 +39,7 @@ import javax.ws.rs.core.Response;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Juraci Paixão Kröhling
@@ -65,7 +63,8 @@ public class SystemStateEndpointTest {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
-                .addPackage(FirewallSocket.class.getPackage())
+                .addClass(SystemStateEndpoint.class)
+                .addClass(FirewallSocket.class)
                 .addPackage(SystemStateRequest.class.getPackage())
                 .addPackage(SystemStateChangePropagator.class.getPackage())
                 .addPackage(SystemStateChange.class.getPackage())

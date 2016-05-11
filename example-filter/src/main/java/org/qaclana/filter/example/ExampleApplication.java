@@ -14,32 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.filter.control;
+package org.qaclana.filter.example;
 
-import javax.websocket.*;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
 /**
- * A web socket client for communicating with the server.
- *
  * @author Juraci Paixão Kröhling
  */
-@ClientEndpoint
-public class SocketClient {
-    MsgLogger log = MsgLogger.LOGGER;
-
-    @OnOpen
-    public void onOpen(Session session) {
-        log.firewallSocketOpened(session.getId());
-    }
-
-    @OnMessage
-    public void onMessage(Session session, String payload) {
-        log.firewallSocketMessage();
-    }
-
-    @OnClose
-    public void onClose(Session session, CloseReason reason) {
-        // TODO: schedule a retry.
-        log.firewallSocketClosed(reason.toString());
-    }
+@ApplicationPath("/v1")
+public class ExampleApplication extends Application {
 }

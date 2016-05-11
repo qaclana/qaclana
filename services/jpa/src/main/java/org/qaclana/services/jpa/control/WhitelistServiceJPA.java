@@ -16,7 +16,7 @@
  */
 package org.qaclana.services.jpa.control;
 
-import org.qaclana.api.control.BlocklistService;
+import org.qaclana.api.control.WhitelistService;
 import org.qaclana.api.entity.IpRange;
 import org.qaclana.services.jpa.entity.IpRangeEntity;
 import org.qaclana.services.jpa.entity.IpRangeEntity_;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  * @author Juraci Paixão Kröhling
  */
 @Stateless
-public class BlocklistServiceJPA implements BlocklistService {
+public class WhitelistServiceJPA implements WhitelistService {
     @Inject
     EntityManager entityManager;
 
@@ -45,7 +45,7 @@ public class BlocklistServiceJPA implements BlocklistService {
         CriteriaQuery<IpRangeEntity> query = builder.createQuery(IpRangeEntity.class);
         Root<IpRangeEntity> root = query.from(IpRangeEntity.class);
         query.select(root);
-        query.where(builder.equal(root.get(IpRangeEntity_.ipRangeType), IpRangeType.BLOCKLIST));
+        query.where(builder.equal(root.get(IpRangeEntity_.ipRangeType), IpRangeType.WHITELIST));
 
         List<IpRangeEntity> results = entityManager.createQuery(query).getResultList();
         return results.stream().map(IpRangeEntity::toIpRange).collect(Collectors.toList());
@@ -53,20 +53,20 @@ public class BlocklistServiceJPA implements BlocklistService {
 
     @Override
     public void add(IpRange ipRange) {
-        if (!isInBlocklist(ipRange)) {
-            entityManager.persist(new IpRangeEntity(ipRange, IpRangeType.BLOCKLIST));
+        if (!isInWhitelist(ipRange)) {
+            entityManager.persist(new IpRangeEntity(ipRange, IpRangeType.WHITELIST));
         }
     }
 
     @Override
     public void remove(IpRange ipRange) {
-        if (isInBlocklist(ipRange)) {
+        if (isInWhitelist(ipRange)) {
             entityManager.remove(get(ipRange));
         }
     }
 
     @Override
-    public boolean isInBlocklist(IpRange ipRange) {
+    public boolean isInWhitelist(IpRange ipRange) {
         return null != get(ipRange);
     }
 
@@ -78,7 +78,7 @@ public class BlocklistServiceJPA implements BlocklistService {
         query.where(
                 builder.equal(root.get(IpRangeEntity_.start), ipRange.getStart()),
                 builder.equal(root.get(IpRangeEntity_.end), ipRange.getEnd()),
-                builder.equal(root.get(IpRangeEntity_.ipRangeType), IpRangeType.BLOCKLIST)
+                builder.equal(root.get(IpRangeEntity_.ipRangeType), IpRangeType.WHITELIST)
         );
 
         List<IpRangeEntity> results = entityManager.createQuery(query).getResultList();

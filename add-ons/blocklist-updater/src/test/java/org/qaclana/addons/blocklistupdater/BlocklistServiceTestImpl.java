@@ -32,6 +32,11 @@ public class BlocklistServiceTestImpl implements BlocklistService {
     List<IpRange> ipRangeList = new ArrayList<>();
 
     @Override
+    public List<IpRange> list() {
+        return ipRangeList;
+    }
+
+    @Override
     public void add(IpRange ipRange) {
         ipRangeList.add(ipRange);
     }
@@ -42,7 +47,7 @@ public class BlocklistServiceTestImpl implements BlocklistService {
     }
 
     @Override
-    public boolean isInBlockList(IpRange ipRange) {
+    public boolean isInBlocklist(IpRange ipRange) {
         return ipRangeList.contains(ipRange);
     }
 

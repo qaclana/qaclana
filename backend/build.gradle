@@ -10,4 +10,5 @@ dependencies {
 
     providedCompile libraries['javaee']
     providedCompile libraries['jbossLogging']
+    providedCompile libraries['jackson']
 }
