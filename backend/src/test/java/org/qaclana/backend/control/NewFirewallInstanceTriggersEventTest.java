@@ -29,7 +29,7 @@ import org.qaclana.api.SystemState;
 import org.qaclana.backend.boundary.FirewallSocket;
 import org.qaclana.backend.entity.event.SystemStateChange;
 import org.qaclana.backend.entity.rest.SystemStateRequest;
-import org.qaclana.backend.entity.ws.BasicMessage;
+import org.qaclana.api.entity.ws.BasicMessage;
 
 import javax.ejb.Stateless;
 import javax.websocket.*;

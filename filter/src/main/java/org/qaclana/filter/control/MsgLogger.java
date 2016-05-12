@@ -32,8 +32,8 @@ public interface MsgLogger {
     void firewallSocketOpened(String id);
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 10101, value = "Got a message via Web Socket from the server.")
-    void firewallSocketMessage();
+    @Message(id = 10101, value = "Got a message via Web Socket from the server: [%s]")
+    void firewallSocketMessage(String payload);
 
     @LogMessage(level = Logger.Level.INFO)
     @Message(id = 10102, value = "Web Socket closed. Reason: [%s]")
@@ -118,4 +118,12 @@ public interface MsgLogger {
     @LogMessage(level = Logger.Level.INFO)
     @Message(id = 10122, value = "Execution of %s#%s() took %dms to complete.")
     void overheadReporter(String className, String methodName, long nanoSeconds);
+
+    @LogMessage(level = Logger.Level.WARN)
+    @Message(id = 10123, value = "Failed to close the web socket session to the server during undeployment. Reason: ")
+    void undeployingCloseFailed(@Cause Throwable throwable);
+
+    @LogMessage(level = Logger.Level.WARN)
+    @Message(id = 10124, value = "Web Socket message didn't have a type in the payload. Payload: [%s]")
+    void messageMissingType(String payload);
 }

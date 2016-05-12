@@ -4,6 +4,7 @@ def projectsWithArquillian = [
         'services/jpa',
         'services/settings',
         'add-ons/blocklist-updater',
+        'processors/blocklist-processor',
 ]
 projectsWithArquillian.each { it ->
     project(it) {

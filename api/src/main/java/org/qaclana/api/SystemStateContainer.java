@@ -16,7 +16,7 @@
  */
 package org.qaclana.api;
 
-import javax.inject.Singleton;
+import javax.ejb.Singleton;
 
 /**
  * Stores the current system state.

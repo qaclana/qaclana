@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.qaclana.api.FirewallOutcome;
 import org.qaclana.api.SystemState;
 import org.qaclana.api.SystemStateContainer;
+import org.qaclana.api.entity.event.NewClientSocketMessage;
 import org.qaclana.filter.boundary.FirewallFilter;
 import org.qaclana.filter.control.*;
 import org.qaclana.filter.control.test.ApplicationResourcesForTest;
@@ -82,6 +83,8 @@ public class FirewallFilterTest {
                 .addClass(MsgLogger_$logger.class)
                 .addClass(SystemStateBasedFirewall.class)
                 .addClass(SocketClient.class)
+                .addClass(SocketMessagePropagator.class)
+                .addClass(NewClientSocketMessage.class)
                 .addClass(Recorder.class)
                 .addClass(FilterOverheadMeasurer.class)
                 .addClass(OverheadMeasureReporter.class)

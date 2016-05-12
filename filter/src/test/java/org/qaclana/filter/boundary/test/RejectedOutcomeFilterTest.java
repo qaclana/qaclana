@@ -24,14 +24,15 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.qaclana.api.SystemStateContainer;
+import org.qaclana.api.*;
+import org.qaclana.api.entity.event.NewClientSocketMessage;
 import org.qaclana.filter.boundary.FirewallFilter;
-import org.qaclana.filter.control.Firewall;
+import org.qaclana.filter.control.*;
 import org.qaclana.filter.control.test.RejectAllProcessor;
 import org.qaclana.filter.control.test.SleepAndAccept;
 import org.qaclana.filter.control.test.SleepAndReject;
-import org.qaclana.api.FirewallOutcome;
 import org.qaclana.filter.entity.IncomingHttpRequest;
+import org.qaclana.filter.entity.OutgoingHttpResponse;
 
 import javax.ejb.Singleton;
 import javax.inject.Inject;
@@ -56,14 +57,25 @@ public class RejectedOutcomeFilterTest {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
-                .addPackage(FirewallFilter.class.getPackage())
-                .addPackage(Firewall.class.getPackage())
-                .addPackage(FirewallOutcome.class.getPackage())
-                .addPackage(SystemStateContainer.class.getPackage())
-                .addPackage(IncomingHttpRequest.class.getPackage())
+                .addClass(MsgLogger.class)
+                .addClass(MsgLogger_$logger.class)
+                .addClass(FirewallFilter.class)
+                .addClass(Firewall.class)
+                .addClass(FirewallOutcome.class)
+                .addClass(SystemStateContainer.class)
+                .addClass(SystemStateBasedFirewall.class)
+                .addClass(IncomingHttpRequest.class)
                 .addClass(SleepAndReject.class)
                 .addClass(SleepAndAccept.class)
                 .addClass(RejectAllProcessor.class)
+                .addClass(Processor.class)
+                .addClass(Recorder.class)
+                .addClass(FilterOverheadMeasurer.class)
+                .addClass(OverheadMeasureReporter.class)
+                .addClass(OutgoingHttpResponse.class)
+                .addClass(ProcessorRegistry.class)
+                .addClass(NewClientSocketMessage.class)
+                .addClass(SystemState.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsWebInfResource("META-INF/ejb-jar.xml", "ejb-jar.xml")
                 .addAsLibraries(Maven.resolver().resolve("org.mockito:mockito-all:1.10.19").withoutTransitivity().as(File.class));

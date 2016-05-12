@@ -16,6 +16,10 @@
  */
 package org.qaclana.filter.control;
 
+import org.qaclana.api.SystemStateContainer;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.websocket.*;
 
 /**
@@ -24,8 +28,15 @@ import javax.websocket.*;
  * @author Juraci Paixão Kröhling
  */
 @ClientEndpoint
+@Stateless
 public class SocketClient {
     MsgLogger log = MsgLogger.LOGGER;
+
+    @Inject
+    SystemStateContainer systemStateContainer;
+
+    @Inject
+    SocketMessagePropagator socketMessagePropagator;
 
     @OnOpen
     public void onOpen(Session session) {
@@ -33,13 +44,14 @@ public class SocketClient {
     }
 
     @OnMessage
-    public void onMessage(Session session, String payload) {
-        log.firewallSocketMessage();
+    public void onMessage(String payload) {
+        log.firewallSocketMessage(payload);
+        socketMessagePropagator.propagate(payload);
     }
 
     @OnClose
-    public void onClose(Session session, CloseReason reason) {
-        // TODO: schedule a retry.
+    public void onClose(CloseReason reason) {
+        // TODO: schedule a retry?
         log.firewallSocketClosed(reason.toString());
     }
 }

@@ -14,32 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.backend.entity.ws;
+package org.qaclana.api.entity.ws;
 
-import org.qaclana.api.SystemState;
+import org.qaclana.api.entity.IpRange;
 
 /**
- * A message sent to be sent via web sockets with new system states.
- *
  * @author Juraci Paixão Kröhling
  */
-public class SystemStateChangeMessage extends BasicMessage {
-    private SystemState state;
+public class UnblockedIpRangeMessage extends BasicMessage {
+    public static final String EVENT_TYPE = "unblocked-iprange";
+    private IpRange ipRange;
 
-    public SystemStateChangeMessage(SystemState state) {
-        this.state = state;
+    public UnblockedIpRangeMessage(IpRange ipRange) {
+        this.ipRange = ipRange;
     }
 
-    public SystemState getState() {
-        return state;
-    }
-
-    public void setState(SystemState state) {
-        this.state = state;
+    public IpRange getIpRange() {
+        return ipRange;
     }
 
     @Override
     public String getType() {
-        return "system-state-change";
+        return EVENT_TYPE;
     }
 }

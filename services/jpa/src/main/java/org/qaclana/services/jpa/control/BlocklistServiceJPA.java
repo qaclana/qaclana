@@ -18,11 +18,14 @@ package org.qaclana.services.jpa.control;
 
 import org.qaclana.api.control.BlocklistService;
 import org.qaclana.api.entity.IpRange;
+import org.qaclana.api.entity.event.NewBlockedIpRange;
+import org.qaclana.api.entity.event.RemovedBlockedIpRange;
 import org.qaclana.services.jpa.entity.IpRangeEntity;
 import org.qaclana.services.jpa.entity.IpRangeEntity_;
 import org.qaclana.services.jpa.entity.IpRangeType;
 
 import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -38,6 +41,12 @@ import java.util.stream.Collectors;
 public class BlocklistServiceJPA implements BlocklistService {
     @Inject
     EntityManager entityManager;
+
+    @Inject
+    Event<NewBlockedIpRange> newBlockedIpRangeEvent;
+
+    @Inject
+    Event<RemovedBlockedIpRange> removedBlockedIpRangeEvent;
 
     @Override
     public List<IpRange> list() {
@@ -55,6 +64,7 @@ public class BlocklistServiceJPA implements BlocklistService {
     public void add(IpRange ipRange) {
         if (!isInBlocklist(ipRange)) {
             entityManager.persist(new IpRangeEntity(ipRange, IpRangeType.BLOCKLIST));
+            newBlockedIpRangeEvent.fire(new NewBlockedIpRange(ipRange));
         }
     }
 
@@ -62,6 +72,7 @@ public class BlocklistServiceJPA implements BlocklistService {
     public void remove(IpRange ipRange) {
         if (isInBlocklist(ipRange)) {
             entityManager.remove(get(ipRange));
+            removedBlockedIpRangeEvent.fire(new RemovedBlockedIpRange(ipRange));
         }
     }
 

@@ -16,8 +16,8 @@
  */
 package org.qaclana.backend.boundary;
 
+import org.qaclana.addons.blocklistupdater.MsgLogger;
 import org.qaclana.api.control.BlocklistService;
-import org.qaclana.api.control.WhitelistService;
 import org.qaclana.api.entity.IpRange;
 import org.qaclana.backend.entity.rest.AddRangeIp;
 
@@ -32,32 +32,36 @@ import java.util.List;
 /**
  * @author Juraci Paixão Kröhling
  */
-@Path("/whitelist")
+@Path("/blocklist")
 @Stateless
 @RolesAllowed("admin")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class WhitelistResource {
+public class BlocklistEndpoint {
+    MsgLogger logger = MsgLogger.LOGGER;
+
     @Inject
-    WhitelistService whitelistService;
+    BlocklistService blocklistService;
 
     @GET
     public Response getAllBlockedIpRanges() {
-        List<IpRange> allIpRanges = whitelistService.list();
+        List<IpRange> allIpRanges = blocklistService.list();
         return Response.ok(allIpRanges).build();
     }
 
     @DELETE
     @Path("{ipRange}")
     public Response deleteRange(@PathParam("ipRange") String ipRange) {
-        whitelistService.remove(IpRange.fromString(ipRange));
+        logger.removeIpRangeFromBlocklist(ipRange);
+        blocklistService.remove(IpRange.fromString(ipRange));
         return Response.noContent().build();
     }
 
     @POST
     public Response addRange(AddRangeIp addRangeIp) {
+        logger.addIpRangeToBlocklist(addRangeIp.getIpRange());
         IpRange range = IpRange.fromString(addRangeIp.getIpRange());
-        whitelistService.add(range);
+        blocklistService.add(range);
         return Response.ok(range).build();
     }
 }

@@ -25,12 +25,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qaclana.api.SystemState;
 import org.qaclana.api.SystemStateContainer;
+import org.qaclana.api.entity.ws.BasicMessage;
+import org.qaclana.api.entity.ws.SystemStateChangeMessage;
 import org.qaclana.backend.boundary.FirewallSocket;
 import org.qaclana.backend.boundary.SystemStateEndpoint;
+import org.qaclana.backend.entity.event.BasicEvent;
+import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
+import org.qaclana.backend.entity.event.SendMessage;
 import org.qaclana.backend.entity.event.SystemStateChange;
 import org.qaclana.backend.entity.rest.ErrorResponse;
 import org.qaclana.backend.entity.rest.SystemStateRequest;
-import org.qaclana.backend.entity.ws.BasicMessage;
 
 import javax.ejb.Singleton;
 import javax.enterprise.event.Observes;
@@ -63,14 +67,22 @@ public class SystemStateEndpointTest {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
+                .addClass(MsgLogger.class)
+                .addClass(MsgLogger_$logger.class)
                 .addClass(SystemStateEndpoint.class)
                 .addClass(FirewallSocket.class)
-                .addPackage(SystemStateRequest.class.getPackage())
-                .addPackage(SystemStateChangePropagator.class.getPackage())
-                .addPackage(SystemStateChange.class.getPackage())
-                .addPackage(SystemState.class.getPackage())
-                .addPackage(BasicMessage.class.getPackage())
-                .addPackage(SystemStateContainer.class.getPackage())
+                .addClass(SystemStateRequest.class)
+                .addClass(SystemStateChangePropagator.class)
+                .addClass(SystemStateChange.class)
+                .addClass(BasicEvent.class)
+                .addClass(SystemStateChangeMessage.class)
+                .addClass(NewFirewallInstanceRegistered.class)
+                .addClass(SystemState.class)
+                .addClass(BasicMessage.class)
+                .addClass(SendMessage.class)
+                .addClass(SystemStateContainer.class)
+                .addClass(RunAsAdmin.class)
+                .addClass(ErrorResponse.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

@@ -14,28 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.api.control;
+package org.qaclana.api.entity.ws;
 
 import org.qaclana.api.entity.IpRange;
-
-import java.util.List;
 
 /**
  * @author Juraci Paixão Kröhling
  */
-public interface BlocklistService {
-    List<IpRange> list();
+public class BlockedIpRangeMessage extends BasicMessage {
+    public static final String EVENT_TYPE = "blocked-iprange";
+    private IpRange ipRange;
 
-    /**
-     * Should emit the event NewBlockedIpRange
-     * @param ipRange
-     */
-    void add(IpRange ipRange);
+    public BlockedIpRangeMessage(IpRange ipRange) {
+        this.ipRange = ipRange;
+    }
 
-    /**
-     * Should emit the event RemovedBlockedIpRange
-     * @param ipRange
-     */
-    void remove(IpRange ipRange);
-    boolean isInBlocklist(IpRange ipRange);
+    public IpRange getIpRange() {
+        return ipRange;
+    }
+
+    @Override
+    public String getType() {
+        return EVENT_TYPE;
+    }
 }

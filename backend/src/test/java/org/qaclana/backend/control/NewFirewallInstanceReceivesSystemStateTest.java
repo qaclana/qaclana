@@ -25,14 +25,15 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qaclana.api.SystemState;
+import org.qaclana.api.entity.event.RemovedBlockedIpRange;
+import org.qaclana.api.entity.ws.BasicMessage;
+import org.qaclana.api.entity.ws.SystemStateChangeMessage;
 import org.qaclana.backend.boundary.FirewallSocket;
 import org.qaclana.backend.boundary.SystemStateEndpoint;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
 import org.qaclana.backend.entity.event.SendMessage;
 import org.qaclana.backend.entity.event.SystemStateChange;
 import org.qaclana.backend.entity.rest.SystemStateRequest;
-import org.qaclana.backend.entity.ws.BasicMessage;
-import org.qaclana.backend.entity.ws.SystemStateChangeMessage;
 
 import javax.ejb.Singleton;
 import javax.enterprise.event.Event;
@@ -75,11 +76,12 @@ public class NewFirewallInstanceReceivesSystemStateTest {
         return ShrinkWrap.create(WebArchive.class)
                 .addClass(FirewallSocket.class)
                 .addClass(SystemStateEndpoint.class)
-                .addPackage(SystemStateRequest.class.getPackage())
-                .addPackage(SystemStateChangePropagator.class.getPackage())
-                .addPackage(SystemStateChange.class.getPackage())
-                .addPackage(SystemState.class.getPackage())
-                .addPackage(BasicMessage.class.getPackage())
+                .addClass(SystemStateRequest.class)
+                .addClass(RemovedBlockedIpRange.class)
+                .addClass(SystemStateChangePropagator.class)
+                .addClass(SystemStateChange.class)
+                .addClass(SystemState.class)
+                .addClass(BasicMessage.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(Maven.resolver().resolve("org.mockito:mockito-all:1.10.19").withoutTransitivity().as(File.class));
     }

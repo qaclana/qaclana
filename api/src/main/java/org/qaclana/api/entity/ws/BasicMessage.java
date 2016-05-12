@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.backend.entity.ws;
+package org.qaclana.api.entity.ws;
 
 /**
  * The basic message type for web socket messages.

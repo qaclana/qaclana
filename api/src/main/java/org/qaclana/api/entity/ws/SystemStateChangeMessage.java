@@ -14,28 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.api.control;
+package org.qaclana.api.entity.ws;
 
-import org.qaclana.api.entity.IpRange;
-
-import java.util.List;
+import org.qaclana.api.SystemState;
 
 /**
+ * A message sent to be sent via web sockets with new system states.
+ *
  * @author Juraci Paixão Kröhling
  */
-public interface BlocklistService {
-    List<IpRange> list();
+public class SystemStateChangeMessage extends BasicMessage {
+    public static final String EVENT_TYPE = "system-state-change";
+    private SystemState state;
 
-    /**
-     * Should emit the event NewBlockedIpRange
-     * @param ipRange
-     */
-    void add(IpRange ipRange);
+    public SystemStateChangeMessage(SystemState state) {
+        this.state = state;
+    }
 
-    /**
-     * Should emit the event RemovedBlockedIpRange
-     * @param ipRange
-     */
-    void remove(IpRange ipRange);
-    boolean isInBlocklist(IpRange ipRange);
+    public SystemState getState() {
+        return state;
+    }
+
+    public void setState(SystemState state) {
+        this.state = state;
+    }
+
+    @Override
+    public String getType() {
+        return EVENT_TYPE;
+    }
 }
