@@ -25,11 +25,13 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qaclana.api.SystemState;
+import org.qaclana.api.SystemStateContainer;
 import org.qaclana.api.entity.event.RemovedBlockedIpRange;
 import org.qaclana.api.entity.ws.BasicMessage;
 import org.qaclana.api.entity.ws.SystemStateChangeMessage;
 import org.qaclana.backend.boundary.FirewallSocket;
 import org.qaclana.backend.boundary.SystemStateEndpoint;
+import org.qaclana.backend.entity.event.BasicEvent;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
 import org.qaclana.backend.entity.event.SendMessage;
 import org.qaclana.backend.entity.event.SystemStateChange;
@@ -65,23 +67,30 @@ public class NewFirewallInstanceReceivesSystemStateTest {
     @Inject
     FirewallSocket firewallSocket;
 
-    @Inject
-    RunAsAdmin runAsAdmin;
-
     @Inject @Firewall
     private Instance<Map<String, Session>> sessionsInstance;
 
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
+                .addClass(ApplicationResources.class)
+                .addClass(BasicMessage.class)
+                .addClass(BasicEvent.class)
+                .addClass(Firewall.class)
                 .addClass(FirewallSocket.class)
-                .addClass(SystemStateEndpoint.class)
-                .addClass(SystemStateRequest.class)
+                .addClass(Frontend.class)
+                .addClass(MsgLogger.class)
+                .addClass(MsgLogger_$logger.class)
+                .addClass(NewFirewallInstanceRegistered.class)
                 .addClass(RemovedBlockedIpRange.class)
+                .addClass(SendMessage.class)
+                .addClass(SystemState.class)
                 .addClass(SystemStateChangePropagator.class)
                 .addClass(SystemStateChange.class)
-                .addClass(SystemState.class)
-                .addClass(BasicMessage.class)
+                .addClass(SystemStateChangeMessage.class)
+                .addClass(SystemStateContainer.class)
+                .addClass(SystemStateEndpoint.class)
+                .addClass(SystemStateRequest.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(Maven.resolver().resolve("org.mockito:mockito-all:1.10.19").withoutTransitivity().as(File.class));
     }
@@ -89,19 +98,16 @@ public class NewFirewallInstanceReceivesSystemStateTest {
     @Test
     public void newInstanceIsRegisteredTest() throws Exception {
         // TODO: change this test to use actual web sockets once WFLY-3313 is fixed.
-        runAsAdmin.call(() -> {
-            assertEquals(0, sessionsInstance.get().size());
-            Session session = mock(Session.class);
-            firewallSocket.onOpen(session);
+        assertEquals(0, sessionsInstance.get().size());
+        Session session = mock(Session.class);
+        firewallSocket.onOpen(session);
 
-            latch.await(2, TimeUnit.SECONDS);
+        latch.await(2, TimeUnit.SECONDS);
 
-            assertEquals(1, sessionsInstance.get().size());
-            assertTrue(receivedMessage.getMessage() instanceof SystemStateChangeMessage);
-            SystemStateChangeMessage message = (SystemStateChangeMessage) receivedMessage.getMessage();
-            assertNotNull(message.getState());
-            return null;
-        });
+        assertEquals(1, sessionsInstance.get().size());
+        assertTrue(receivedMessage.getMessage() instanceof SystemStateChangeMessage);
+        SystemStateChangeMessage message = (SystemStateChangeMessage) receivedMessage.getMessage();
+        assertNotNull(message.getState());
     }
 
     public void getMessage(@Observes SendMessage event) {

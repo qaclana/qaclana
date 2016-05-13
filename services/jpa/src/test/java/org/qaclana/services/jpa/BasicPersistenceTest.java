@@ -27,9 +27,12 @@ import org.junit.runner.RunWith;
 import org.qaclana.api.control.BlocklistService;
 import org.qaclana.api.control.WhitelistService;
 import org.qaclana.api.entity.IpRange;
+import org.qaclana.api.entity.event.NewBlockedIpRange;
+import org.qaclana.api.entity.event.RemovedBlockedIpRange;
 import org.qaclana.services.jpa.control.BlocklistServiceJPA;
 import org.qaclana.services.jpa.control.JpaServiceResources;
-import org.qaclana.services.jpa.entity.IpRangeEntity;
+import org.qaclana.services.jpa.control.WhitelistServiceJPA;
+import org.qaclana.services.jpa.entity.*;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -51,11 +54,19 @@ public class BasicPersistenceTest {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
-                .addPackage(BlocklistServiceJPA.class.getPackage())
-                .addPackage(JpaServiceResources.class.getPackage())
-                .addPackage(IpRangeEntity.class.getPackage())
-                .addPackage(BlocklistService.class.getPackage())
-                .addPackage(IpRange.class.getPackage())
+                .addClass(BlocklistService.class)
+                .addClass(BlocklistServiceJPA.class)
+                .addClass(IpRange.class)
+                .addClass(IpRangeEntity.class)
+                .addClass(IpRangeEntity_.class)
+                .addClass(IpRangeType.class)
+                .addClass(JpaServiceResources.class)
+                .addClass(NewBlockedIpRange.class)
+                .addClass(QaclanaEntity.class)
+                .addClass(QaclanaEntity_.class)
+                .addClass(RemovedBlockedIpRange.class)
+                .addClass(WhitelistService.class)
+                .addClass(WhitelistServiceJPA.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 .addAsLibraries(Maven.resolver().resolve("org.mockito:mockito-all:1.10.19").withoutTransitivity().as(File.class));
