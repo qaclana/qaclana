@@ -23,21 +23,35 @@ endif::[]
 The project is divided into several modules. More information about the individual modules can be found in the
 respective module's README files.
 
+* add-ons: code that extends or improves the behavior of a basic service or processor, like batch jobs.
+* api: code that is useful for more than one module. Contains no big dependencies, but has Java EE as runtime target.
 * backend: it's the REST backend that is responsible for analysing request and response data. If a client is marked as
 suspicious, a blacklist event is sent via Web Sockets to the registered instances.
-* shared: code that is useful for more than one module.
-* client: code that is intended to be shared between proxy and filter.
+* example-filter: very simple JAX-RS application that incorporates the filter
 * filter: servlet filter that intercepts the requests and responses. Might block a request from coming in, or a response
 from going out.
-* proxy: similar in intention to the filter, but intended to be used by non-Java EE applications.
+* processors: request and response analyzers, responsible for the firewall outcome.
+* services: implementations of services defined on the API.
+* proxy: coming soon. The idea is to incorporate the filter into a reverse-proxy, so that this can be used by non
+Java EE applications as well.
 
 == Basic usage
 
-At this point, there's no usage. In the future:
+* Deploy the backend WAR file onto a Wildfly 10 instance
+* Consume the filter on your own Java EE application, deployed on the same or remote Wildfly 10 instance
 
-- the filter will be able to be embedded into Java EE applications. By just adding a dependency to the module and
-"somehow" telling it where the server is should suffice.
-- the proxy will be a standalone application (possibly based on Wildfly, Wildfly Swarm or Undertow).
+== Architecture
+
+Both the backend and the filter are heavily dependent on Java EE. EJBs and CDI beans are the key backbones of the
+architecture. This allows for a very decoupled architecture, both in providers and for consumers. The main contract
+among the modules is defined on the API module, as this is pretty much the only module that other modules can depend on.
+The filter and the backend are also "assembler" modules, providing some basic features and extending themselves by
+incorporating other modules. Whenever possible, CDI events are fired and can be observed by other modules. Events which
+are part of the API are defined on the API module. Request and response processors should each reside on its own module,
+and register themselves with the Processor registry via CDI as well.
+
+As it currently is, the backend is a single point of failure. While it can be scaled by adding more backend instances
+and put behind a load balancer, once a backend node goes down, all client Web Sockets are disconnected with it.
 
 == How to build Qaclana from source
 
@@ -49,14 +63,15 @@ $ ./gradlew build
 
 == Releasing
 
-Coming soon.
+Qaclana implements the idea of Continuous Deployment and Continuous Delivery. Each commit, once accepted into the main
+git repository, becomes a version that is deployed on a Maven repository.
 
 == License
 
 Qaclana is released under Apache License, Version 2.0 as described in the link:LICENSE[LICENSE] document
 
 ----
-   Copyright 2015 Red Hat, Inc.
+   Copyright 2016 Red Hat, Inc.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -70,7 +85,3 @@ Qaclana is released under Apache License, Version 2.0 as described in the link:L
    See the License for the specific language governing permissions and
    limitations under the License.
 ----
-
-
-
-

@@ -16,8 +16,8 @@
  */
 package org.qaclana.filter.control;
 
-import org.qaclana.api.SystemStateContainer;
 import org.qaclana.api.FirewallOutcome;
+import org.qaclana.api.SystemStateContainer;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;

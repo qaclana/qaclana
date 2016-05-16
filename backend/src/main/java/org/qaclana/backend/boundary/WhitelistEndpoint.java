@@ -16,7 +16,6 @@
  */
 package org.qaclana.backend.boundary;
 
-import org.qaclana.api.control.BlocklistService;
 import org.qaclana.api.control.WhitelistService;
 import org.qaclana.api.entity.IpRange;
 import org.qaclana.backend.entity.rest.AddRangeIp;
