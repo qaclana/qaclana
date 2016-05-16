@@ -1,0 +1,27 @@
+= Qaclana Backend
+
+This is the main backend module. It's a JAX-RS application with REST endpoints that allows for administrators to
+interact with the state of the firewall as a whole. Besides that, it incorporates several of the modules. In other
+words, the backend is an assembler module that also provides some behavior.
+
+In a future version, the JAX-RS application might be moved into a separate module, making the backend a pure assembler
+module.
+
+The backend also provides a couple of Web Socket Server endpoints. One is intended to be consumed by firewall instances
+created by the filter, while the other is intended to be used by the frontend UI, which is yet to be built.
+
+The endpoints should try to defer the execution of the actions as much as possible, using Java EE executors. This way,
+processing happens asynchronously, while acknowledging the request to the client. This is accomplished by firing up CDI
+events, which are usually caught by EJBs in `@Asynchronous` methods.
+
+Similarly, messages are sent via Web Sockets to firewall instances by firing the CDI event `SendMessage`. The messages
+are defined in the API module and are subclasses of `BasicMessage`.
+
+Example of the flow for a new blocked IP range:
+
+- The JAX-RS `BlocklistEndpoint` receives the a POST request with the IP Range to be blocked
+- A `BlocklistService` stores the new IP Range into a permanent storage and fires a `NewBlockedIpRange`
+- `BlockedIpPropagator` observes the event and builds a `BlockedIpRangeMessage`. Using the Java EE managed executor, it
+schedules the submission of this message to all firewall socket instances, by firing one `SendMessage` event for each
+socket instance.
+- `MessageSender` observes the event and effectively sends the message to the destination

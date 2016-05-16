@@ -1,0 +1,5 @@
+= Qaclana Services - JPA
+
+Implements the services storing persistent data into a JPA backend. It uses the default data source as defined by the
+Java EE specification. It's the administrator's responsibility to configure this default data source in Wildfly.
+This service runs on the backend.

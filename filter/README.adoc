@@ -1,0 +1,19 @@
+= Qaclana Filter
+
+The filter is intended to be embedded into target applications and effectively analyzes the incoming requests and the
+outgoing responses.
+
+The main piece of this is the `Firewall` EJB, which is invoked before each request is processed and again before the
+response is sent to the client. All registered processors are invoked asynchronously. Once the first processor has a
+definitive answer, all other processors are cancelled. A definitive answer can be positive (ie: IP is in a whitelist),
+or negative (ie: IP is in a blocklist).
+
+The `FirewallFilter` is a servlet filter that delegates the processing to a more knowledgeable processor, the
+`SystemStateBasedFirewall`. This gets the current system state as defined on the backend via a web socket and act
+accordingly:
+
+* Do nothing, if the state is `DISABLED`
+* Asynchronously records the request and response data via `Recorder` instances, returning immediately if the state is
+`PERMISSIVE`
+* Blocks the request/response until an outcome from the `Firewall` is returned. If the `FirewallOutcome` is `REJECT`,
+a `400 Bad Request` is sent to the client. If it is `ACCEPT`, the filter chain is resumed.

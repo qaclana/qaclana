@@ -1,0 +1,6 @@
+= Qaclana Services - Settings
+
+Implements the services providing access to the configuration settings for Qaclana. It may read configuration settings
+from configuration files, system properties, environment variables or JNDI entries. Consumers can get the value for
+a configuration setting by injecting a `@SettingsValue("key")`, such as:
+`@SettingsValue("qaclana.configuration.key") String value`.

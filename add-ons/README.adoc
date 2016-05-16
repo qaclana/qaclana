@@ -1,0 +1,6 @@
+= Qaclana Add-ons
+
+This module contains add-ons for services and processors. The code here extends or improves the main behavior. The idea
+is that the main business logic should reside on the service/processor main module, and extra behavior is added here.
+One such example is the link:blocklist-updater[blocklist-updater] module, which provides a batch job for updating the
+blocklist based on external sources.

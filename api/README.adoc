@@ -1,0 +1,8 @@
+= Qaclana API
+
+This is the main contract for inter-component relationship. This is not a "public" API in the sense that non-Qaclana
+components can interact with, but rather a public API that components can rely upon when interacting with other
+components. For instance, a module might fire a CDI event that is interesting for other components. Such CDI event would
+then be part of this public API.
+
+Components of the API should try to abstain from using Java EE, except when justifiable.

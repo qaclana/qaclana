@@ -1,0 +1,11 @@
+= Qaclana Processors
+
+Each processor implements a request/response processor logic. A processor should implement the `Processor` interface
+and should register itself by getting a `ProcessorRegistry` instance via CDI.
+
+For each incoming request, the `Processor#process(ServletRequest)` method is invoked and a `FirewallOutcome` is
+expected. For each processed response, the `Processor#process(ServletResponse)` method is invoked and a
+`FirewallOutcome` is expected.
+
+In the general case, processors should be `@Singleton` EJB beans instantiated via `@Startup`, as the registry will keep
+only a list of processor instances. As such, no data should be kept at the EJB instances.

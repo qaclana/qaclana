@@ -1,0 +1,5 @@
+= Qaclana Example Filter
+
+This is a very simple JAX-RS application that adds the filter to its WAR file. This can be used as an example of how to
+consume the filter in a Java EE application. This can also be used for developing the filter. Just deploy the exploded
+WAR into a running Wildfly in debug mode and configure your IDE to auto-deploy on changes.
