@@ -23,16 +23,16 @@ endif::[]
 The project is divided into several modules. More information about the individual modules can be found in the
 respective module's README files.
 
-* add-ons: code that extends or improves the behavior of a basic service or processor, like batch jobs.
-* api: code that is useful for more than one module. Contains no big dependencies, but has Java EE as runtime target.
-* backend: it's the REST backend that is responsible for analysing request and response data. If a client is marked as
+* link:add-ons[add-ons]: code that extends or improves the behavior of a basic service or processor, like batch jobs.
+* link:api[api]: code that is useful for more than one module. Contains no big dependencies, but has Java EE as runtime target.
+* link:backend[backend]: it's the REST backend that is responsible for analysing request and response data. If a client is marked as
 suspicious, a blacklist event is sent via Web Sockets to the registered instances.
-* example-filter: very simple JAX-RS application that incorporates the filter
-* filter: servlet filter that intercepts the requests and responses. Might block a request from coming in, or a response
+* link:example-filter[example-filter]: very simple JAX-RS application that incorporates the filter
+* link:filter[filter]: servlet filter that intercepts the requests and responses. Might block a request from coming in, or a response
 from going out.
-* processors: request and response analyzers, responsible for the firewall outcome.
-* services: implementations of services defined on the API.
-* proxy: coming soon. The idea is to incorporate the filter into a reverse-proxy, so that this can be used by non
+* link:processors[processors]: request and response analyzers, responsible for the firewall outcome.
+* link:services[services]: implementations of services defined on the API.
+* link:proxy[proxy]: coming soon. The idea is to incorporate the filter into a reverse-proxy, so that this can be used by non
 Java EE applications as well.
 
 == Basic usage
