@@ -1,11 +1,11 @@
 ext {
     libraries = [
             junit: 'junit:junit:4.12',
-            jackson: 'com.fasterxml.jackson.core:jackson-databind:2.6.3',
+            jackson: 'com.fasterxml.jackson.core:jackson-databind:2.7.4',
             mockito: 'org.mockito:mockito-all:1.10.19',
             wildflyZip: 'org.wildfly:wildfly-dist:10.0.0.Final@zip',
             javaee: 'javax:javaee-api:7.0',
-            jpaModelGenerator: 'org.hibernate:hibernate-jpamodelgen:4.3.11.Final',
+            jpaModelGenerator: 'org.hibernate:hibernate-jpamodelgen:5.1.0.Final',
             jbossLogging: [
                     'org.jboss.logging:jboss-logging:3.3.0.Final',
                     'org.jboss.logging:jboss-logging-annotations:2.0.1.Final',
@@ -16,7 +16,7 @@ ext {
                     'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-impl-maven:2.2.2',
             ],
             arquillian: [
-                    'org.jboss.arquillian.junit:arquillian-junit-container:1.1.10.Final',
+                    'org.jboss.arquillian.junit:arquillian-junit-container:1.1.11.Final',
                     'org.wildfly.arquillian:wildfly-arquillian-container-managed:2.0.0.Final',
             ],
     ]

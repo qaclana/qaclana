@@ -17,10 +17,14 @@
 package org.qaclana.filter.control;
 
 import org.qaclana.api.SystemStateContainer;
+import org.qaclana.filter.entity.ConnectToSocketServer;
 
-import javax.ejb.Stateless;
+import javax.ejb.Singleton;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.websocket.*;
+
+import static org.qaclana.filter.control.SocketClientStarter.UNDEPLOYMENT;
 
 /**
  * A web socket client for communicating with the server.
@@ -28,7 +32,7 @@ import javax.websocket.*;
  * @author Juraci Paixão Kröhling
  */
 @ClientEndpoint
-@Stateless
+@Singleton
 public class SocketClient {
     MsgLogger log = MsgLogger.LOGGER;
 
@@ -37,6 +41,9 @@ public class SocketClient {
 
     @Inject
     SocketMessagePropagator socketMessagePropagator;
+
+    @Inject
+    Event<ConnectToSocketServer> connectToSocketServerEvent;
 
     @OnOpen
     public void onOpen(Session session) {
@@ -51,7 +58,14 @@ public class SocketClient {
 
     @OnClose
     public void onClose(CloseReason reason) {
-        // TODO: schedule a retry?
+        // it's bad, but we compare both the close code and the reason phases, we the instance object for the reason
+        // might not be the same
+        if (!(UNDEPLOYMENT.getCloseCode().equals(reason.getCloseCode()) &&
+                UNDEPLOYMENT.getReasonPhrase().equals(reason.getReasonPhrase()))) {
+            // if *we* are going away, we don't want to try to connect to the server again
+            // otherwise, we want to start retrying right
+            connectToSocketServerEvent.fire(new ConnectToSocketServer(reason, System.currentTimeMillis()));
+        }
         log.firewallSocketClosed(reason.toString());
     }
 }

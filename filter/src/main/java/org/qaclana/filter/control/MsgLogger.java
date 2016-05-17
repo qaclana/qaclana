@@ -126,4 +126,12 @@ public interface MsgLogger {
     @LogMessage(level = Logger.Level.WARN)
     @Message(id = 10124, value = "Web Socket message didn't have a type in the payload. Payload: [%s]")
     void messageMissingType(String payload);
+
+    @LogMessage(level = Logger.Level.INFO)
+    @Message(id = 10125, value = "Attempting to reconnect to the server's web socket.")
+    void reconnectingWebSocket();
+
+    @LogMessage(level = Logger.Level.INFO)
+    @Message(id = 10126, value = "Failed to reconnect to the server. We will try again at [%s]")
+    void failedToReconnect(String timestamp);
 }

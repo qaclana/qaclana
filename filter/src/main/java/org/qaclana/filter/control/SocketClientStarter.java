@@ -16,15 +16,25 @@
  */
 package org.qaclana.filter.control;
 
+import org.qaclana.filter.entity.ConnectToSocketServer;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
+import javax.ejb.Asynchronous;
 import javax.ejb.DependsOn;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.enterprise.concurrent.ManagedScheduledExecutorService;
+import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
+import java.time.Instant;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Juraci Paixão Kröhling
@@ -33,9 +43,15 @@ import java.net.URI;
 @Singleton
 @DependsOn("SocketClient") // otherwise, the socket client might get undeployed before this
 public class SocketClientStarter {
+    private static final int MAX_WAIT = 20_000; // in milliseconds
+    static final CloseReason UNDEPLOYMENT = new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Client being undeployed.");
     private Session session;
-    private static final CloseReason UNDEPLOYMENT = new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Client being undeployed.");
+    private ScheduledFuture scheduledFuture;
+
     MsgLogger log = MsgLogger.LOGGER;
+
+    @Resource
+    private ManagedScheduledExecutorService executor;
 
     @Inject
     @SocketServerEndpointUri
@@ -44,24 +60,50 @@ public class SocketClientStarter {
     @Inject
     SocketClient socketClient;
 
+    @Inject
+    Event<ConnectToSocketServer> connectToSocketServerEvent;
+
     @PostConstruct
     public void connect() {
-        try {
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            session = container.connectToServer(socketClient, uri);
-        } catch (DeploymentException | IOException e) {
-            log.cannotOpenSocketToServer(e);
-        }
+        connectToSocketServerEvent.fire(new ConnectToSocketServer(null, System.currentTimeMillis()));
     }
 
     @PreDestroy
     public void close() {
         try {
+            if (null != scheduledFuture && !scheduledFuture.isDone()) {
+                scheduledFuture.cancel(true);
+            }
+
             if (null != session) {
                 session.close(UNDEPLOYMENT);
             }
         } catch (Throwable t) {
             log.undeployingCloseFailed(t);
         }
+    }
+
+    @Asynchronous
+    public void reconnect(@Observes ConnectToSocketServer connectToSocketServer) {
+        // there's a chance that we might receive two such events but store only one in our instance
+        // too bad... the solution would be to have a local cache of all the futures we called and clean them
+        // up from time to time... which sounds overkill for this edge case
+        scheduledFuture = executor.schedule(() -> {
+            try {
+                log.reconnectingWebSocket();
+                WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+                session = container.connectToServer(socketClient, uri);
+            } catch (DeploymentException | IOException e) {
+                log.cannotOpenSocketToServer(e);
+
+                long nextAttemptIn = Math.min(MAX_WAIT, connectToSocketServer.getAttempt() * 1000);
+                long nextAttemptAt = System.currentTimeMillis() + nextAttemptIn;
+                connectToSocketServer.setNextAttempt(nextAttemptAt);
+                connectToSocketServer.increaseAttempt();
+                log.failedToReconnect(Instant.ofEpochMilli(nextAttemptAt).toString());
+
+                connectToSocketServerEvent.fire(connectToSocketServer);
+            }
+        }, Math.min(MAX_WAIT, connectToSocketServer.getAttempt() * 1000), TimeUnit.MILLISECONDS);
     }
 }
