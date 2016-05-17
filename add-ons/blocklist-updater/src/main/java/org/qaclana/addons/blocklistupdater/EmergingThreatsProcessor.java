@@ -22,6 +22,8 @@ import javax.batch.api.chunk.ItemProcessor;
 import javax.inject.Named;
 
 /**
+ * Batch processor for Emerging Threats blocklist.
+ *
  * @author Juraci Paixão Kröhling
  */
 @Named

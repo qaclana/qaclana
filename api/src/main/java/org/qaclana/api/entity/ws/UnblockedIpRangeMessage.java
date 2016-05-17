@@ -19,6 +19,8 @@ package org.qaclana.api.entity.ws;
 import org.qaclana.api.entity.IpRange;
 
 /**
+ * Web socket message broadcasting that a IP Range has been removed from the blacklist
+ *
  * @author Juraci Paixão Kröhling
  */
 public class UnblockedIpRangeMessage extends BasicMessage {

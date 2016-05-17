@@ -19,7 +19,9 @@ package org.qaclana.api;
 import javax.ejb.Singleton;
 
 /**
- * Stores the current system state.
+ * Stores the current system state. Consumers can rest assured that the system state on this container will always
+ * represent the correct system state, so, stateless or singleton EJBs can, for instance, just inject this container
+ * and consume the system state by calling the getter.
  *
  * @author Juraci Paixão Kröhling
  */

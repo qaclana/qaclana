@@ -21,6 +21,9 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
 /**
+ * EJB interceptor that wraps target calls and measures the time it took to run, reporting this data to a
+ * {@link OverheadMeasureReporter}
+ *
  * @author Juraci Paixão Kröhling
  */
 public class FilterOverheadMeasurer {

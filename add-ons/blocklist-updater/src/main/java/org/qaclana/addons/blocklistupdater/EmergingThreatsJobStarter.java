@@ -24,6 +24,8 @@ import javax.ejb.Singleton;
 import java.util.Properties;
 
 /**
+ * Provides a way to start the batch job for Emerging Threats blocklist.
+ *
  * @author Juraci Paixão Kröhling
  */
 @Singleton

@@ -19,6 +19,8 @@ package org.qaclana.api.entity.event;
 import org.qaclana.api.entity.IpRange;
 
 /**
+ * CDI event emitted when a new IP Range is removed from the blacklist
+ *
  * @author Juraci Paixão Kröhling
  */
 public class RemovedBlockedIpRange {

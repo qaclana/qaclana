@@ -17,6 +17,8 @@
 package org.qaclana.api;
 
 /**
+ * Represents the main outcome for the firewall. The final decision always comes down to "accept" or "reject".
+ *
  * @author Juraci Paixão Kröhling
  */
 public enum FirewallOutcome {

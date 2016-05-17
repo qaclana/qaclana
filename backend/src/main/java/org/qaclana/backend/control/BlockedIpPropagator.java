@@ -16,6 +16,7 @@
  */
 package org.qaclana.backend.control;
 
+import org.qaclana.api.entity.IpRange;
 import org.qaclana.api.entity.event.NewBlockedIpRange;
 import org.qaclana.api.entity.event.RemovedBlockedIpRange;
 import org.qaclana.api.entity.ws.BasicMessage;
@@ -35,6 +36,8 @@ import javax.websocket.Session;
 import java.util.Map;
 
 /**
+ * Propagates the information about the blacklisting of a specific {@link IpRange}.
+ *
  * @author Juraci Paixão Kröhling
  */
 @Stateless
@@ -49,6 +52,12 @@ public class BlockedIpPropagator {
     @Resource
     private ManagedExecutorService executor;
 
+    /**
+     * Builds a new Web Socket message and sends to all firewall instances with open sockets with us. Uses a
+     * {@link ManagedExecutorService} to execute the submissions.
+     *
+     * @param newBlockedIpRange    the new blacklisted {@link IpRange}
+     */
     @Asynchronous
     public void propagate(@Observes NewBlockedIpRange newBlockedIpRange) {
         BasicMessage message = new BlockedIpRangeMessage(newBlockedIpRange.getIpRange());
@@ -59,6 +68,12 @@ public class BlockedIpPropagator {
         );
     }
 
+    /**
+     * Builds a new Web Socket message and sends to all firewall instances with open sockets with us. Uses a
+     * {@link ManagedExecutorService} to execute the submissions.
+     *
+     * @param removedBlockedIpRange    the {@link IpRange} that has been removed from the blacklist
+     */
     @Asynchronous
     public void propagate(@Observes RemovedBlockedIpRange removedBlockedIpRange) {
         BasicMessage message = new UnblockedIpRangeMessage(removedBlockedIpRange.getIpRange());

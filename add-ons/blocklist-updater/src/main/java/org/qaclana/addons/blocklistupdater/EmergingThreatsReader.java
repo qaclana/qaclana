@@ -27,6 +27,8 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 
 /**
+ * Batch reader for Emerging Threats blocklist.
+ *
  * @author Juraci Paixão Kröhling
  */
 @Named

@@ -17,15 +17,43 @@
 package org.qaclana.api.control;
 
 import org.qaclana.api.entity.IpRange;
+import org.qaclana.api.entity.event.NewWhitelistedIpRange;
+import org.qaclana.api.entity.event.RemovedWhitelistedIpRange;
 
 import java.util.List;
 
 /**
+ * A service that provides access to IP Ranges which are part of a whitelist. Implementations should take care to emit
+ * the appropriate CDI events when operations are successful.
+ *
  * @author Juraci Paixão Kröhling
  */
 public interface WhitelistService {
+
+    /**
+     * Lists all known IP Ranges in the whitelist.
+     * @return a list of {@link IpRange} on the whitelist
+     */
     List<IpRange> list();
-    void add(IpRange ipRange);
-    void remove(IpRange ipRange);
+
+    /**
+     * Checks whether a given {@link IpRange} is in the whitelist
+     * @param ipRange    the {@link IpRange} to be checked
+     * @return true if the range is in the whitelist
+     */
     boolean isInWhitelist(IpRange ipRange);
+
+    /**
+     * Adds the IP Range to the storage. If the operation is successful, the CDI event {@link NewWhitelistedIpRange}
+     * is emitted.
+     * @param ipRange    the {@link IpRange} to add to the whitelist
+     */
+    void add(IpRange ipRange);
+
+    /**
+     * Removes the IP Range from the storage. If the operation is successful, the CDI event
+     * {@link RemovedWhitelistedIpRange} is emitted.
+     * @param ipRange    the {@link IpRange} to remove from the whitelist
+     */
+    void remove(IpRange ipRange);
 }

@@ -29,7 +29,8 @@ import java.net.UnknownHostException;
 public class IpRange {
 
     /**
-     * Stores the first IP of this range, inclusive.
+     * Stores the first IP of this range, inclusive. Note that we don't use {@link InetAddress} to store it because
+     * of overflows on IPv6 addresses.
      */
     private BigInteger start;
 

@@ -20,6 +20,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
+ * Basic contract for request/response processors. The firewall will run each processor twice, one once the request
+ * first comes in, and again when the response is ready to be sent to the client.
+ *
+ * Implementations should self instantiate and register themselves with the {@link ProcessorRegistry}
+ *
+ * @see ProcessorRegistry
  * @author Juraci Paixão Kröhling
  */
 public interface Processor {

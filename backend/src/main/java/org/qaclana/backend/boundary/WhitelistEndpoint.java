@@ -18,7 +18,7 @@ package org.qaclana.backend.boundary;
 
 import org.qaclana.api.control.WhitelistService;
 import org.qaclana.api.entity.IpRange;
-import org.qaclana.backend.entity.rest.AddRangeIp;
+import org.qaclana.backend.entity.rest.IpRangeRequest;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -29,6 +29,10 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
+ * JAX-RS endpoint exposing management operations for the {@link IpRange} whitelist.
+ * The methods just perform some data validation, delegate the operation to the {@link WhitelistService} and wrap
+ * the response into a {@link Response}.
+ *
  * @author Juraci Paixão Kröhling
  */
 @Path("/whitelist")
@@ -54,8 +58,8 @@ public class WhitelistEndpoint {
     }
 
     @POST
-    public Response addRange(AddRangeIp addRangeIp) {
-        IpRange range = IpRange.fromString(addRangeIp.getIpRange());
+    public Response addRange(IpRangeRequest ipRangeRequest) {
+        IpRange range = IpRange.fromString(ipRangeRequest.getIpRange());
         whitelistService.add(range);
         return Response.ok(range).build();
     }

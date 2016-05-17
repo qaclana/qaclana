@@ -17,6 +17,8 @@
 package org.qaclana.addons.blocklistupdater.entity;
 
 /**
+ * Empty bean, used in CDI events to signal when a batch job has finished.
+ *
  * @author Juraci Paixão Kröhling
  */
 public class JobFinished {

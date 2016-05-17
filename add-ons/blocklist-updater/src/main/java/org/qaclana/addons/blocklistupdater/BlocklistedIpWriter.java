@@ -26,6 +26,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * Generic IP Range writer. This implementation uses the {@link BlocklistService} that CDI delivers.
+ *
  * @author Juraci Paixão Kröhling
  */
 @Named

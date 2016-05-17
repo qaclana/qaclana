@@ -25,6 +25,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /**
+ * This is a Batch Listener that converts events into CDI events, which can be caught by non-batch elements.
+ *
  * @author Juraci Paixão Kröhling
  */
 @Named

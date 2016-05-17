@@ -16,33 +16,28 @@
  */
 package org.qaclana.api.entity.event;
 
+import org.qaclana.api.entity.IpRange;
+
 /**
- * CDI event emitted when a new message is to be sent to a client socket, such as firewall instances.
+ * CDI event emitted when a new IP Range is removed from the whitelist
  *
  * @author Juraci Paixão Kröhling
  */
-public class NewClientSocketMessage {
-    private String type;
-    private String message;
+public class RemovedWhitelistedIpRange {
+    private IpRange ipRange;
 
-    public NewClientSocketMessage(String type, String message) {
-        this.type = type;
-        this.message = message;
+    public RemovedWhitelistedIpRange(IpRange ipRange) {
+        this.ipRange = ipRange;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public String getMessage() {
-        return message;
+    public IpRange getIpRange() {
+        return ipRange;
     }
 
     @Override
     public String toString() {
-        return "NewClientSocketMessage{" +
-                "type='" + type + '\'' +
-                ", message='" + message + '\'' +
+        return "RemovedWhitelistedIpRange{" +
+                "ipRange=" + ipRange +
                 '}';
     }
 }

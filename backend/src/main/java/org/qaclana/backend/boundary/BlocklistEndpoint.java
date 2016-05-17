@@ -19,7 +19,7 @@ package org.qaclana.backend.boundary;
 import org.qaclana.addons.blocklistupdater.MsgLogger;
 import org.qaclana.api.control.BlocklistService;
 import org.qaclana.api.entity.IpRange;
-import org.qaclana.backend.entity.rest.AddRangeIp;
+import org.qaclana.backend.entity.rest.IpRangeRequest;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -30,6 +30,10 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
+ * JAX-RS endpoint exposing management operations for the {@link IpRange} blacklist.
+ * The methods just perform some data validation, delegate the operation to the {@link BlocklistService} and wrap
+ * the response into a {@link Response}.
+ *
  * @author Juraci Paixão Kröhling
  */
 @Path("/blocklist")
@@ -58,9 +62,9 @@ public class BlocklistEndpoint {
     }
 
     @POST
-    public Response addRange(AddRangeIp addRangeIp) {
-        logger.addIpRangeToBlocklist(addRangeIp.getIpRange());
-        IpRange range = IpRange.fromString(addRangeIp.getIpRange());
+    public Response addRange(IpRangeRequest ipRangeRequest) {
+        logger.addIpRangeToBlocklist(ipRangeRequest.getIpRange());
+        IpRange range = IpRange.fromString(ipRangeRequest.getIpRange());
         blocklistService.add(range);
         return Response.ok(range).build();
     }

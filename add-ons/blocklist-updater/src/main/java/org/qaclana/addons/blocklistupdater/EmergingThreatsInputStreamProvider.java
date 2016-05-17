@@ -25,6 +25,9 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
+ * Produces an {@link InputStream} with the contents of the blocklist. This allows for tests to use alternative
+ * implementations.
+ *
  * @author Juraci Paixão Kröhling
  */
 @Stateless

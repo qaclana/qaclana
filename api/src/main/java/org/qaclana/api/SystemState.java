@@ -17,6 +17,9 @@
 package org.qaclana.api;
 
 /**
+ * Used to mark the current state of the firewall as a whole. The server should propagate any changes to interested
+ * parties.
+ *
  * @author Juraci Paixão Kröhling
  */
 public enum SystemState {

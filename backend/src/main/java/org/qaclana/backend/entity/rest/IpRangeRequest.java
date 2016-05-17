@@ -16,17 +16,21 @@
  */
 package org.qaclana.backend.entity.rest;
 
+import org.qaclana.api.entity.IpRange;
+
 /**
+ * JAX-RS bean parameter for requests that include only an {@link IpRange} in text format.
+ *
  * @author Juraci Paixão Kröhling
  */
-public class AddRangeIp {
+public class IpRangeRequest {
     private String ipRange;
 
-    public AddRangeIp(String ipRange) {
+    public IpRangeRequest(String ipRange) {
         this.ipRange = ipRange;
     }
 
-    public AddRangeIp() {
+    public IpRangeRequest() {
     }
 
     public String getIpRange() {
@@ -39,7 +43,7 @@ public class AddRangeIp {
 
     @Override
     public String toString() {
-        return "AddRangeIp{" +
+        return "IpRangeRequest{" +
                 "ipRange='" + ipRange + '\'' +
                 '}';
     }

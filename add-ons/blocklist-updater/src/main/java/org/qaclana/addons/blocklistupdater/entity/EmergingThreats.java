@@ -24,6 +24,8 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
+ * CDI qualifier for classes that might be ambiguous.
+ *
  * @author Juraci Paixão Kröhling
  */
 @Qualifier

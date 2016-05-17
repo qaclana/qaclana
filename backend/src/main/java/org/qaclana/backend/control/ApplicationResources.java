@@ -33,8 +33,6 @@ import java.util.Map;
  */
 @ApplicationScoped
 public class ApplicationResources {
-    private static final MsgLogger log = MsgLogger.LOGGER;
-
     private Map<String, Session> frontendSessions = new HashMap<>();
     private Map<String, Session> firewallSessions = new HashMap<>();
 

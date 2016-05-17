@@ -17,25 +17,42 @@
 package org.qaclana.api.control;
 
 import org.qaclana.api.entity.IpRange;
+import org.qaclana.api.entity.event.NewBlockedIpRange;
+import org.qaclana.api.entity.event.RemovedBlockedIpRange;
 
 import java.util.List;
 
 /**
+ * A service that provides access to IP Ranges which are part of a blacklist. Implementations should take care to emit
+ * the appropriate CDI events when operations are successful.
+ *
  * @author Juraci Paixão Kröhling
  */
 public interface BlocklistService {
+    /**
+     * Lists all known IP Ranges in the blacklist.
+     * @return a list of {@link IpRange} on the blacklist
+     */
     List<IpRange> list();
 
     /**
-     * Should emit the event NewBlockedIpRange
-     * @param ipRange
+     * Checks whether a given {@link IpRange} is in the blacklist
+     * @param ipRange    the {@link IpRange} to be checked
+     * @return true if the range is in the blacklist
+     */
+    boolean isInBlocklist(IpRange ipRange);
+
+    /**
+     * Adds the IP Range to the storage. If the operation is successful, the CDI event {@link NewBlockedIpRange}
+     * is emitted.
+     * @param ipRange    the {@link IpRange} to add to the blacklist
      */
     void add(IpRange ipRange);
 
     /**
-     * Should emit the event RemovedBlockedIpRange
-     * @param ipRange
+     * Removes the IP Range from the storage. If the operation is successful, the CDI event
+     * {@link RemovedBlockedIpRange} is emitted.
+     * @param ipRange    the {@link IpRange} to remove from the blacklist
      */
     void remove(IpRange ipRange);
-    boolean isInBlocklist(IpRange ipRange);
 }
