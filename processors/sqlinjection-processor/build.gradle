@@ -1,0 +1,11 @@
+apply plugin: 'java'
+
+description = 'Detects SQL Injection attacks'
+
+dependencies {
+    compile project(':api')
+
+    compile libraries['javaee']
+    compile libraries['jbossLogging']
+}
+

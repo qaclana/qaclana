@@ -39,7 +39,7 @@ import java.io.StringReader;
 @Stateless
 @Asynchronous
 public class SystemStateUpdater {
-    MsgLogger logger = MsgLogger.LOGGER;
+    private static final MsgLogger logger = MsgLogger.LOGGER;
 
     @Inject
     SystemStateContainer systemStateInstance;

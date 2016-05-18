@@ -22,17 +22,18 @@ ext {
         }
     }
 }
-
 def jarProjects = [
         'api',
         'services/jpa',
         'services/settings',
         'services/system-state-propagator',
         'processors/blacklist-processor',
+        'processors/sqlinjection-processor',
         'processors/whitelist-processor',
         'add-ons/blacklist-updater',
         'filter',
 ]
+
 def warProjects = ['backend', 'example-filter']
 
 def publishedProjects = []

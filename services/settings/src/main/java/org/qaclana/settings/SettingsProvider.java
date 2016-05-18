@@ -41,7 +41,7 @@ import java.util.Properties;
 public class SettingsProvider {
     private static final String JNDI_BASE = "java:global/qaclana";
     private static final String CONFIG_FILE_PATH = "/etc/qaclana.conf";
-    MsgLogger logger = MsgLogger.LOGGER;
+    private static final MsgLogger logger = MsgLogger.LOGGER;
 
     private Map<String, String> properties = new HashMap<>();
     private Map<String, String> fromJNDI = new HashMap<>();

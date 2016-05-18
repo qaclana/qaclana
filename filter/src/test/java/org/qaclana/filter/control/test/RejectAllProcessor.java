@@ -24,8 +24,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Juraci Paixão Kröhling
@@ -42,12 +42,12 @@ public class RejectAllProcessor implements Processor {
     }
 
     @Override
-    public FirewallOutcome process(ServletRequest request) {
+    public FirewallOutcome process(HttpServletRequest request) {
         return FirewallOutcome.REJECT;
     }
 
     @Override
-    public FirewallOutcome process(ServletResponse response) {
+    public FirewallOutcome process(HttpServletResponse response) {
         return FirewallOutcome.REJECT;
     }
 }

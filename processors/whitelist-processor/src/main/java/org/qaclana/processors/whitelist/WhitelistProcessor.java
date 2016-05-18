@@ -25,8 +25,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +36,7 @@ import java.util.Optional;
 @Singleton
 @Startup
 public class WhitelistProcessor implements Processor {
-    MsgLogger logger = MsgLogger.LOGGER;
+    private static final MsgLogger logger = MsgLogger.LOGGER;
 
     @Inject
     ProcessorRegistry registration;
@@ -50,7 +50,7 @@ public class WhitelistProcessor implements Processor {
     }
 
     @Override
-    public FirewallOutcome process(ServletRequest request) {
+    public FirewallOutcome process(HttpServletRequest request) {
         IpRange ipFromRequest = IpRange.fromString(request.getRemoteAddr());
         List<IpRange> ipRangesOnWhitelist = whitelistContainer.getIpRangesOnWhitelist();
         Optional<IpRange> possibleIpRange = ipRangesOnWhitelist
@@ -71,7 +71,7 @@ public class WhitelistProcessor implements Processor {
     }
 
     @Override
-    public FirewallOutcome process(ServletResponse response) {
+    public FirewallOutcome process(HttpServletResponse response) {
         return FirewallOutcome.NEUTRAL;
     }
 }

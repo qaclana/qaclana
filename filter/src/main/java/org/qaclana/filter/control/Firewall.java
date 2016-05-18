@@ -24,8 +24,9 @@ import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.inject.Inject;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -61,15 +62,15 @@ public class Firewall {
     private ManagedExecutorService executor;
 
     /**
-     * Sends the {@link ServletRequest} for asynchronous processing.
+     * Sends the {@link HttpServletRequest} for asynchronous processing.
      *
      * @param request    the request to be processed by all {@link Processor}
      * @return a {@link Future} that provides the {@link FirewallOutcome} once the processing is done.
-     * @see #process(ServletRequest)
-     * @see #doProcess(ServletRequest, ServletResponse)
+     * @see #process(HttpServletRequest)
+     * @see #doProcess(HttpServletRequest, HttpServletResponse)
      */
     @Asynchronous
-    public void processAsync(ServletRequest request) {
+    public void processAsync(HttpServletRequest request) {
         doProcess(request, null);
     }
 
@@ -79,11 +80,11 @@ public class Firewall {
      * @param request     the request, for reference should the processor need it. Should not be changed.
      * @param response    the response, for analysis. Can be changed/rewritten by processors.
      * @return a {@link Future} that provides the {@link FirewallOutcome} once the processing is done.
-     * @see #process(ServletRequest, ServletResponse)
-     * @see #doProcess(ServletRequest, ServletResponse)
+     * @see #process(HttpServletRequest, HttpServletResponse)
+     * @see #doProcess(HttpServletRequest, HttpServletResponse)
      */
     @Asynchronous
-    public void processAsync(ServletRequest request, ServletResponse response) {
+    public void processAsync(HttpServletRequest request, HttpServletResponse response) {
         doProcess(request, response);
     }
 
@@ -92,9 +93,9 @@ public class Firewall {
      *
      * @param request    the request to be processed by all {@link Processor}
      * @return the {@link FirewallOutcome} for this request
-     * @see #doProcess(ServletRequest, ServletResponse)
+     * @see #doProcess(HttpServletRequest, HttpServletResponse)
      */
-    public FirewallOutcome process(ServletRequest request) {
+    public FirewallOutcome process(HttpServletRequest request) {
         return doProcess(request, null);
     }
 
@@ -104,9 +105,9 @@ public class Firewall {
      * @param request     the request, for reference should the processor need it. Should not be changed.
      * @param response    the response, for analysis. Can be changed/rewritten by processors.
      * @return the {@link FirewallOutcome} for this request
-     * @see #doProcess(ServletRequest, ServletResponse)
+     * @see #doProcess(HttpServletRequest, HttpServletResponse)
      */
-    public FirewallOutcome process(ServletRequest request, ServletResponse response) {
+    public FirewallOutcome process(HttpServletRequest request, HttpServletResponse response) {
         return doProcess(request, response);
     }
 
@@ -132,7 +133,7 @@ public class Firewall {
      * @param response    the response, can be null if the request has not been fully dispatched yet
      * @return  the outcome for the firewall processing
      */
-    private FirewallOutcome doProcess(ServletRequest request, ServletResponse response) {
+    private FirewallOutcome doProcess(HttpServletRequest request, HttpServletResponse response) {
         if (null == request) {
             log.cannotAcceptProcessingWithoutRequest();
             return null;

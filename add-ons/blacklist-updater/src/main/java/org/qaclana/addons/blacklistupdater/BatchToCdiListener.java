@@ -31,7 +31,7 @@ import javax.inject.Named;
  */
 @Named
 public class BatchToCdiListener implements JobListener {
-    MsgLogger logger = MsgLogger.LOGGER;
+    private static final MsgLogger logger = MsgLogger.LOGGER;
 
     @Inject
     Event<JobStarted> jobStartedEvent;

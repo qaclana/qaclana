@@ -32,7 +32,7 @@ import javax.inject.Inject;
 @Stateless
 @Asynchronous
 public class BlacklistUpdateListener {
-    MsgLogger logger = MsgLogger.LOGGER;
+    private static final MsgLogger logger = MsgLogger.LOGGER;
 
     @Inject
     BlacklistContainer blacklistContainer;

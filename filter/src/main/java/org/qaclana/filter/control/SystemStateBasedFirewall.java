@@ -25,6 +25,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -39,7 +40,15 @@ public class SystemStateBasedFirewall {
     @Inject
     Firewall firewall;
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
+        if (!(servletRequest instanceof HttpServletRequest && servletResponse instanceof HttpServletResponse)) {
+            // should never happen... but if it does, we are not interested on them anyway
+            return;
+        }
+
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+
         switch (systemStateContainer.getState()) {
             case DISABLED:
                 chain.doFilter(request, response);

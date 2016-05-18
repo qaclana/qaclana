@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 @Stateless
 @Asynchronous
 public class OverheadMeasureReporter {
-    MsgLogger logger = MsgLogger.LOGGER;
+    private static final MsgLogger logger = MsgLogger.LOGGER;
 
     public void report(Class<?> clazz, Method method, long start, long end) {
         logger.overheadReporter(clazz.getName(), method.getName(), end-start);

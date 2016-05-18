@@ -32,6 +32,7 @@ import org.qaclana.api.entity.IpRange;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
@@ -77,7 +78,7 @@ public class WhitelistProcessorTest {
     }
 
     private void assertOutcome(String ip, FirewallOutcome expectedOutcome) {
-        ServletRequest request = mock(ServletRequest.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getRemoteAddr()).thenReturn(ip);
 
         assertEquals(0, whitelistContainer.getIpRangesOnWhitelist().size());

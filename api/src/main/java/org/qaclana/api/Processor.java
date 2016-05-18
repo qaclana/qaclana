@@ -16,8 +16,8 @@
  */
 package org.qaclana.api;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Basic contract for request/response processors. The firewall will run each processor twice, one once the request
@@ -31,6 +31,6 @@ import javax.servlet.ServletResponse;
 public interface Processor {
     // TODO: we will need different types of processors, such as score-based processor, accept/reject processor
 
-    FirewallOutcome process(ServletRequest request);
-    FirewallOutcome process(ServletResponse response);
+    FirewallOutcome process(HttpServletRequest request);
+    FirewallOutcome process(HttpServletResponse response);
 }

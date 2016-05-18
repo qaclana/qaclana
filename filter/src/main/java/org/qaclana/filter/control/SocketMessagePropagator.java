@@ -33,7 +33,7 @@ import java.io.StringReader;
 @Stateless
 @Asynchronous
 public class SocketMessagePropagator {
-    MsgLogger logger = MsgLogger.LOGGER;
+    private static final MsgLogger logger = MsgLogger.LOGGER;
 
     @Inject
     Event<NewClientSocketMessage> newClientSocketMessageEvent;

@@ -25,8 +25,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +36,7 @@ import java.util.Optional;
 @Singleton
 @Startup
 public class BlacklistProcessor implements Processor {
-    MsgLogger logger = MsgLogger.LOGGER;
+    private static final MsgLogger logger = MsgLogger.LOGGER;
 
     @Inject
     ProcessorRegistry registration;
@@ -50,7 +50,7 @@ public class BlacklistProcessor implements Processor {
     }
 
     @Override
-    public FirewallOutcome process(ServletRequest request) {
+    public FirewallOutcome process(HttpServletRequest request) {
         // it's safe to assume that the IP from the request isn't a range, but we need to convert it into
         // a BigInteger, as it can be either IPv6 or IPv4. So, we just get a new IP Range, as it takes care
         // of all this calculation for us
@@ -74,7 +74,7 @@ public class BlacklistProcessor implements Processor {
     }
 
     @Override
-    public FirewallOutcome process(ServletResponse response) {
+    public FirewallOutcome process(HttpServletResponse response) {
         return FirewallOutcome.NEUTRAL;
     }
 }

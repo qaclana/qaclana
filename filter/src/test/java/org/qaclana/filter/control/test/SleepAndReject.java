@@ -24,8 +24,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Juraci Paixão Kröhling
@@ -42,7 +42,7 @@ public class SleepAndReject implements Processor {
     }
 
     @Override
-    public FirewallOutcome process(ServletRequest request) {
+    public FirewallOutcome process(HttpServletRequest request) {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -52,7 +52,7 @@ public class SleepAndReject implements Processor {
     }
 
     @Override
-    public FirewallOutcome process(ServletResponse response) {
+    public FirewallOutcome process(HttpServletResponse response) {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
