@@ -18,6 +18,7 @@ package org.qaclana.backend.boundary;
 
 import org.qaclana.api.control.WhitelistService;
 import org.qaclana.api.entity.IpRange;
+import org.qaclana.backend.control.MsgLogger;
 import org.qaclana.backend.entity.rest.IpRangeRequest;
 
 import javax.annotation.security.RolesAllowed;
@@ -41,11 +42,13 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class WhitelistEndpoint {
+    private static final MsgLogger logger = MsgLogger.LOGGER;
+
     @Inject
     WhitelistService whitelistService;
 
     @GET
-    public Response getAllBlockedIpRanges() {
+    public Response getAllIpRangesInWhitelist() {
         List<IpRange> allIpRanges = whitelistService.list();
         return Response.ok(allIpRanges).build();
     }
@@ -53,12 +56,14 @@ public class WhitelistEndpoint {
     @DELETE
     @Path("{ipRange}")
     public Response deleteRange(@PathParam("ipRange") String ipRange) {
+        logger.removeIpRangeFromWhitelist(ipRange);
         whitelistService.remove(IpRange.fromString(ipRange));
         return Response.noContent().build();
     }
 
     @POST
     public Response addRange(IpRangeRequest ipRangeRequest) {
+        logger.addIpRangeToWhitelist(ipRangeRequest.getIpRange());
         IpRange range = IpRange.fromString(ipRangeRequest.getIpRange());
         whitelistService.add(range);
         return Response.ok(range).build();

@@ -27,8 +27,10 @@ def jarProjects = [
         'api',
         'services/jpa',
         'services/settings',
-        'processors/blocklist-processor',
-        'add-ons/blocklist-updater',
+        'services/system-state-propagator',
+        'processors/blacklist-processor',
+        'processors/whitelist-processor',
+        'add-ons/blacklist-updater',
         'filter',
 ]
 def warProjects = ['backend', 'example-filter']

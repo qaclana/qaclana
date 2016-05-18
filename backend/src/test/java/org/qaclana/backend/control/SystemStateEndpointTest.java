@@ -25,16 +25,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qaclana.api.SystemState;
 import org.qaclana.api.SystemStateContainer;
+import org.qaclana.api.entity.event.BasicEvent;
+import org.qaclana.api.entity.event.NewClientSocketMessage;
+import org.qaclana.api.entity.event.SystemStateChange;
+import org.qaclana.api.entity.event.SystemStateChangeApplied;
 import org.qaclana.api.entity.ws.BasicMessage;
 import org.qaclana.api.entity.ws.SystemStateChangeMessage;
 import org.qaclana.backend.boundary.FirewallSocket;
 import org.qaclana.backend.boundary.SystemStateEndpoint;
-import org.qaclana.backend.entity.event.BasicEvent;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
 import org.qaclana.backend.entity.event.SendMessage;
-import org.qaclana.backend.entity.event.SystemStateChange;
 import org.qaclana.backend.entity.rest.ErrorResponse;
 import org.qaclana.backend.entity.rest.SystemStateRequest;
+import org.qaclana.services.systemstatepropagator.SystemStateUpdater;
 
 import javax.ejb.Singleton;
 import javax.enterprise.event.Observes;
@@ -53,7 +56,7 @@ import static org.junit.Assert.*;
 public class SystemStateEndpointTest {
     // static because the instance of our test is not the same as the singleton EJB
     private static CountDownLatch latch; // we expect one message to arrive
-    private static SystemStateChange changeEvent;
+    private static SystemStateChangeApplied changeEvent;
 
     @Inject
     SystemStateEndpoint endpoint;
@@ -79,11 +82,16 @@ public class SystemStateEndpointTest {
                 .addClass(SendMessage.class)
                 .addClass(SystemState.class)
                 .addClass(SystemStateChange.class)
+                .addClass(SystemStateChangeApplied.class)
                 .addClass(SystemStateChangePropagator.class)
                 .addClass(SystemStateChangeMessage.class)
                 .addClass(SystemStateContainer.class)
                 .addClass(SystemStateEndpoint.class)
                 .addClass(SystemStateRequest.class)
+                .addClass(NewClientSocketMessage.class)
+                .addClass(SystemStateUpdater.class)
+                .addClass(org.qaclana.services.systemstatepropagator.MsgLogger.class)
+                .addClass(org.qaclana.services.systemstatepropagator.MsgLogger_$logger.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
@@ -141,7 +149,7 @@ public class SystemStateEndpointTest {
         });
     }
 
-    public void getMessage(@Observes SystemStateChange event) {
+    public void getMessage(@Observes SystemStateChangeApplied event) {
         changeEvent = event;
         latch.countDown();
     }

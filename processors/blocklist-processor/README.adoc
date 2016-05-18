@@ -1,5 +1,0 @@
-= Qaclana Processors - Blocklist processor
-
-This is a definitive negative processor: it matches the IP of the incoming request with the blocked IP ranges. If the IP
-is in the range, a `REJECT` outcome is issued and the request should be blocked. As such, the response phase should
-never be reached for this processor.

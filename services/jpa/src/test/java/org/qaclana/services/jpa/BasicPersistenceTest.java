@@ -24,14 +24,11 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.qaclana.api.control.BlocklistService;
+import org.qaclana.api.control.BlacklistService;
 import org.qaclana.api.control.WhitelistService;
 import org.qaclana.api.entity.IpRange;
-import org.qaclana.api.entity.event.NewBlockedIpRange;
-import org.qaclana.api.entity.event.RemovedBlockedIpRange;
-import org.qaclana.services.jpa.control.BlocklistServiceJPA;
-import org.qaclana.services.jpa.control.JpaServiceResources;
-import org.qaclana.services.jpa.control.WhitelistServiceJPA;
+import org.qaclana.api.entity.event.*;
+import org.qaclana.services.jpa.control.*;
 import org.qaclana.services.jpa.entity.*;
 
 import javax.inject.Inject;
@@ -46,7 +43,7 @@ import static org.junit.Assert.assertTrue;
 public class BasicPersistenceTest {
 
     @Inject
-    BlocklistService blocklistService;
+    BlacklistService blacklistService;
 
     @Inject
     WhitelistService whitelistService;
@@ -54,17 +51,22 @@ public class BasicPersistenceTest {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
-                .addClass(BlocklistService.class)
-                .addClass(BlocklistServiceJPA.class)
+                .addClass(BlacklistService.class)
+                .addClass(MsgLogger.class)
+                .addClass(MsgLogger_$logger.class)
+                .addClass(BlacklistServiceJPA.class)
                 .addClass(IpRange.class)
                 .addClass(IpRangeEntity.class)
                 .addClass(IpRangeEntity_.class)
                 .addClass(IpRangeType.class)
                 .addClass(JpaServiceResources.class)
-                .addClass(NewBlockedIpRange.class)
+                .addClass(BasicEvent.class)
+                .addClass(IpRangeAddedToBlacklist.class)
+                .addClass(IpRangeAddedToWhitelist.class)
                 .addClass(QaclanaEntity.class)
                 .addClass(QaclanaEntity_.class)
-                .addClass(RemovedBlockedIpRange.class)
+                .addClass(IpRangeRemovedFromBlacklist.class)
+                .addClass(IpRangeRemovedFromWhitelist.class)
                 .addClass(WhitelistService.class)
                 .addClass(WhitelistServiceJPA.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
@@ -75,9 +77,9 @@ public class BasicPersistenceTest {
     @Test
     public void simplePersistenceTestForIpRange() throws Exception {
         whitelistService.add(IpRange.fromString("192.168.1.0/24"));
-        blocklistService.add(IpRange.fromString("192.168.1.0/24"));
+        blacklistService.add(IpRange.fromString("192.168.1.0/24"));
 
         assertTrue(whitelistService.isInWhitelist(IpRange.fromString("192.168.1.0/24")));
-        assertTrue(blocklistService.isInBlocklist(IpRange.fromString("192.168.1.0/24")));
+        assertTrue(blacklistService.isInBlacklist(IpRange.fromString("192.168.1.0/24")));
     }
 }

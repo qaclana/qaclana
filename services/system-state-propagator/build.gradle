@@ -1,0 +1,10 @@
+apply plugin: 'java'
+
+description = 'Accepts system state changes from web sockets and CDI events'
+
+dependencies {
+    compile project(':api')
+
+    compile libraries['javaee']
+    compile libraries['jbossLogging']
+}

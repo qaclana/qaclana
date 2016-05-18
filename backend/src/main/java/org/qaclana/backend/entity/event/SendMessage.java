@@ -16,6 +16,7 @@
  */
 package org.qaclana.backend.entity.event;
 
+import org.qaclana.api.entity.event.BasicEvent;
 import org.qaclana.api.entity.ws.BasicMessage;
 
 import javax.websocket.Session;

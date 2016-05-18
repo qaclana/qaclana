@@ -22,5 +22,18 @@ package org.qaclana.api;
  * @author Juraci Paixão Kröhling
  */
 public enum FirewallOutcome {
-    ACCEPT, REJECT
+    /**
+     * Determines that the request is approved and that processing should continue.
+     */
+    ACCEPT,
+
+    /**
+     * Determines that the request is rejected and that processing should halt.
+     */
+    REJECT,
+
+    /**
+     * Determines that the request has no qualities that could either render a ACCEPT or REJECT outcome.
+     */
+    NEUTRAL
 }

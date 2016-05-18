@@ -19,8 +19,8 @@ are defined in the API module and are subclasses of `BasicMessage`.
 
 Example of the flow for a new blocked IP range:
 
-- The JAX-RS `BlocklistEndpoint` receives the a POST request with the IP Range to be blocked
-- A `BlocklistService` stores the new IP Range into a permanent storage and fires a `NewBlockedIpRange`
+- The JAX-RS `BlacklistEndpoint` receives the a POST request with the IP Range to be blocked
+- A `BlacklistService` stores the new IP Range into a permanent storage and fires a `NewBlockedIpRange`
 - `BlockedIpPropagator` observes the event and builds a `BlockedIpRangeMessage`. Using the Java EE managed executor, it
 schedules the submission of this message to all firewall socket instances, by firing one `SendMessage` event for each
 socket instance.

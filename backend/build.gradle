@@ -4,9 +4,9 @@ description = 'Backend components for Qaclana'
 
 dependencies {
     compile project(':api')
-    compile project(':add-ons/blocklist-updater')
-    compile project(':processors/blocklist-processor')
+    compile project(':add-ons/blacklist-updater')
     compile project(':services/jpa')
+    compile project(':services/system-state-propagator')
 
     providedCompile libraries['javaee']
     providedCompile libraries['jbossLogging']

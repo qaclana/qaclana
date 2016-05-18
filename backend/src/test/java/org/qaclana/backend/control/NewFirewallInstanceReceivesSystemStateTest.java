@@ -26,15 +26,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qaclana.api.SystemState;
 import org.qaclana.api.SystemStateContainer;
-import org.qaclana.api.entity.event.RemovedBlockedIpRange;
+import org.qaclana.api.entity.event.IpRangeRemovedFromBlacklist;
 import org.qaclana.api.entity.ws.BasicMessage;
 import org.qaclana.api.entity.ws.SystemStateChangeMessage;
 import org.qaclana.backend.boundary.FirewallSocket;
 import org.qaclana.backend.boundary.SystemStateEndpoint;
-import org.qaclana.backend.entity.event.BasicEvent;
+import org.qaclana.api.entity.event.BasicEvent;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
 import org.qaclana.backend.entity.event.SendMessage;
-import org.qaclana.backend.entity.event.SystemStateChange;
+import org.qaclana.api.entity.event.SystemStateChange;
 import org.qaclana.backend.entity.rest.SystemStateRequest;
 
 import javax.ejb.Singleton;
@@ -82,7 +82,7 @@ public class NewFirewallInstanceReceivesSystemStateTest {
                 .addClass(MsgLogger.class)
                 .addClass(MsgLogger_$logger.class)
                 .addClass(NewFirewallInstanceRegistered.class)
-                .addClass(RemovedBlockedIpRange.class)
+                .addClass(IpRangeRemovedFromBlacklist.class)
                 .addClass(SendMessage.class)
                 .addClass(SystemState.class)
                 .addClass(SystemStateChangePropagator.class)

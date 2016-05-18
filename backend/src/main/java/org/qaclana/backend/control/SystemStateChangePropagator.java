@@ -21,7 +21,7 @@ import org.qaclana.api.entity.ws.BasicMessage;
 import org.qaclana.api.entity.ws.SystemStateChangeMessage;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
 import org.qaclana.backend.entity.event.SendMessage;
-import org.qaclana.backend.entity.event.SystemStateChange;
+import org.qaclana.api.entity.event.SystemStateChange;
 
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;

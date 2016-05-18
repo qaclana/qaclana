@@ -1,6 +1,0 @@
-= Qaclana Add-ons - Blocklist updater
-
-This add-on provides a batch job that updates the blocklist periodically. It's composed of a `@Singleton` EJB that
-contains a `@Schedule` configuration, so that it runs from time to time. This EJB then starts the batch job.
-Before the job starts and after it finishes, CDI events are fired, so that interested parties can react to it. As there
-are no consumers of these events except for the tests, these are not part of the main public API.

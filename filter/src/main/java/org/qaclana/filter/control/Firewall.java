@@ -20,6 +20,7 @@ import org.qaclana.api.FirewallOutcome;
 import org.qaclana.api.Processor;
 
 import javax.annotation.Resource;
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.inject.Inject;
@@ -67,8 +68,9 @@ public class Firewall {
      * @see #process(ServletRequest)
      * @see #doProcess(ServletRequest, ServletResponse)
      */
-    public Future<FirewallOutcome> processAsync(ServletRequest request) {
-        return executor.submit(() -> doProcess(request, null));
+    @Asynchronous
+    public void processAsync(ServletRequest request) {
+        doProcess(request, null);
     }
 
     /**
@@ -80,8 +82,9 @@ public class Firewall {
      * @see #process(ServletRequest, ServletResponse)
      * @see #doProcess(ServletRequest, ServletResponse)
      */
-    public Future<FirewallOutcome> processAsync(ServletRequest request, ServletResponse response) {
-        return executor.submit(() -> doProcess(request, response));
+    @Asynchronous
+    public void processAsync(ServletRequest request, ServletResponse response) {
+        doProcess(request, response);
     }
 
     /**
@@ -153,15 +156,15 @@ public class Firewall {
 
         CompletionService<FirewallOutcome> completionService = new ExecutorCompletionService<>(executor);
         List<Future<FirewallOutcome>> listOfFutureOutcomes = new ArrayList<>(processors.size());
-        FirewallOutcome outcome = FirewallOutcome.ACCEPT; // if no processors reject the request, we accept it
+        FirewallOutcome outcome = FirewallOutcome.NEUTRAL; // if no processors reject the request, we accept it
 
         try {
             processors
                     .stream()
                     .forEach(processor -> listOfFutureOutcomes
                             .add(completionService.submit(
-                                    () -> response == null ? processor.process(request) : processor.process(response))
-                            )
+                                    () -> response == null ? processor.process(request) : processor.process(response)
+                            ))
                     );
 
             for (int i = 0 ; i < processors.size() ; i++) {
@@ -170,13 +173,23 @@ public class Firewall {
                     if (FirewallOutcome.REJECT.equals(outcome)) {
                         break;
                     }
+
+                    if (FirewallOutcome.ACCEPT.equals(outcome)) {
+                        break;
+                    }
                 } catch (InterruptedException | ExecutionException ignored) {}
             }
         } finally {
-            listOfFutureOutcomes.stream().forEach(future -> future.cancel(true));
+            // the currently running tasks should be fast enough, so, we let them finish whenever they are done
+            // but we move on... it would be more expensive to try and cancel them just to get an occasional exception
+            listOfFutureOutcomes.stream().forEach(future -> future.cancel(false));
         }
 
-        log.finalOutcomeForRequest(requestId, outcome.toString());
+        if (null == response) {
+            log.finalOutcomeForRequest(requestId, outcome.toString());
+        } else {
+            log.finalOutcomeForResponse(requestId, outcome.toString());
+        }
         return outcome;
     }
 }

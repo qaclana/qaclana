@@ -21,7 +21,7 @@ package org.qaclana.api.entity.event;
  *
  * @author Juraci Paixão Kröhling
  */
-public class NewClientSocketMessage {
+public class NewClientSocketMessage extends BasicEvent {
     private String type;
     private String message;
 

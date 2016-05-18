@@ -18,11 +18,14 @@ package org.qaclana.services.jpa.control;
 
 import org.qaclana.api.control.WhitelistService;
 import org.qaclana.api.entity.IpRange;
+import org.qaclana.api.entity.event.IpRangeAddedToWhitelist;
+import org.qaclana.api.entity.event.IpRangeRemovedFromWhitelist;
 import org.qaclana.services.jpa.entity.IpRangeEntity;
 import org.qaclana.services.jpa.entity.IpRangeEntity_;
 import org.qaclana.services.jpa.entity.IpRangeType;
 
 import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -36,8 +39,16 @@ import java.util.stream.Collectors;
  */
 @Stateless
 public class WhitelistServiceJPA implements WhitelistService {
+    private static final MsgLogger logger = MsgLogger.LOGGER;
+
     @Inject
     EntityManager entityManager;
+
+    @Inject
+    Event<IpRangeAddedToWhitelist> ipRangeAddedToWhitelistEvent;
+
+    @Inject
+    Event<IpRangeRemovedFromWhitelist> ipRangeRemovedFromWhitelistEvent;
 
     @Override
     public List<IpRange> list() {
@@ -55,6 +66,9 @@ public class WhitelistServiceJPA implements WhitelistService {
     public void add(IpRange ipRange) {
         if (!isInWhitelist(ipRange)) {
             entityManager.persist(new IpRangeEntity(ipRange, IpRangeType.WHITELIST));
+            ipRangeAddedToWhitelistEvent.fire(new IpRangeAddedToWhitelist(ipRange));
+        } else {
+            logger.ipRangeAlreadyInWhitelist(ipRange.toString());
         }
     }
 
@@ -62,6 +76,9 @@ public class WhitelistServiceJPA implements WhitelistService {
     public void remove(IpRange ipRange) {
         if (isInWhitelist(ipRange)) {
             entityManager.remove(get(ipRange));
+            ipRangeRemovedFromWhitelistEvent.fire(new IpRangeRemovedFromWhitelist(ipRange));
+        } else {
+            logger.ipRangeNotInWhitelist(ipRange.toString());
         }
     }
 

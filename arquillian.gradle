@@ -3,8 +3,10 @@ def projectsWithArquillian = [
         'filter',
         'services/jpa',
         'services/settings',
-        'add-ons/blocklist-updater',
-        'processors/blocklist-processor',
+        'services/system-state-propagator',
+        'add-ons/blacklist-updater',
+        'processors/blacklist-processor',
+        'processors/whitelist-processor',
 ]
 projectsWithArquillian.each { it ->
     project(it) {

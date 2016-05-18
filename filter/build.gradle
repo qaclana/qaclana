@@ -4,7 +4,9 @@ description = 'Filter components for Qaclana'
 
 dependencies {
     compile project(':api')
-    compile project(':processors/blocklist-processor')
+    compile project(':processors/blacklist-processor')
+    compile project(':processors/whitelist-processor')
+    compile project(':services/system-state-propagator')
 
     compile libraries['javaee']
     compile libraries['jbossLogging']

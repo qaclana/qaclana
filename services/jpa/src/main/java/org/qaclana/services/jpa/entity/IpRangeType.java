@@ -20,5 +20,5 @@ package org.qaclana.services.jpa.entity;
  * @author Juraci Paixão Kröhling
  */
 public enum IpRangeType {
-    BLOCKLIST, WHITELIST
+    BLACKLIST, WHITELIST
 }

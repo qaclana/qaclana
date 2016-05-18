@@ -107,7 +107,7 @@ public interface MsgLogger {
     @Message(id = 10119, value = "Interrupted while waiting for outcome of request [%s].")
     void waitInterruptedForOutcome(String requestId, @Cause Throwable throwable);
 
-    @LogMessage(level = Logger.Level.WARN)
+    @LogMessage(level = Logger.Level.INFO)
     @Message(id = 10120, value = "Final outcome for request [%s]: [%s].")
     void finalOutcomeForRequest(String requestId, String outcome);
 
@@ -134,4 +134,8 @@ public interface MsgLogger {
     @LogMessage(level = Logger.Level.INFO)
     @Message(id = 10126, value = "Failed to reconnect to the server. We will try again at [%s]")
     void failedToReconnect(String timestamp);
+
+    @LogMessage(level = Logger.Level.INFO)
+    @Message(id = 10127, value = "Final outcome for response from request [%s]: [%s].")
+    void finalOutcomeForResponse(String requestId, String outcome);
 }

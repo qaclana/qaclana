@@ -16,6 +16,10 @@
  */
 package org.qaclana.api.entity;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import java.io.StringReader;
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -121,6 +125,20 @@ public class IpRange {
         } catch (UnknownHostException e) {
             throw new IllegalArgumentException("The given CIDR is invalid: " + cidr, e);
         }
+    }
+
+    public static IpRange fromJson(String json) {
+        JsonReader reader = Json.createReader(new StringReader(json));
+        JsonObject object = reader.readObject();
+        JsonObject ipRangeObject = object.getJsonObject("ipRange");
+
+        if (!ipRangeObject.containsKey("start") || !ipRangeObject.containsKey("end")) {
+            throw new IllegalStateException("Unable to determine the IP Range from the socket message.");
+        }
+
+        BigInteger start = ipRangeObject.getJsonNumber("start").bigIntegerValue();
+        BigInteger end = ipRangeObject.getJsonNumber("end").bigIntegerValue();
+        return new IpRange(start, end);
     }
 
     public static BigInteger ipToBigInteger(InetAddress ipBase) {

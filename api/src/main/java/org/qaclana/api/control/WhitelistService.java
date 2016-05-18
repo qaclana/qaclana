@@ -17,8 +17,8 @@
 package org.qaclana.api.control;
 
 import org.qaclana.api.entity.IpRange;
-import org.qaclana.api.entity.event.NewWhitelistedIpRange;
-import org.qaclana.api.entity.event.RemovedWhitelistedIpRange;
+import org.qaclana.api.entity.event.IpRangeAddedToWhitelist;
+import org.qaclana.api.entity.event.IpRangeRemovedFromWhitelist;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public interface WhitelistService {
     boolean isInWhitelist(IpRange ipRange);
 
     /**
-     * Adds the IP Range to the storage. If the operation is successful, the CDI event {@link NewWhitelistedIpRange}
+     * Adds the IP Range to the storage. If the operation is successful, the CDI event {@link IpRangeAddedToWhitelist}
      * is emitted.
      * @param ipRange    the {@link IpRange} to add to the whitelist
      */
@@ -52,7 +52,7 @@ public interface WhitelistService {
 
     /**
      * Removes the IP Range from the storage. If the operation is successful, the CDI event
-     * {@link RemovedWhitelistedIpRange} is emitted.
+     * {@link IpRangeRemovedFromWhitelist} is emitted.
      * @param ipRange    the {@link IpRange} to remove from the whitelist
      */
     void remove(IpRange ipRange);

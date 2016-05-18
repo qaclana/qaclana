@@ -6,7 +6,7 @@ outgoing responses.
 The main piece of this is the `Firewall` EJB, which is invoked before each request is processed and again before the
 response is sent to the client. All registered processors are invoked asynchronously. Once the first processor has a
 definitive answer, all other processors are cancelled. A definitive answer can be positive (ie: IP is in a whitelist),
-or negative (ie: IP is in a blocklist).
+or negative (ie: IP is in a blacklist).
 
 The `FirewallFilter` is a servlet filter that delegates the processing to a more knowledgeable processor, the
 `SystemStateBasedFirewall`. This gets the current system state as defined on the backend via a web socket and act

@@ -19,7 +19,7 @@ package org.qaclana.backend.boundary;
 import org.qaclana.api.SystemState;
 import org.qaclana.api.SystemStateContainer;
 import org.qaclana.backend.control.MsgLogger;
-import org.qaclana.backend.entity.event.SystemStateChange;
+import org.qaclana.api.entity.event.SystemStateChange;
 import org.qaclana.backend.entity.rest.ErrorResponse;
 import org.qaclana.backend.entity.rest.SystemStateRequest;
 
@@ -69,13 +69,12 @@ public class SystemStateEndpoint {
             return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
         }
 
-        systemStateInstance.setState(state);
         systemStateChangeEvent.fire(new SystemStateChange(state));
         return Response.ok().entity(state).build();
     }
 
     @GET
     public Response get() {
-        return Response.ok().entity(systemStateInstance).build();
+        return Response.ok().entity(systemStateInstance.getState()).build();
     }
 }

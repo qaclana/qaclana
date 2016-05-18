@@ -53,7 +53,7 @@ public class SystemStateBasedFirewall {
                 FirewallOutcome outcome;
                 outcome = firewall.process(request);
 
-                if (FirewallOutcome.ACCEPT.equals(outcome)) {
+                if (!FirewallOutcome.REJECT.equals(outcome)) {
                     chain.doFilter(request, response);
                     outcome = firewall.process(request, response);
                     if (FirewallOutcome.REJECT.equals(outcome)) {

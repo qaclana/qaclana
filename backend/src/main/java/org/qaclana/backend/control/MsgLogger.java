@@ -86,4 +86,12 @@ public interface MsgLogger {
     @LogMessage(level = Logger.Level.WARN)
     @Message(id = 10014, value = "Failed to send message to destination [%s]. Reason: ")
     void failedToSendMessageToDestination(String destination, @Cause Throwable t);
+
+    @LogMessage(level = Logger.Level.INFO)
+    @Message(id = 10015, value = "Received a request to add new IP Range to the whitelist. IP Range: [%s]")
+    void addIpRangeToWhitelist(String ipRange);
+
+    @LogMessage(level = Logger.Level.INFO)
+    @Message(id = 10016, value = "Received a request to remove an IP Range from the whitelist. IP Range: [%s]")
+    void removeIpRangeFromWhitelist(String ipRange);
 }

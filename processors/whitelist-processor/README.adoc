@@ -1,0 +1,5 @@
+= Qaclana Processors - Whitelist processor
+
+This is a definitive positive processor: it matches the IP of the incoming request with the whitelisted IP ranges.
+If the IP is in a range, a `ACCEPT` outcome is issued and the request should be accepted. This acts only on the request,
+so, a `NEUTRAL` outcome for the response phase is always returned.
