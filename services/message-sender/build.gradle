@@ -1,0 +1,11 @@
+apply plugin: 'java'
+
+description = 'A message sender component'
+
+dependencies {
+    compile project(':api')
+
+    compile libraries['javaee']
+    compile libraries['jbossLogging']
+    compile libraries['jackson']
+}

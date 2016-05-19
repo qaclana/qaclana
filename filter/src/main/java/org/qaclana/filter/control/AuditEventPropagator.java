@@ -16,39 +16,34 @@
  */
 package org.qaclana.filter.control;
 
-import org.qaclana.api.entity.event.NewClientSocketMessage;
+import org.qaclana.api.entity.event.AuditEventReported;
+import org.qaclana.api.entity.event.SendMessage;
+import org.qaclana.api.entity.ws.AuditEventMessage;
+import org.qaclana.api.entity.ws.BasicMessage;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import java.io.StringReader;
+import javax.websocket.Session;
 
 /**
  * @author Juraci Paixão Kröhling
  */
 @Stateless
 @Asynchronous
-public class SocketMessagePropagator {
-    private static final MsgLogger logger = MsgLogger.LOGGER;
+public class AuditEventPropagator {
 
     @Inject
-    Event<NewClientSocketMessage> newClientSocketMessageEvent;
+    Event<SendMessage> sendMessageEvent;
 
-    public void propagate(String payload) {
-        JsonReader reader = Json.createReader(new StringReader(payload));
-        JsonObject object = reader.readObject();
+    @Inject
+    SocketSessionContainer socketSessionContainer;
 
-        if (!object.containsKey("type")) {
-            logger.messageMissingType(payload);
-            throw new IllegalStateException("Unable to determine the message type for the socket message.");
-        }
-
-        String messageType = object.getString("type");
-        newClientSocketMessageEvent.fire(new NewClientSocketMessage(messageType, payload));
+    public void propagate(@Observes AuditEventReported auditEventReported) {
+        BasicMessage message = new AuditEventMessage(auditEventReported.getAudit());
+        Session destination = socketSessionContainer.getSession();
+        sendMessageEvent.fire(new SendMessage(destination, message));
     }
-
 }

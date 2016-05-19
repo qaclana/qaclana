@@ -32,8 +32,8 @@ public interface MsgLogger {
     void firewallSocketOpened();
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 10001, value = "A Firewall worker sent a message.")
-    void firewallSocketMessage();
+    @Message(id = 10001, value = "A Firewall worker sent a message: [%s]")
+    void firewallSocketMessage(String message);
 
     @LogMessage(level = Logger.Level.INFO)
     @Message(id = 10002, value = "Web Socket closed for a Firewall worker.")
@@ -56,12 +56,12 @@ public interface MsgLogger {
     void systemStateChangeRequestReceived(String newState);
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 10007, value = "System state change applied to this system. New state: [%s]")
-    void systemStateChangeApplied(String newState);
+    @Message(id = 10007, value = "Reuse this.")
+    void unused();
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 10008, value = "Sending message to [%s]. Message type: [%s]")
-    void sendingMessageToDestination(String destination, String messageType);
+    @Message(id = 10008, value = "Reuse this.")
+    void unused2();
 
     @LogMessage(level = Logger.Level.INFO)
     @Message(id = 10009, value = "Propagating system state change. New state: [%s]")

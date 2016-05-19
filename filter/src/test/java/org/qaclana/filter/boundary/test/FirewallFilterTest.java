@@ -23,9 +23,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.qaclana.api.FirewallOutcome;
-import org.qaclana.api.SystemState;
-import org.qaclana.api.SystemStateContainer;
+import org.qaclana.api.*;
 import org.qaclana.api.entity.event.BasicEvent;
 import org.qaclana.api.entity.event.NewClientSocketMessage;
 import org.qaclana.filter.boundary.FirewallFilter;
@@ -34,8 +32,10 @@ import org.qaclana.filter.control.test.ApplicationResourcesForTest;
 import org.qaclana.filter.control.test.ContextPathContainer;
 import org.qaclana.filter.control.test.ServletContextStartupListener;
 import org.qaclana.filter.control.test.SocketServer;
+import org.qaclana.filter.entity.ConnectToSocketServer;
 import org.qaclana.filter.entity.IncomingHttpRequest;
 import org.qaclana.filter.entity.OutgoingHttpResponse;
+import org.qaclana.services.messagensender.SocketMessagePropagator;
 
 import javax.ejb.Singleton;
 import javax.enterprise.event.Observes;
@@ -82,21 +82,28 @@ public class FirewallFilterTest {
                 .addClass(MsgLogger.class)
                 .addClass(MsgLogger_$logger.class)
                 .addClass(SystemStateBasedFirewall.class)
+                .addClass(SystemState.class)
                 .addClass(SocketClient.class)
                 .addClass(SocketMessagePropagator.class)
                 .addClass(BasicEvent.class)
                 .addClass(NewClientSocketMessage.class)
                 .addClass(Recorder.class)
+                .addClass(Processor.class)
+                .addClass(ProcessorRegistry.class)
                 .addClass(FilterOverheadMeasurer.class)
                 .addClass(OverheadMeasureReporter.class)
-                .addPackage(FirewallFilter.class.getPackage())
-                .addPackage(FirewallOutcome.class.getPackage())
-                .addPackage(SystemStateContainer.class.getPackage())
-                .addPackage(IncomingHttpRequest.class.getPackage())
+                .addClass(FirewallFilter.class)
+                .addClass(FirewallOutcome.class)
+                .addClass(SystemStateContainer.class)
+                .addClass(IncomingHttpRequest.class)
+                .addClass(OutgoingHttpResponse.class)
                 .addClass(ContextPathContainer.class)
                 .addClass(ServletContextStartupListener.class)
                 .addClass(ApplicationResourcesForTest.class)
                 .addClass(SocketServer.class)
+                .addClass(ConnectToSocketServer.class)
+                .addClass(org.qaclana.services.messagensender.MsgLogger.class)
+                .addClass(org.qaclana.services.messagensender.MsgLogger_$logger.class)
                 .addAsWebInfResource("META-INF/ejb-jar.xml", "ejb-jar.xml")
                 .addAsWebInfResource("beans.xml", "beans.xml")
                 .addAsLibraries(Maven.resolver().resolve("org.mockito:mockito-all:1.10.19").withoutTransitivity().as(File.class));

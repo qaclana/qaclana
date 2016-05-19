@@ -18,6 +18,7 @@ package org.qaclana.filter.control;
 
 import org.qaclana.api.SystemStateContainer;
 import org.qaclana.filter.entity.ConnectToSocketServer;
+import org.qaclana.services.messagensender.SocketMessagePropagator;
 
 import javax.ejb.Singleton;
 import javax.enterprise.event.Event;

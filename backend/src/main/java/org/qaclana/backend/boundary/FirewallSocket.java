@@ -56,7 +56,7 @@ public class FirewallSocket {
 
     @OnMessage
     public void onMessage(Session session, String payload) {
-        log.firewallSocketMessage();
+        log.firewallSocketMessage(payload);
     }
 
     @OnClose

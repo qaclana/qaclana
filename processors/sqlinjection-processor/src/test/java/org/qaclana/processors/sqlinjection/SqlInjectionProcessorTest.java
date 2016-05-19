@@ -27,12 +27,16 @@ import org.junit.runner.RunWith;
 import org.qaclana.api.FirewallOutcome;
 import org.qaclana.api.Processor;
 import org.qaclana.api.ProcessorRegistry;
+import org.qaclana.api.entity.Audit;
+import org.qaclana.api.entity.IpRange;
+import org.qaclana.api.entity.event.AuditEventReported;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -51,11 +55,15 @@ public class SqlInjectionProcessorTest {
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
                 .addClass(SqlInjectionProcessor.class)
+                .addClass(AttackAttemptReporter.class)
+                .addClass(AuditEventReported.class)
                 .addClass(MsgLogger.class)
                 .addClass(MsgLogger_$logger.class)
                 .addClass(ProcessorRegistry.class)
                 .addClass(Processor.class)
                 .addClass(FirewallOutcome.class)
+                .addClass(IpRange.class)
+                .addClass(Audit.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(Maven.resolver().resolve("org.mockito:mockito-all:1.10.19").withoutTransitivity().as(File.class));
     }
@@ -120,6 +128,8 @@ public class SqlInjectionProcessorTest {
     private void assertRequestForMap(Map<String, String[]> parameterMap, FirewallOutcome expectedOutcome) {
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getParameterMap()).thenReturn(parameterMap);
+        when(request.getRemoteAddr()).thenReturn("127.0.0.1");
+        when(request.getAttribute("Firewall-RequestID")).thenReturn(UUID.randomUUID().toString());
 
         FirewallOutcome outcome = sqlInjectionProcessor.process(request);
         assertEquals(expectedOutcome, outcome);

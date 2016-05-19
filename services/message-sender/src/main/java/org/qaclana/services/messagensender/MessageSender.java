@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.backend.control;
+package org.qaclana.services.messagensender;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.qaclana.backend.entity.event.SendMessage;
+import org.qaclana.api.entity.event.SendMessage;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;

@@ -43,12 +43,10 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 @DependsOn("SocketClient") // otherwise, the socket client might get undeployed before this
 public class SocketClientStarter {
+    private static final MsgLogger log = MsgLogger.LOGGER;
     private static final int MAX_WAIT = 20_000; // in milliseconds
     static final CloseReason UNDEPLOYMENT = new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Client being undeployed.");
-    private Session session;
     private ScheduledFuture scheduledFuture;
-
-    MsgLogger log = MsgLogger.LOGGER;
 
     @Resource
     private ManagedScheduledExecutorService executor;
@@ -56,6 +54,9 @@ public class SocketClientStarter {
     @Inject
     @SocketServerEndpointUri
     URI uri;
+
+    @Inject
+    SocketSessionContainer sessionContainer;
 
     @Inject
     SocketClient socketClient;
@@ -75,8 +76,8 @@ public class SocketClientStarter {
                 scheduledFuture.cancel(true);
             }
 
-            if (null != session) {
-                session.close(UNDEPLOYMENT);
+            if (null != sessionContainer.getSession()) {
+                sessionContainer.getSession().close(UNDEPLOYMENT);
             }
         } catch (Throwable t) {
             log.undeployingCloseFailed(t);
@@ -92,7 +93,7 @@ public class SocketClientStarter {
             try {
                 log.reconnectingWebSocket();
                 WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-                session = container.connectToServer(socketClient, uri);
+                sessionContainer.setSession(container.connectToServer(socketClient, uri));
             } catch (DeploymentException | IOException e) {
                 log.cannotOpenSocketToServer(e);
 

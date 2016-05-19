@@ -28,6 +28,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
+
+import static org.qaclana.filter.control.Firewall.HTTP_HEADER_REQUEST_ID;
 
 /**
  * @author Juraci Paixão Kröhling
@@ -66,11 +69,11 @@ public class SystemStateBasedFirewall {
                     chain.doFilter(request, response);
                     outcome = firewall.process(request, response);
                     if (FirewallOutcome.REJECT.equals(outcome)) {
-                        reject(response);
+                        reject(request, response);
                         return;
                     }
                 } else {
-                    reject(response);
+                    reject(request, response);
                     return;
                 }
                 return;
@@ -79,14 +82,15 @@ public class SystemStateBasedFirewall {
         }
     }
 
-    private void reject(ServletResponse response) throws IOException {
-        if (response instanceof HttpServletResponse) {
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
-            httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            // we don't know how to tell the client that this request is blocked, but we do know that
-            // we want to reset the response
-            response.reset();
+    private void reject(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Enumeration<String> attributeNames = request.getAttributeNames();
+        while (attributeNames.hasMoreElements()) {
+            String name = attributeNames.nextElement();
+            if (name.toLowerCase().startsWith("qaclana-processor")) {
+                response.addHeader(name, request.getAttribute(name).toString());
+            }
         }
+        response.addHeader("Qaclana-Request-ID", request.getAttribute(HTTP_HEADER_REQUEST_ID).toString());
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 }

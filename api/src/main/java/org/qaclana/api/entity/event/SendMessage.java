@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.backend.entity.event;
+package org.qaclana.api.entity.event;
 
-import org.qaclana.api.entity.event.BasicEvent;
 import org.qaclana.api.entity.ws.BasicMessage;
 
 import javax.websocket.Session;

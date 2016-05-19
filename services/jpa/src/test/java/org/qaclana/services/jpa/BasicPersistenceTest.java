@@ -24,8 +24,10 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.qaclana.api.control.AuditService;
 import org.qaclana.api.control.BlacklistService;
 import org.qaclana.api.control.WhitelistService;
+import org.qaclana.api.entity.Audit;
 import org.qaclana.api.entity.IpRange;
 import org.qaclana.api.entity.event.*;
 import org.qaclana.services.jpa.control.*;
@@ -33,7 +35,10 @@ import org.qaclana.services.jpa.entity.*;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.math.BigInteger;
+import java.util.UUID;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -48,9 +53,17 @@ public class BasicPersistenceTest {
     @Inject
     WhitelistService whitelistService;
 
+    @Inject
+    AuditService auditService;
+
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
+                .addClass(AuditService.class)
+                .addClass(AuditServiceJPA.class)
+                .addClass(Audit.class)
+                .addClass(AuditEntity.class)
+                .addClass(AuditEntity_.class)
                 .addClass(BlacklistService.class)
                 .addClass(MsgLogger.class)
                 .addClass(MsgLogger_$logger.class)
@@ -81,5 +94,13 @@ public class BasicPersistenceTest {
 
         assertTrue(whitelistService.isInWhitelist(IpRange.fromString("192.168.1.0/24")));
         assertTrue(blacklistService.isInBlacklist(IpRange.fromString("192.168.1.0/24")));
+    }
+
+    @Test
+    public void storeAuditEvent() throws Exception {
+        BigInteger remoteAddress = IpRange.fromString("127.0.0.1").getStart();
+        Audit audit = new Audit(UUID.randomUUID().toString(), remoteAddress, "A random audit event.");
+        auditService.add(audit);
+        assertNotNull(auditService.get(audit.getId()));
     }
 }

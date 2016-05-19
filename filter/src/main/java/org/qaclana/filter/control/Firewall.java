@@ -191,6 +191,7 @@ public class Firewall {
         } else {
             log.finalOutcomeForResponse(requestId, outcome.toString());
         }
+
         return outcome;
     }
 }

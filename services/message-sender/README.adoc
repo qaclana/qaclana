@@ -1,0 +1,3 @@
+= Qaclana Services - Message sender
+
+Message sender for Web Socket messages. Can be used in both client and server sockets.

@@ -34,7 +34,7 @@ import org.qaclana.api.entity.ws.SystemStateChangeMessage;
 import org.qaclana.backend.boundary.FirewallSocket;
 import org.qaclana.backend.boundary.SystemStateEndpoint;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
-import org.qaclana.backend.entity.event.SendMessage;
+import org.qaclana.api.entity.event.SendMessage;
 import org.qaclana.backend.entity.rest.ErrorResponse;
 import org.qaclana.backend.entity.rest.SystemStateRequest;
 import org.qaclana.services.systemstatepropagator.SystemStateUpdater;

@@ -70,6 +70,9 @@ public class SqlInjectionProcessor implements Processor {
     @Inject
     ProcessorRegistry processorRegistry;
 
+    @Inject
+    AttackAttemptReporter attackAttemptReporter;
+
     @PostConstruct
     public void register() {
         processorRegistry.register(this);
@@ -80,22 +83,18 @@ public class SqlInjectionProcessor implements Processor {
         Map<String, String[]> parameterMap = request.getParameterMap();
         for (String key : parameterMap.keySet()) {
             for (String value : parameterMap.get(key)) {
-                if (containsSqlInjection(value)) {
-                    return FirewallOutcome.REJECT;
+                for (Pattern pattern : patterns) {
+                    if (pattern.matcher(value).matches()) {
+                        String requestId = request.getAttribute("Firewall-RequestID").toString();
+                        request.setAttribute("Qaclana-Processor-SQLInjection", String.format("Pattern violated [%s]", pattern));
+                        attackAttemptReporter.report(requestId, request.getRemoteAddr(), key, value, pattern);
+                        return FirewallOutcome.REJECT;
+                    }
                 }
+
             }
         }
-
         return FirewallOutcome.NEUTRAL;
-    }
-
-    private boolean containsSqlInjection(String value) {
-        for (Pattern pattern : patterns) {
-            if (pattern.matcher(value).matches()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

@@ -9,6 +9,7 @@ dependencies {
     compile project(':processors/sqlinjection-processor')
     compile project(':processors/whitelist-processor')
     compile project(':services/system-state-propagator')
+    compile project(':services/message-sender')
 
     compile libraries['javaee']
     compile libraries['jbossLogging']

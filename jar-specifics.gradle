@@ -25,6 +25,7 @@ ext {
 def jarProjects = [
         'api',
         'services/jpa',
+        'services/message-sender',
         'services/settings',
         'services/system-state-propagator',
         'processors/blacklist-processor',
