@@ -28,6 +28,7 @@ def jarProjects = [
         'services/settings',
         'services/system-state-propagator',
         'processors/blacklist-processor',
+        'processors/projecthoneypot-processor',
         'processors/sqlinjection-processor',
         'processors/whitelist-processor',
         'add-ons/blacklist-updater',

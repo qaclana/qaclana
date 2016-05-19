@@ -5,6 +5,7 @@ description = 'Filter components for Qaclana'
 dependencies {
     compile project(':api')
     compile project(':processors/blacklist-processor')
+    compile project(':processors/projecthoneypot-processor')
     compile project(':processors/sqlinjection-processor')
     compile project(':processors/whitelist-processor')
     compile project(':services/system-state-propagator')

@@ -6,6 +6,7 @@ def projectsWithArquillian = [
         'services/system-state-propagator',
         'add-ons/blacklist-updater',
         'processors/blacklist-processor',
+        'processors/projecthoneypot-processor',
         'processors/sqlinjection-processor',
         'processors/whitelist-processor',
 ]

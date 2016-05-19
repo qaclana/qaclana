@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.processors.sqlinjection;
+package org.qaclana.processors.projecthoneypot;
 
 import org.jboss.logging.Logger;
 import org.jboss.logging.annotations.LogMessage;
@@ -26,19 +26,15 @@ import org.jboss.logging.annotations.ValidIdRange;
  * @author Juraci Paixão Kröhling
  */
 @MessageLogger(projectCode = "QCLN")
-@ValidIdRange(min = 10290, max = 10299)
+@ValidIdRange(min = 10280, max = 10289)
 public interface MsgLogger {
     MsgLogger LOGGER = Logger.getMessageLogger(MsgLogger.class, MsgLogger.class.getPackage().getName());
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 10291, value = "IP Range added to the blacklist: [%s]")
-    void addedIpRangeToBlacklist(String ipRange);
+    @Message(id = 10280, value = "Timed out waiting for Project Honey Pot results for IP: [%s].")
+    void timedOut(String ip);
 
     @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 10292, value = "IP Range removed from the blacklist: [%s]")
-    void removedIpRangeFromBlacklist(String ipRange);
-
-    @LogMessage(level = Logger.Level.INFO)
-    @Message(id = 10293, value = "IP Range found on the blacklist. Request's IP: [%s] , blacklisted range: [%s]")
-    void ipRangeFoundOnBlacklist(String ipRangeFromRequest, String blacklistedIpRange);
+    @Message(id = 10281, value = "Project Honey Pot processor disabled, no API Key found. Set the key [%s] to your API Key.")
+    void noApiKeyConfigured(String settingsKey);
 }

@@ -1,0 +1,5 @@
+= Qaclana Processors - Project Honey Pot processor
+
+This is a definitive negative processor: it matches the request's IP with query results from the Project Honey Pot
+(http://www.projecthoneypot.org). We try to wait for the request for about 100ms, which is the maximum delay we accept.
+If it takes longer, we keep processing in background and might or not add the IP to our own blacklist.

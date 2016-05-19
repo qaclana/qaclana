@@ -80,7 +80,7 @@ public class SettingsProvider {
             return value;
         }
 
-        if (fromConfigurationFile.contains(settingsName)) {
+        if (fromConfigurationFile.containsKey(settingsName)) {
             String value = (String) fromConfigurationFile.get(settingsName);
             properties.put(settingsName, value);
             return value;

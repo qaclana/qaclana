@@ -1,0 +1,12 @@
+apply plugin: 'java'
+
+description = 'Lookup IPs on Project Honey Pot'
+
+dependencies {
+    compile project(':api')
+    compile project(':services/settings')
+
+    compile libraries['javaee']
+    compile libraries['jbossLogging']
+}
+

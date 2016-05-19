@@ -42,9 +42,8 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.DeploymentException;
 import java.io.File;
 import java.io.IOException;
@@ -110,8 +109,8 @@ public class FirewallFilterTest {
         responseEvent = null;
 
         systemStateContainer.setState(SystemState.ENFORCING);
-        ServletResponse response = mock(ServletResponse.class);
-        ServletRequest request = mock(ServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
         FilterChain chain = mock(FilterChain.class);
         filter.doFilter(request, response, chain);
 
@@ -127,8 +126,8 @@ public class FirewallFilterTest {
         responseEvent = null;
 
         systemStateContainer.setState(SystemState.PERMISSIVE);
-        ServletResponse response = mock(ServletResponse.class);
-        ServletRequest request = mock(ServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
         FilterChain chain = mock(FilterChain.class);
         filter.doFilter(request, response, chain);
 
@@ -142,8 +141,8 @@ public class FirewallFilterTest {
         latch = new CountDownLatch(2); // ignored on this test
 
         systemStateContainer.setState(SystemState.ENFORCING);
-        ServletResponse response = mock(ServletResponse.class);
-        ServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
         FilterChain chain = mock(FilterChain.class);
 
         String idForSecondCall = UUID.randomUUID().toString();
@@ -162,8 +161,8 @@ public class FirewallFilterTest {
         latch = new CountDownLatch(2); // ignored on this test
 
         systemStateContainer.setState(SystemState.ENFORCING);
-        ServletResponse response = mock(ServletResponse.class);
-        ServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
         FilterChain chain = mock(FilterChain.class);
 
         String requestId = UUID.randomUUID().toString();

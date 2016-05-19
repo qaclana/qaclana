@@ -36,8 +36,8 @@ import org.qaclana.filter.entity.OutgoingHttpResponse;
 
 import javax.ejb.Singleton;
 import javax.inject.Inject;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.UUID;
 
@@ -83,16 +83,16 @@ public class RejectedOutcomeFilterTest {
 
     @Test
     public void ensureRequestGetsRejected() {
-        ServletRequest request = mock(ServletRequest.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
         FirewallOutcome outcome = firewall.process(request);
         assertEquals(FirewallOutcome.REJECT, outcome);
     }
 
     @Test
     public void ensureResponseGetsRejected() {
-        ServletRequest request = mock(ServletRequest.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getAttribute(Firewall.HTTP_HEADER_REQUEST_ID)).thenReturn(UUID.randomUUID().toString());
-        ServletResponse response = mock(ServletResponse.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         FirewallOutcome outcome = firewall.process(request, response);
         assertEquals(FirewallOutcome.REJECT, outcome);
     }

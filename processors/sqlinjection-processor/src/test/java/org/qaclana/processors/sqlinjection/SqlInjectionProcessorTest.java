@@ -62,41 +62,36 @@ public class SqlInjectionProcessorTest {
 
     @Test
     public void catchesDeclareForTSql() {
-        Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("param", new String[]{"' declare @var1 varchar(10), @var2 varchar(255)\n"});
-        assertRequestIsRejectedForMap(parameterMap);
-//        parameterMap.replace("param", new String[]{"' declare @var1 varchar(10), @var2\nvarchar(255)"});
-//        assertRequestIsRejectedForMap(parameterMap);
-//        parameterMap.replace("param", new String[]{"' declare @var1 varchar(10), @var2\n/*some comment*/ varchar(255)"});
-//        assertRequestIsRejectedForMap(parameterMap);
+        assertRequestIsRejectedForParameterValue("' declare @var1 varchar(10), @var2 varchar(255)");
+//        assertRequestIsRejectedForParameterValue("' declare @var1 varchar(10), @var2 varchar(255)\n");
+//        assertRequestIsRejectedForParameterValue("' declare @var1 varchar(10), @var2\\nvarchar(255)");
+//        assertRequestIsRejectedForParameterValue("' declare @var1 varchar(10), @var2\\n/*some comment*/ varchar(255)");
+    }
+
+    @Test
+    public void catchesNumericWithExtraCommands() {
+        assertRequestIsRejectedForParameterValue("1 AND A NOT BETWEEN 0 AND B--");
+//        assertRequestIsRejectedForParameterValue("1 AND A NOT BETWEEN 0 AND B--\n");
     }
 
     @Test
     public void catchesDeleteStatement() {
-        Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("param", new String[]{"' or 1=1 ; delete from table"});
-        assertRequestIsRejectedForMap(parameterMap);
+        assertRequestIsRejectedForParameterValue("' or 1=1 ; delete from table");
     }
 
     @Test
     public void catchesInsertStatement() {
-        Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("param", new String[]{"';insert into table () values () "});
-        assertRequestIsRejectedForMap(parameterMap);
+        assertRequestIsRejectedForParameterValue("';insert into table () values () ");
     }
 
     @Test
     public void catchesSelectStatement() {
-        Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("param", new String[]{"';select * from admins"});
-        assertRequestIsRejectedForMap(parameterMap);
+        assertRequestIsRejectedForParameterValue("';select * from admins");
     }
 
     @Test
     public void catchesUpdateStatement() {
-        Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("param", new String[]{"  aa '  ;      update   users   set role='admin' where login = 'jdoe'"});
-        assertRequestIsRejectedForMap(parameterMap);
+        assertRequestIsRejectedForParameterValue("  aa '  ;      update   users   set role='admin' where login = 'jdoe'");
     }
 
     @Test
@@ -106,6 +101,12 @@ public class SqlInjectionProcessorTest {
         parameterMap.put("param2", new String[]{"O'Brian likes to select the best fruits on the market"});
         parameterMap.put("param3", new String[]{"O'Connor declare that @ his company there's ... "});
         assertRequestIsNeutralForMap(parameterMap);
+    }
+
+    private void assertRequestIsRejectedForParameterValue(String value) {
+        Map<String, String[]> parameterMap = new HashMap<>();
+        parameterMap.put("param", new String[]{value});
+        assertRequestIsRejectedForMap(parameterMap);
     }
 
     private void assertRequestIsRejectedForMap(Map<String, String[]> parameterMap) {

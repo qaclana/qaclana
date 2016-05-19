@@ -62,6 +62,9 @@ public class SqlInjectionProcessor implements Processor {
 
         // ' UPDATE SET
         patterns.add(Pattern.compile(".*'.*\\bUPDATE\\b.*\\bSET\\b.*([\\r\\n]+)?", MATCHING_MODE));
+
+        // 1 AND/OR B BETWEEN C AND D
+        patterns.add(Pattern.compile("^([\\d]+)?\\s\\b((AND)|(OR)).*\\bBETWEEN\\b.*AND.*$", MATCHING_MODE));
     }
 
     @Inject
