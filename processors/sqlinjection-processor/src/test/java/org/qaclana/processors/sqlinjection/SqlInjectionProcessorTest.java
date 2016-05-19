@@ -65,6 +65,10 @@ public class SqlInjectionProcessorTest {
         Map<String, String[]> parameterMap = new HashMap<>();
         parameterMap.put("param", new String[]{"' declare @var1 varchar(10), @var2 varchar(255)\n"});
         assertRequestIsRejectedForMap(parameterMap);
+//        parameterMap.replace("param", new String[]{"' declare @var1 varchar(10), @var2\nvarchar(255)"});
+//        assertRequestIsRejectedForMap(parameterMap);
+//        parameterMap.replace("param", new String[]{"' declare @var1 varchar(10), @var2\n/*some comment*/ varchar(255)"});
+//        assertRequestIsRejectedForMap(parameterMap);
     }
 
     @Test
