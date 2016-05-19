@@ -20,11 +20,11 @@ import org.qaclana.api.control.BlacklistService;
 import org.qaclana.api.entity.IpRange;
 import org.qaclana.api.entity.event.IpRangeAddedToBlacklist;
 import org.qaclana.api.entity.event.IpRangeRemovedFromBlacklist;
+import org.qaclana.api.entity.event.SendMessage;
 import org.qaclana.api.entity.ws.BasicMessage;
 import org.qaclana.api.entity.ws.IpRangeAddedToBlacklistMessage;
 import org.qaclana.api.entity.ws.IpRangeRemovedFromBlacklistMessage;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
-import org.qaclana.api.entity.event.SendMessage;
 
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;

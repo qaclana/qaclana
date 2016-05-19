@@ -18,8 +18,8 @@ package org.qaclana.processors.whitelist;
 
 import org.qaclana.api.entity.IpRange;
 import org.qaclana.api.entity.event.NewClientSocketMessage;
-import org.qaclana.api.entity.ws.IpRangeRemovedFromWhitelistMessage;
 import org.qaclana.api.entity.ws.IpRangeAddedToWhitelistMessage;
+import org.qaclana.api.entity.ws.IpRangeRemovedFromWhitelistMessage;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;

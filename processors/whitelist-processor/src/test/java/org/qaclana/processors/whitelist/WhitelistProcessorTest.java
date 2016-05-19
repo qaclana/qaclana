@@ -31,7 +31,6 @@ import org.qaclana.api.entity.IpRange;
 
 import javax.ejb.Singleton;
 import javax.inject.Inject;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 

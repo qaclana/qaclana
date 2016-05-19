@@ -26,9 +26,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qaclana.api.SystemState;
+import org.qaclana.api.entity.event.SystemStateChange;
 import org.qaclana.api.entity.ws.BasicMessage;
 import org.qaclana.backend.boundary.FirewallSocket;
-import org.qaclana.api.entity.event.SystemStateChange;
 import org.qaclana.backend.entity.rest.SystemStateRequest;
 
 import javax.ejb.Stateless;

@@ -20,11 +20,11 @@ import org.qaclana.api.control.WhitelistService;
 import org.qaclana.api.entity.IpRange;
 import org.qaclana.api.entity.event.IpRangeAddedToWhitelist;
 import org.qaclana.api.entity.event.IpRangeRemovedFromWhitelist;
+import org.qaclana.api.entity.event.SendMessage;
 import org.qaclana.api.entity.ws.BasicMessage;
 import org.qaclana.api.entity.ws.IpRangeAddedToWhitelistMessage;
 import org.qaclana.api.entity.ws.IpRangeRemovedFromWhitelistMessage;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
-import org.qaclana.api.entity.event.SendMessage;
 
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
