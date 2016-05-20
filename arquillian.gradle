@@ -1,37 +1,27 @@
 def projectsWithArquillian = [
+        'add-ons/blacklist-updater',
         'backend',
         'filter',
-        'services/jpa',
-        'services/settings',
-        'services/system-state-propagator',
-        'add-ons/blacklist-updater',
         'processors/blacklist-processor',
         'processors/projecthoneypot-processor',
         'processors/sqlinjection-processor',
         'processors/whitelist-processor',
+        'services/audit-event-recorder',
+        'services/jpa',
+        'services/message-sender',
+        'services/settings',
+        'services/system-state-propagator',
 ]
 projectsWithArquillian.each { it ->
     project(it) {
         apply plugin: 'java'
 
-        configurations {
-            wildfly
-        }
-
-        task downloadWildfly(type: Copy) {
-            outputs.dir new File(rootProject.buildDir, "wildfly-10.0.0.Final")
-            destinationDir = file("${rootProject.buildDir}")
-            from { zipTree(configurations.wildfly.singleFile) }
-        }
-
         dependencies {
-            wildfly libraries['wildflyZip']
             testCompile libraries['junit']
             testCompile libraries['arquillian']
             testCompile libraries['mockito']
         }
 
-        test.dependsOn downloadWildfly
         test.systemProperty 'java.util.logging.manager', 'org.jboss.logmanager.LogManager'
         test.systemProperty 'jboss.home', "${rootProject.buildDir}/wildfly-10.0.0.Final"
         test.systemProperty 'allowConnectingToRunningServer', 'true'

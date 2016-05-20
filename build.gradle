@@ -14,6 +14,20 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.12'
 }
 
+configurations {
+    wildfly
+}
+
+task downloadWildfly(type: Copy) {
+    outputs.dir new File(rootProject.buildDir, "wildfly-10.0.0.Final")
+    destinationDir = file("${rootProject.buildDir}")
+    from { zipTree(configurations.wildfly.singleFile) }
+}
+
+dependencies {
+    wildfly libraries['wildflyZip']
+}
+
 allprojects { it ->
     repositories {
         mavenCentral()

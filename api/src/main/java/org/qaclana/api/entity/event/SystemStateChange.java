@@ -40,4 +40,11 @@ public class SystemStateChange extends BasicEvent {
     public SystemState getState() {
         return state;
     }
+
+    @Override
+    public String toString() {
+        return "SystemStateChange{" +
+                "state=" + state +
+                '}';
+    }
 }

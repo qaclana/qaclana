@@ -30,6 +30,7 @@ import org.qaclana.api.ProcessorRegistry;
 import org.qaclana.api.entity.Audit;
 import org.qaclana.api.entity.IpRange;
 import org.qaclana.api.entity.event.AuditEventReported;
+import org.qaclana.api.entity.event.BasicEvent;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -56,6 +57,7 @@ public class SqlInjectionProcessorTest {
         return ShrinkWrap.create(WebArchive.class)
                 .addClass(SqlInjectionProcessor.class)
                 .addClass(AttackAttemptReporter.class)
+                .addClass(BasicEvent.class)
                 .addClass(AuditEventReported.class)
                 .addClass(MsgLogger.class)
                 .addClass(MsgLogger_$logger.class)

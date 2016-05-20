@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.services.messagensender;
+package org.qaclana.services.messagesender;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.qaclana.api.entity.event.SendMessage;
 
 import javax.ejb.Asynchronous;
@@ -35,6 +36,11 @@ import java.io.IOException;
 public class MessageSender {
     private static final MsgLogger log = MsgLogger.LOGGER;
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
+
+    static {
+        JSON_MAPPER.findAndRegisterModules();
+        JSON_MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    }
 
     @Asynchronous
     public void send(@Observes SendMessage event) {

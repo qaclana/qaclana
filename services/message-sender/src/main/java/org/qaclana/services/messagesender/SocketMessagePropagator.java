@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.services.messagensender;
+package org.qaclana.services.messagesender;
 
-import org.qaclana.api.entity.event.NewClientSocketMessage;
+import org.qaclana.api.entity.event.NewSocketMessage;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
@@ -36,7 +36,7 @@ public class SocketMessagePropagator {
     private static final MsgLogger logger = MsgLogger.LOGGER;
 
     @Inject
-    Event<NewClientSocketMessage> newClientSocketMessageEvent;
+    Event<NewSocketMessage> newClientSocketMessageEvent;
 
     public void propagate(String payload) {
         JsonReader reader = Json.createReader(new StringReader(payload));
@@ -48,6 +48,6 @@ public class SocketMessagePropagator {
         }
 
         String messageType = object.getString("type");
-        newClientSocketMessageEvent.fire(new NewClientSocketMessage(messageType, payload));
+        newClientSocketMessageEvent.fire(new NewSocketMessage(messageType, payload));
     }
 }

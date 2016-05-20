@@ -48,4 +48,12 @@ public class SendMessage extends BasicEvent {
     public BasicMessage getMessage() {
         return message;
     }
+
+    @Override
+    public String toString() {
+        return "SendMessage{" +
+                "destination=" + destination +
+                ", message=" + message +
+                '}';
+    }
 }

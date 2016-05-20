@@ -39,4 +39,11 @@ public class AuditEventMessage extends BasicMessage {
     public String getType() {
         return EVENT_TYPE;
     }
+
+    @Override
+    public String toString() {
+        return "AuditEventMessage{" +
+                "audit=" + audit +
+                '}';
+    }
 }

@@ -20,7 +20,7 @@ import org.qaclana.api.entity.Audit;
 
 import javax.persistence.Entity;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 /**
@@ -31,7 +31,7 @@ public class AuditEntity extends QaclanaEntity {
     private String requestId;
     private BigInteger ipAddress;
     private String text;
-    private LocalDateTime timestamp;
+    private ZonedDateTime timestamp;
 
     protected AuditEntity() {
     }
@@ -44,7 +44,7 @@ public class AuditEntity extends QaclanaEntity {
         this.timestamp = audit.getTimestamp();
     }
 
-    public AuditEntity(UUID id, String requestId, BigInteger ipAddress, String text, LocalDateTime timestamp) {
+    public AuditEntity(UUID id, String requestId, BigInteger ipAddress, String text, ZonedDateTime timestamp) {
         super(id);
         this.requestId = requestId;
         this.ipAddress = ipAddress;
@@ -64,7 +64,7 @@ public class AuditEntity extends QaclanaEntity {
         return text;
     }
 
-    public LocalDateTime getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return timestamp;
     }
 

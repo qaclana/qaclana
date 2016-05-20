@@ -17,7 +17,7 @@
 package org.qaclana.processors.whitelist;
 
 import org.qaclana.api.entity.IpRange;
-import org.qaclana.api.entity.event.NewClientSocketMessage;
+import org.qaclana.api.entity.event.NewSocketMessage;
 import org.qaclana.api.entity.ws.IpRangeAddedToWhitelistMessage;
 import org.qaclana.api.entity.ws.IpRangeRemovedFromWhitelistMessage;
 
@@ -37,7 +37,7 @@ public class WhitelistUpdateListener {
     @Inject
     WhitelistContainer whitelistContainer;
 
-    public void blockedIpRange(@Observes NewClientSocketMessage message) {
+    public void blockedIpRange(@Observes NewSocketMessage message) {
         if (!IpRangeAddedToWhitelistMessage.EVENT_TYPE.equals(message.getType())) {
             return;
         }
@@ -47,7 +47,7 @@ public class WhitelistUpdateListener {
         logger.addedIpRangeToWhitelist(ipRange.toString());
     }
 
-    public void unblockedIpRange(@Observes NewClientSocketMessage message) {
+    public void unblockedIpRange(@Observes NewSocketMessage message) {
         if (!IpRangeRemovedFromWhitelistMessage.EVENT_TYPE.equals(message.getType())) {
             return;
         }

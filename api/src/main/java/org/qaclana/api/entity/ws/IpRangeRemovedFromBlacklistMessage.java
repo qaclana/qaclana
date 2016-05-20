@@ -39,4 +39,11 @@ public class IpRangeRemovedFromBlacklistMessage extends BasicMessage {
     public String getType() {
         return EVENT_TYPE;
     }
+
+    @Override
+    public String toString() {
+        return "IpRangeRemovedFromBlacklistMessage{" +
+                "ipRange=" + ipRange +
+                '}';
+    }
 }

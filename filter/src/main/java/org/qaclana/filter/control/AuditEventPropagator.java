@@ -29,6 +29,8 @@ import javax.inject.Inject;
 import javax.websocket.Session;
 
 /**
+ * Emits a {@link SendMessage} based on a {@link AuditEventReported}.
+ *
  * @author Juraci Paixão Kröhling
  */
 @Stateless

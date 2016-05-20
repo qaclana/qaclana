@@ -17,7 +17,7 @@
 package org.qaclana.processors.blacklist;
 
 import org.qaclana.api.entity.IpRange;
-import org.qaclana.api.entity.event.NewClientSocketMessage;
+import org.qaclana.api.entity.event.NewSocketMessage;
 import org.qaclana.api.entity.ws.IpRangeAddedToBlacklistMessage;
 import org.qaclana.api.entity.ws.IpRangeRemovedFromBlacklistMessage;
 
@@ -37,7 +37,7 @@ public class BlacklistUpdateListener {
     @Inject
     BlacklistContainer blacklistContainer;
 
-    public void ipRangeBlacklisted(@Observes NewClientSocketMessage message) {
+    public void ipRangeBlacklisted(@Observes NewSocketMessage message) {
         if (!IpRangeAddedToBlacklistMessage.EVENT_TYPE.equals(message.getType())) {
             return;
         }
@@ -47,7 +47,7 @@ public class BlacklistUpdateListener {
         logger.addedIpRangeToBlacklist(ipRange.toString());
     }
 
-    public void ipRangeRemovedFromBlacklist(@Observes NewClientSocketMessage message) {
+    public void ipRangeRemovedFromBlacklist(@Observes NewSocketMessage message) {
         if (!IpRangeRemovedFromBlacklistMessage.EVENT_TYPE.equals(message.getType())) {
             return;
         }

@@ -18,7 +18,7 @@ package org.qaclana.services.systemstatepropagator;
 
 import org.qaclana.api.SystemState;
 import org.qaclana.api.SystemStateContainer;
-import org.qaclana.api.entity.event.NewClientSocketMessage;
+import org.qaclana.api.entity.event.NewSocketMessage;
 import org.qaclana.api.entity.event.SystemStateChange;
 import org.qaclana.api.entity.event.SystemStateChangeApplied;
 import org.qaclana.api.entity.ws.SystemStateChangeMessage;
@@ -50,12 +50,12 @@ public class SystemStateUpdater {
     @Inject
     Event<SystemStateChangeApplied> systemStateChangeAppliedEvent;
 
-    public void acceptChangeFromSocket(@Observes NewClientSocketMessage newClientSocketMessage) {
-        if (!SystemStateChangeMessage.EVENT_TYPE.equals(newClientSocketMessage.getType())) {
+    public void acceptChangeFromSocket(@Observes NewSocketMessage newSocketMessage) {
+        if (!SystemStateChangeMessage.EVENT_TYPE.equals(newSocketMessage.getType())) {
             return;
         }
 
-        String message = newClientSocketMessage.getMessage();
+        String message = newSocketMessage.getMessage();
         logger.systemStateChangeMessageReceived(message);
 
         JsonReader reader = Json.createReader(new StringReader(message));

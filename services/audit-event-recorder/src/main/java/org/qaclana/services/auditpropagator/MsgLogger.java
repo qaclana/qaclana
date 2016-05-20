@@ -14,35 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.api.entity.event;
+package org.qaclana.services.auditpropagator;
+
+import org.jboss.logging.Logger;
+import org.jboss.logging.annotations.LogMessage;
+import org.jboss.logging.annotations.Message;
+import org.jboss.logging.annotations.MessageLogger;
+import org.jboss.logging.annotations.ValidIdRange;
 
 /**
- * CDI event emitted when a new message is to be sent to a client socket, such as firewall instances.
- *
  * @author Juraci Paixão Kröhling
  */
-public class NewClientSocketMessage extends BasicEvent {
-    private String type;
-    private String message;
+@MessageLogger(projectCode = "QCLN")
+@ValidIdRange(min = 10320, max = 10329)
+public interface MsgLogger {
+    MsgLogger LOGGER = Logger.getMessageLogger(MsgLogger.class, MsgLogger.class.getPackage().getName());
 
-    public NewClientSocketMessage(String type, String message) {
-        this.type = type;
-        this.message = message;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    @Override
-    public String toString() {
-        return "NewClientSocketMessage{" +
-                "type='" + type + '\'' +
-                ", message='" + message + '\'' +
-                '}';
-    }
+    @LogMessage(level = Logger.Level.INFO)
+    @Message(id = 10321, value = "Received an Audit event: [%s]")
+    void auditEventReceived(String auditEvent);
 }

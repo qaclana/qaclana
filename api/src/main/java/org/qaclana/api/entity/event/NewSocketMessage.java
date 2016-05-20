@@ -16,35 +16,33 @@
  */
 package org.qaclana.api.entity.event;
 
-import org.qaclana.api.SystemState;
-
-import java.util.UUID;
-
 /**
- * CDI event fired when a system state changes.
+ * CDI event emitted when a new message is to be sent to a client socket, such as firewall instances.
  *
  * @author Juraci Paixão Kröhling
  */
-public class SystemStateChangeApplied extends BasicEvent {
-    private SystemState state;
+public class NewSocketMessage extends BasicEvent {
+    private String type;
+    private String message;
 
-    public SystemStateChangeApplied(SystemState state) {
-        this.state = state;
+    public NewSocketMessage(String type, String message) {
+        this.type = type;
+        this.message = message;
     }
 
-    public SystemStateChangeApplied(UUID id, SystemState state) {
-        super(id);
-        this.state = state;
+    public String getType() {
+        return type;
     }
 
-    public SystemState getState() {
-        return state;
+    public String getMessage() {
+        return message;
     }
 
     @Override
     public String toString() {
-        return "SystemStateChangeApplied{" +
-                "state=" + state +
+        return "NewSocketMessage{" +
+                "type='" + type + '\'' +
+                ", message='" + message + '\'' +
                 '}';
     }
 }

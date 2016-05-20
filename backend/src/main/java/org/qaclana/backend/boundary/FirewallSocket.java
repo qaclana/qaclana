@@ -19,6 +19,7 @@ package org.qaclana.backend.boundary;
 import org.qaclana.backend.control.Firewall;
 import org.qaclana.backend.control.MsgLogger;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
+import org.qaclana.services.messagesender.SocketMessagePropagator;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
@@ -47,6 +48,9 @@ public class FirewallSocket {
     @Inject
     Event<NewFirewallInstanceRegistered> newFirewallInstanceRegisteredEvent;
 
+    @Inject
+    SocketMessagePropagator socketMessagePropagator;
+
     @OnOpen
     public void onOpen(Session session) {
         log.firewallSocketOpened();
@@ -57,6 +61,7 @@ public class FirewallSocket {
     @OnMessage
     public void onMessage(Session session, String payload) {
         log.firewallSocketMessage(payload);
+        socketMessagePropagator.propagate(payload);
     }
 
     @OnClose

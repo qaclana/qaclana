@@ -43,4 +43,11 @@ public class SystemStateChangeMessage extends BasicMessage {
     public String getType() {
         return EVENT_TYPE;
     }
+
+    @Override
+    public String toString() {
+        return "SystemStateChangeMessage{" +
+                "state=" + state +
+                '}';
+    }
 }

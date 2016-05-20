@@ -1,0 +1,10 @@
+apply plugin: 'java'
+
+description = 'Listens for Audit Events and stores it in permanent storage'
+
+dependencies {
+    compile project(':api')
+
+    compile libraries['javaee']
+    compile libraries['jbossLogging']
+}

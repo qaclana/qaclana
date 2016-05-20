@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qaclana.api.entity.IpRange;
 import org.qaclana.api.entity.event.BasicEvent;
-import org.qaclana.api.entity.event.NewClientSocketMessage;
+import org.qaclana.api.entity.event.NewSocketMessage;
 import org.qaclana.api.entity.ws.IpRangeAddedToBlacklistMessage;
 
 import javax.ejb.Singleton;
@@ -49,7 +49,7 @@ public class BlacklistUpdateListenerTest {
     BlacklistContainer blacklistContainer;
 
     @Inject
-    Event<NewClientSocketMessage> newClientSocketMessageEvent;
+    Event<NewSocketMessage> newClientSocketMessageEvent;
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -60,7 +60,7 @@ public class BlacklistUpdateListenerTest {
                 .addClass(MsgLogger.class)
                 .addClass(MsgLogger_$logger.class)
                 .addClass(BasicEvent.class)
-                .addClass(NewClientSocketMessage.class)
+                .addClass(NewSocketMessage.class)
                 .addClass(IpRange.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
@@ -72,7 +72,7 @@ public class BlacklistUpdateListenerTest {
         IpRange blocked = IpRange.fromString("192.168.0.1/24");
         String template = "{\"ipRange\":{\"start\":%s,\"end\":%s},\"type\":\"blocked-iprange\"}";
         String payload = String.format(template, blocked.getStart(), blocked.getEnd());
-        newClientSocketMessageEvent.fire(new NewClientSocketMessage(IpRangeAddedToBlacklistMessage.EVENT_TYPE, payload));
+        newClientSocketMessageEvent.fire(new NewSocketMessage(IpRangeAddedToBlacklistMessage.EVENT_TYPE, payload));
         latch.await(1, TimeUnit.SECONDS);
 
         assertEquals(1, blacklistContainer.getBlacklistedIpRanges().size());

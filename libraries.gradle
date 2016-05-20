@@ -1,7 +1,10 @@
 ext {
     libraries = [
             junit: 'junit:junit:4.12',
-            jackson: 'com.fasterxml.jackson.core:jackson-databind:2.7.4',
+            jackson: [
+                    'com.fasterxml.jackson.core:jackson-databind:2.7.4',
+                    'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.4',
+            ],
             mockito: 'org.mockito:mockito-all:1.10.19',
             wildflyZip: 'org.wildfly:wildfly-dist:10.0.0.Final@zip',
             javaee: 'javax:javaee-api:7.0',

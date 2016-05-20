@@ -19,9 +19,11 @@ package org.qaclana.api.entity.event;
 import org.qaclana.api.entity.Audit;
 
 /**
+ * CDI event indicating that an audit event has just been reported.
+ *
  * @author Juraci Paixão Kröhling
  */
-public class AuditEventReported {
+public class AuditEventReported extends BasicEvent {
     private Audit audit;
 
     public AuditEventReported(Audit audit) {
@@ -30,5 +32,12 @@ public class AuditEventReported {
 
     public Audit getAudit() {
         return audit;
+    }
+
+    @Override
+    public String toString() {
+        return "AuditEventReported{" +
+                "audit=" + audit +
+                '}';
     }
 }

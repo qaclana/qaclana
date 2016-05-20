@@ -33,6 +33,7 @@ import org.qaclana.backend.boundary.SystemStateEndpoint;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
 import org.qaclana.backend.entity.rest.ErrorResponse;
 import org.qaclana.backend.entity.rest.SystemStateRequest;
+import org.qaclana.services.messagesender.SocketMessagePropagator;
 import org.qaclana.services.systemstatepropagator.SystemStateUpdater;
 
 import javax.ejb.Singleton;
@@ -84,8 +85,11 @@ public class SystemStateEndpointTest {
                 .addClass(SystemStateContainer.class)
                 .addClass(SystemStateEndpoint.class)
                 .addClass(SystemStateRequest.class)
-                .addClass(NewClientSocketMessage.class)
+                .addClass(NewSocketMessage.class)
                 .addClass(SystemStateUpdater.class)
+                .addClass(SocketMessagePropagator.class)
+                .addClass(org.qaclana.services.messagesender.MsgLogger.class)
+                .addClass(org.qaclana.services.messagesender.MsgLogger_$logger.class)
                 .addClass(org.qaclana.services.systemstatepropagator.MsgLogger.class)
                 .addClass(org.qaclana.services.systemstatepropagator.MsgLogger_$logger.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");

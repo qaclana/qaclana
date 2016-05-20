@@ -23,6 +23,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Stores a list of all available processors. Each processor should self-instantiate and self-register by calling the
+ * {@link #register(Processor)} method. Usually, implementations would be EJBs created via {@link javax.ejb.Startup} and
+ * would use {@link javax.annotation.PostConstruct} to perform the self registration. This registry can be injected via
+ * CDI.
+ *
  * @author Juraci Paixão Kröhling
  */
 @Singleton

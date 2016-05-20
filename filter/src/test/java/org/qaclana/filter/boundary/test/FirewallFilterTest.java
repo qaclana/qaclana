@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qaclana.api.*;
 import org.qaclana.api.entity.event.BasicEvent;
-import org.qaclana.api.entity.event.NewClientSocketMessage;
+import org.qaclana.api.entity.event.NewSocketMessage;
 import org.qaclana.filter.boundary.FirewallFilter;
 import org.qaclana.filter.control.*;
 import org.qaclana.filter.control.test.ApplicationResourcesForTest;
@@ -35,7 +35,7 @@ import org.qaclana.filter.control.test.SocketServer;
 import org.qaclana.filter.entity.ConnectToSocketServer;
 import org.qaclana.filter.entity.IncomingHttpRequest;
 import org.qaclana.filter.entity.OutgoingHttpResponse;
-import org.qaclana.services.messagensender.SocketMessagePropagator;
+import org.qaclana.services.messagesender.SocketMessagePropagator;
 
 import javax.ejb.Singleton;
 import javax.enterprise.event.Observes;
@@ -86,7 +86,7 @@ public class FirewallFilterTest {
                 .addClass(SocketClient.class)
                 .addClass(SocketMessagePropagator.class)
                 .addClass(BasicEvent.class)
-                .addClass(NewClientSocketMessage.class)
+                .addClass(NewSocketMessage.class)
                 .addClass(Recorder.class)
                 .addClass(Processor.class)
                 .addClass(ProcessorRegistry.class)
@@ -102,8 +102,8 @@ public class FirewallFilterTest {
                 .addClass(ApplicationResourcesForTest.class)
                 .addClass(SocketServer.class)
                 .addClass(ConnectToSocketServer.class)
-                .addClass(org.qaclana.services.messagensender.MsgLogger.class)
-                .addClass(org.qaclana.services.messagensender.MsgLogger_$logger.class)
+                .addClass(org.qaclana.services.messagesender.MsgLogger.class)
+                .addClass(org.qaclana.services.messagesender.MsgLogger_$logger.class)
                 .addAsWebInfResource("META-INF/ejb-jar.xml", "ejb-jar.xml")
                 .addAsWebInfResource("beans.xml", "beans.xml")
                 .addAsLibraries(Maven.resolver().resolve("org.mockito:mockito-all:1.10.19").withoutTransitivity().as(File.class));

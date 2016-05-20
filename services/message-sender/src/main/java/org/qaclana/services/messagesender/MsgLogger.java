@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qaclana.services.messagensender;
+package org.qaclana.services.messagesender;
 
 import org.jboss.logging.Logger;
 import org.jboss.logging.annotations.*;

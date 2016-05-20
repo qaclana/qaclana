@@ -16,25 +16,26 @@
  */
 package org.qaclana.filter.control;
 
+import org.qaclana.settings.SettingsValue;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
  * Place where application resources are defined.
  *
- * TODO: make use of the settings module
- *
  * @author Juraci Paixão Kröhling
  */
 @ApplicationScoped
 public class ApplicationResources {
-    private static final MsgLogger log = MsgLogger.LOGGER;
+    @Inject @SettingsValue("qaclana.server.socket.endpoint")
+    String serverSocketEndpoint;
 
     @Produces @SocketServerEndpointUri
     public URI getSocketServerEndpointUri() throws URISyntaxException {
-        String uri = System.getProperty("org.qaclana.server.socket.endpoint", "ws://localhost:8080/backend-0.0.1-SNAPSHOT/ws/instance");
-        return new URI(uri);
+        return new URI(serverSocketEndpoint);
     }
 }

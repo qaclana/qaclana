@@ -25,7 +25,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qaclana.api.*;
-import org.qaclana.api.entity.event.NewClientSocketMessage;
+import org.qaclana.api.entity.event.NewSocketMessage;
 import org.qaclana.filter.boundary.FirewallFilter;
 import org.qaclana.filter.control.*;
 import org.qaclana.filter.control.test.RejectAllProcessor;
@@ -74,7 +74,7 @@ public class RejectedOutcomeFilterTest {
                 .addClass(OverheadMeasureReporter.class)
                 .addClass(OutgoingHttpResponse.class)
                 .addClass(ProcessorRegistry.class)
-                .addClass(NewClientSocketMessage.class)
+                .addClass(NewSocketMessage.class)
                 .addClass(SystemState.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsWebInfResource("META-INF/ejb-jar.xml", "ejb-jar.xml")

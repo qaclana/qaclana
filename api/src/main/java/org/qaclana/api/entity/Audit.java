@@ -17,7 +17,7 @@
 package org.qaclana.api.entity;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 /**
@@ -30,9 +30,9 @@ public class Audit {
     private String requestId;
     private BigInteger ipAddress;
     private String text;
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private ZonedDateTime timestamp = ZonedDateTime.now();
 
-    public Audit(UUID id, String requestId, BigInteger ipAddress, String text, LocalDateTime timestamp) {
+    public Audit(UUID id, String requestId, BigInteger ipAddress, String text, ZonedDateTime timestamp) {
         this.id = id;
         this.requestId = requestId;
         this.ipAddress = ipAddress;
@@ -63,7 +63,7 @@ public class Audit {
         return id;
     }
 
-    public LocalDateTime getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return timestamp;
     }
 

@@ -39,4 +39,11 @@ public class IpRangeAddedToWhitelistMessage extends BasicMessage {
     public String getType() {
         return EVENT_TYPE;
     }
+
+    @Override
+    public String toString() {
+        return "IpRangeAddedToWhitelistMessage{" +
+                "ipRange=" + ipRange +
+                '}';
+    }
 }
