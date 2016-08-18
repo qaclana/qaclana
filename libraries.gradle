@@ -2,13 +2,13 @@ ext {
     libraries = [
             junit: 'junit:junit:4.12',
             jackson: [
-                    'com.fasterxml.jackson.core:jackson-databind:2.8.0',
-                    'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.0',
+                    'com.fasterxml.jackson.core:jackson-databind:2.8.1',
+                    'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.1',
             ],
             mockito: 'org.mockito:mockito-all:1.10.19',
             wildflyZip: 'org.wildfly:wildfly-dist:10.0.0.Final@zip',
             javaee: 'javax:javaee-api:7.0',
-            jpaModelGenerator: 'org.hibernate:hibernate-jpamodelgen:5.2.1.Final',
+            jpaModelGenerator: 'org.hibernate:hibernate-jpamodelgen:5.2.2.Final',
             jbossLogging: [
                     'org.jboss.logging:jboss-logging:3.3.0.Final',
                     'org.jboss.logging:jboss-logging-annotations:2.0.1.Final',
