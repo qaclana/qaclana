@@ -1,0 +1,8 @@
+apply plugin: 'war'
+
+description = 'Target application without filter'
+
+dependencies {
+    providedCompile libraries['javaee']
+    providedCompile libraries['jbossLogging']
+}

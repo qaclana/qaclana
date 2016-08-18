@@ -1,0 +1,5 @@
+= Target application without filter
+
+This is a very simple JAX-RS application, meant to be used as a target with the proxy in front.
+This can also be used for developing the proxy. Just deploy the exploded
+WAR into a running Wildfly in debug mode and configure your IDE to auto-deploy on changes.
