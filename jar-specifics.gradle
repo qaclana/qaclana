@@ -63,6 +63,10 @@ publishedProjects.each { it ->
             sourceOutputDir = "${projectDir}/src/main/generated-src"
         }
 
+        compileJava {
+            options.encoding = "UTF-8"
+        }
+
         compileJava.dependsOn task('adjustGeneratedSourceDir', {
             doLast {
                 new File(processors.sourceOutputDir).mkdirs()
