@@ -23,7 +23,7 @@ projectsWithArquillian.each { it ->
         }
 
         test.systemProperty 'java.util.logging.manager', 'org.jboss.logmanager.LogManager'
-        test.systemProperty 'jboss.home', "${rootProject.buildDir}/wildfly-10.0.0.Final"
+        test.systemProperty 'jboss.home', "${rootProject.buildDir}/wildfly-10.1.0.CR1"
         test.systemProperty 'allowConnectingToRunningServer', 'true'
     }
 }

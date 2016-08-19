@@ -6,7 +6,7 @@ ext {
                     'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.1',
             ],
             mockito: 'org.mockito:mockito-all:1.10.19',
-            wildflyZip: 'org.wildfly:wildfly-dist:10.0.0.Final@zip',
+            wildflyZip: 'org.wildfly:wildfly-dist:10.1.0.CR1@zip',
             javaee: 'javax:javaee-api:7.0',
             jpaModelGenerator: 'org.hibernate:hibernate-jpamodelgen:5.2.2.Final',
             jbossLogging: [

@@ -19,7 +19,7 @@ configurations {
 }
 
 task downloadWildfly(type: Copy) {
-    outputs.dir new File(rootProject.buildDir, "wildfly-10.0.0.Final")
+    outputs.dir new File(rootProject.buildDir, "wildfly-10.1.0.CR1")
     destinationDir = file("${rootProject.buildDir}")
     from { zipTree(configurations.wildfly.singleFile) }
 }
