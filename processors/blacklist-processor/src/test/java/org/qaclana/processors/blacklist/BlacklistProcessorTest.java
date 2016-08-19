@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,7 +63,8 @@ public class BlacklistProcessorTest {
                 .addClass(Processor.class)
                 .addClass(FirewallOutcome.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsLibraries(Maven.resolver().resolve("org.mockito:mockito-all:1.10.19").withoutTransitivity().as(File.class));
+                .addAsLibraries(Maven.resolver().resolve("org.mockito:mockito-all:1.10.19").withoutTransitivity()
+                        .as(File.class));
     }
 
     @Test

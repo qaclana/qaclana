@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,8 @@ import java.util.UUID;
 public interface AuditService {
     /**
      * Lists all the audit events for a given request.
-     * @param requestId    the request ID for the events
+     *
+     * @param requestId the request ID for the events
      * @return a list of {@link Audit} or null if no events are found.
      */
     List<Audit> listEventsForRequestId(String requestId);
@@ -40,7 +41,8 @@ public interface AuditService {
      * Lists all the audit events for a given IP address. Note that IP addresses do change, so, even though multiple
      * events might report the same IP address, it doesn't necessarily mean that it's the same client. Still, it's
      * a good indication of a "bad network" if the same IP address presents the same behavior most of the time.
-     * @param ipAddress    the IP address for the events
+     *
+     * @param ipAddress the IP address for the events
      * @return a list of {@link Audit} or null if no events are found
      */
     List<Audit> listEventsForClientIp(InetAddress ipAddress);
@@ -49,26 +51,30 @@ public interface AuditService {
      * Lists all the audit events for a given IP range. Note that IP addresses do change, so, even though multiple
      * events might report the same IP address, it doesn't necessarily mean that it's the same client. Still, it's
      * a good indication of a "bad network" if the same IP address presents the same behavior most of the time.
-     * @param ipRange    the IP range to get the audit events for
+     *
+     * @param ipRange the IP range to get the audit events for
      * @return a list of {@link Audit} or null if no events are found
      */
     List<Audit> listEventsForClientIp(IpRange ipRange);
 
     /**
      * Stores a new audit event.
-     * @param audit    the {@link Audit} event to be added
+     *
+     * @param audit the {@link Audit} event to be added
      */
     void add(Audit audit);
 
     /**
      * Removes a previously stored audit event
-     * @param id    the audit event's ID
+     *
+     * @param id the audit event's ID
      */
     void remove(UUID id);
 
     /**
      * Retrieve a single audit based on its ID
-     * @param id    the ID for the existing audit event
+     *
+     * @param id the ID for the existing audit event
      * @return the audit event or null if none exists under the ID
      */
     Audit get(UUID id);

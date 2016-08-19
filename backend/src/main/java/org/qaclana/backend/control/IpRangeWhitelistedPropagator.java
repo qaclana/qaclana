@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,18 +50,16 @@ public class IpRangeWhitelistedPropagator {
 
     @Inject
     Event<SendMessage> sendMessageEvent;
-
-    @Resource
-    private ManagedExecutorService executor;
-
     @Inject
     WhitelistService whitelistService;
+    @Resource
+    private ManagedExecutorService executor;
 
     /**
      * Builds a new Web Socket message and sends to all firewall instances with open sockets with us. Uses a
      * {@link ManagedExecutorService} to execute the submissions.
      *
-     * @param ipRangeAddedToWhitelist    the new whitelisted {@link IpRange}
+     * @param ipRangeAddedToWhitelist the new whitelisted {@link IpRange}
      */
     @Asynchronous
     public void propagate(@Observes IpRangeAddedToWhitelist ipRangeAddedToWhitelist) {
@@ -77,7 +75,7 @@ public class IpRangeWhitelistedPropagator {
      * Builds a new Web Socket message and sends to all firewall instances with open sockets with us. Uses a
      * {@link ManagedExecutorService} to execute the submissions.
      *
-     * @param ipRangeRemovedFromWhitelist    the {@link IpRange} that has been removed from the whitelist
+     * @param ipRangeRemovedFromWhitelist the {@link IpRange} that has been removed from the whitelist
      */
     @Asynchronous
     public void propagate(@Observes IpRangeRemovedFromWhitelist ipRangeRemovedFromWhitelist) {
@@ -91,7 +89,8 @@ public class IpRangeWhitelistedPropagator {
 
     /**
      * Sends the whitelist to new firewall instances
-     * @param newFirewallInstanceRegistered    the newly registered firewall instance
+     *
+     * @param newFirewallInstanceRegistered the newly registered firewall instance
      */
     @Asynchronous
     public void propagate(@Observes NewFirewallInstanceRegistered newFirewallInstanceRegistered) {

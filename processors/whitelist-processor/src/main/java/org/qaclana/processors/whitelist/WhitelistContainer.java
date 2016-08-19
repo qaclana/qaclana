@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,10 +30,9 @@ import java.util.List;
  */
 @Singleton
 public class WhitelistContainer {
-    private List<IpRange> whitelistedIpRanges = Collections.synchronizedList(new ArrayList<>());
-
     @Inject
     Event<WhitelistUpdated> whitelistUpdatedEvent;
+    private List<IpRange> whitelistedIpRanges = Collections.synchronizedList(new ArrayList<>());
 
     public List<IpRange> getIpRangesOnWhitelist() {
         return Collections.unmodifiableList(whitelistedIpRanges);

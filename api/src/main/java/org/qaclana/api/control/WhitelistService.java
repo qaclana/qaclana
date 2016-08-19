@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,13 +32,15 @@ public interface WhitelistService {
 
     /**
      * Lists all known IP Ranges in the whitelist.
+     *
      * @return a list of {@link IpRange} on the whitelist
      */
     List<IpRange> list();
 
     /**
      * Checks whether a given {@link IpRange} is in the whitelist
-     * @param ipRange    the {@link IpRange} to be checked
+     *
+     * @param ipRange the {@link IpRange} to be checked
      * @return true if the range is in the whitelist
      */
     boolean isInWhitelist(IpRange ipRange);
@@ -46,14 +48,16 @@ public interface WhitelistService {
     /**
      * Adds the IP Range to the storage. If the operation is successful, the CDI event {@link IpRangeAddedToWhitelist}
      * is emitted.
-     * @param ipRange    the {@link IpRange} to add to the whitelist
+     *
+     * @param ipRange the {@link IpRange} to add to the whitelist
      */
     void add(IpRange ipRange);
 
     /**
      * Removes the IP Range from the storage. If the operation is successful, the CDI event
      * {@link IpRangeRemovedFromWhitelist} is emitted.
-     * @param ipRange    the {@link IpRange} to remove from the whitelist
+     *
+     * @param ipRange the {@link IpRange} to remove from the whitelist
      */
     void remove(IpRange ipRange);
 }

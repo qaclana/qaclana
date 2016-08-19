@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +29,6 @@ public class OverheadMeasureReporter {
     private static final MsgLogger logger = MsgLogger.LOGGER;
 
     public void report(Class<?> clazz, Method method, long start, long end) {
-        logger.overheadReporter(clazz.getName(), method.getName(), end-start);
+        logger.overheadReporter(clazz.getName(), method.getName(), end - start);
     }
 }

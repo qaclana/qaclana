@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -64,7 +64,7 @@ public class Firewall {
     /**
      * Sends the {@link HttpServletRequest} for asynchronous processing.
      *
-     * @param request    the request to be processed by all {@link Processor}
+     * @param request the request to be processed by all {@link Processor}
      * @return a {@link Future} that provides the {@link FirewallOutcome} once the processing is done.
      * @see #process(HttpServletRequest)
      * @see #doProcess(HttpServletRequest, HttpServletResponse)
@@ -77,8 +77,8 @@ public class Firewall {
     /**
      * Sends the {@link ServletResponse} for asynchronous processing.
      *
-     * @param request     the request, for reference should the processor need it. Should not be changed.
-     * @param response    the response, for analysis. Can be changed/rewritten by processors.
+     * @param request  the request, for reference should the processor need it. Should not be changed.
+     * @param response the response, for analysis. Can be changed/rewritten by processors.
      * @return a {@link Future} that provides the {@link FirewallOutcome} once the processing is done.
      * @see #process(HttpServletRequest, HttpServletResponse)
      * @see #doProcess(HttpServletRequest, HttpServletResponse)
@@ -91,7 +91,7 @@ public class Firewall {
     /**
      * Process the request immediately
      *
-     * @param request    the request to be processed by all {@link Processor}
+     * @param request the request to be processed by all {@link Processor}
      * @return the {@link FirewallOutcome} for this request
      * @see #doProcess(HttpServletRequest, HttpServletResponse)
      */
@@ -102,8 +102,8 @@ public class Firewall {
     /**
      * Process the response immediately
      *
-     * @param request     the request, for reference should the processor need it. Should not be changed.
-     * @param response    the response, for analysis. Can be changed/rewritten by processors.
+     * @param request  the request, for reference should the processor need it. Should not be changed.
+     * @param response the response, for analysis. Can be changed/rewritten by processors.
      * @return the {@link FirewallOutcome} for this request
      * @see #doProcess(HttpServletRequest, HttpServletResponse)
      */
@@ -114,24 +114,24 @@ public class Firewall {
     /**
      * Sends the request and response to all processors, collecting the answers and calculating a final
      * {@link FirewallOutcome}
-     *
+     * <p>
      * There are two phases where this method is called: request and response. During the request phase, the response is
      * null. The request can be changed by the processors during this phase. During the response phase, we expect
      * both the request and response to be provided, but the request cannot be changed. The response can be changed.
-     *
+     * <p>
      * Before passing the request/response to the processors, an UUID is generated for the request. This UUID is then
      * added as a request attribute, under the name {@link #HTTP_HEADER_REQUEST_ID}. The request/response is then
      * recorded via {@link Recorder}.
-     *
+     * <p>
      * Each processor gets its own job that is submitted to the {@link ManagedExecutorService} via a
      * {@link CompletionService}.
-     *
+     * <p>
      * At the current implementation, the processing is finished once the first {@link FirewallOutcome#REJECT} is seen
      * and pending processors are cancelled.
      *
-     * @param request     the incoming request
-     * @param response    the response, can be null if the request has not been fully dispatched yet
-     * @return  the outcome for the firewall processing
+     * @param request  the incoming request
+     * @param response the response, can be null if the request has not been fully dispatched yet
+     * @return the outcome for the firewall processing
      */
     private FirewallOutcome doProcess(HttpServletRequest request, HttpServletResponse response) {
         if (null == request) {
@@ -168,7 +168,7 @@ public class Firewall {
                             ))
                     );
 
-            for (int i = 0 ; i < processors.size() ; i++) {
+            for (int i = 0; i < processors.size(); i++) {
                 try {
                     outcome = completionService.take().get();
                     if (FirewallOutcome.REJECT.equals(outcome)) {
@@ -178,7 +178,8 @@ public class Firewall {
                     if (FirewallOutcome.ACCEPT.equals(outcome)) {
                         break;
                     }
-                } catch (InterruptedException | ExecutionException ignored) {}
+                } catch (InterruptedException | ExecutionException ignored) {
+                }
             }
         } finally {
             // the currently running tasks should be fast enough, so, we let them finish whenever they are done

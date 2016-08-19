@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -59,8 +59,8 @@ public class BlacklistProcessor implements Processor {
         Optional<IpRange> possibleIpRange = blacklistedIpRanges
                 .stream()
                 .filter(blockedIpRange ->
-                    ipFromRequest.getStart().compareTo(blockedIpRange.getStart()) >= 0
-                            && ipFromRequest.getStart().compareTo(blockedIpRange.getEnd()) <= 0
+                        ipFromRequest.getStart().compareTo(blockedIpRange.getStart()) >= 0
+                                && ipFromRequest.getStart().compareTo(blockedIpRange.getEnd()) <= 0
                 )
                 .findAny();
 

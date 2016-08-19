@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,14 +33,14 @@ import java.util.concurrent.Future;
 @Specializes
 @Singleton
 public class RecordLookupServiceMock extends RecordLookupService {
-    @Inject
-    Event<IpFoundOnHoneyPotBlacklist> ipFoundOnHoneyPotBlacklistEvent;
-
     private static final List<String> ipsToReturnRecords = new ArrayList<>();
 
     static {
         ipsToReturnRecords.add("255.255.255.255");
     }
+
+    @Inject
+    Event<IpFoundOnHoneyPotBlacklist> ipFoundOnHoneyPotBlacklistEvent;
 
     public Future<InetAddress[]> lookup(String ip) {
         InetAddress[] addresses = null;

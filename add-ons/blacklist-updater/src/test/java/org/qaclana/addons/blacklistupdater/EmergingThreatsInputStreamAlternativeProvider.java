@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,8 @@ import java.io.InputStream;
 @Stateless
 @Alternative
 public class EmergingThreatsInputStreamAlternativeProvider {
-    @Produces @EmergingThreats
+    @Produces
+    @EmergingThreats
     public InputStream produceEmergingThreatsInputStream() throws IOException {
         return this.getClass().getResourceAsStream("/emerging-Block-IPs.txt");
     }

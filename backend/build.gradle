@@ -12,5 +12,7 @@ dependencies {
 
     providedCompile libraries['javaee']
     providedCompile libraries['jbossLogging']
-    providedCompile libraries['jackson'] // we don't directly depend on this, but transitively we do and the server provides it
+
+    // we don't directly depend on this, but transitively we do and the server provides it
+    providedCompile libraries['jackson']
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ package org.qaclana.filter.control;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
+import java.time.Clock;
 
 /**
  * EJB interceptor that wraps target calls and measures the time it took to run, reporting this data to a
@@ -31,13 +32,16 @@ public class FilterOverheadMeasurer {
     @Inject
     OverheadMeasureReporter reporter;
 
+    @Inject
+    Clock clock;
+
     @AroundInvoke
     public Object measure(InvocationContext invocationContext) throws Exception {
-        long begin = System.currentTimeMillis();
+        long begin = clock.millis();
         try {
             return invocationContext.proceed();
         } finally {
-            long end = System.currentTimeMillis();
+            long end = clock.millis();
             reporter.report(invocationContext.getTarget().getClass(), invocationContext.getMethod(), begin, end);
         }
     }

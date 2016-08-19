@@ -60,7 +60,7 @@ publishedProjects.each { it ->
         }
 
         processors {
-            sourceOutputDir = "${projectDir}/src/main/generated-src"
+            sourceOutputDir = "${projectDir}/src/main/generated_src"
         }
 
         compileJava {
@@ -102,8 +102,8 @@ publishedProjects.each { it ->
 
                     pom.withXml {
                         asNode().children().last() + pomCustom
-                        asNode().appendNode( 'description', project.description )
-                        asNode().appendNode( 'name', project.name )
+                        asNode().appendNode('description', project.description)
+                        asNode().appendNode('name', project.name)
                     }
                 }
             }
@@ -111,7 +111,7 @@ publishedProjects.each { it ->
         publishing {
             repositories {
                 maven {
-                    if(project.version.endsWith('-SNAPSHOT')) {
+                    if (project.version.endsWith('-SNAPSHOT')) {
                         url 'https://repository.jboss.org/nexus/content/repositories/snapshots/'
                     } else {
                         url 'https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/'

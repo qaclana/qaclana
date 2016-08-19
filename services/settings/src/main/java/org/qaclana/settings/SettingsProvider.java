@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,13 +42,12 @@ public class SettingsProvider {
     private static final String JNDI_BASE = "java:global/qaclana";
     private static final String CONFIG_FILE_PATH = "/etc/qaclana.conf";
     private static final MsgLogger logger = MsgLogger.LOGGER;
-
+    @Inject
+    @EnvironmentVars
+    Map<String, String> envVars;
     private Map<String, String> properties = new HashMap<>();
     private Map<String, String> fromJNDI = new HashMap<>();
     private Properties fromConfigurationFile = new Properties();
-
-    @Inject @EnvironmentVars
-    Map<String, String> envVars;
 
     public String get(String settingsName) {
         // Resolution order:
@@ -89,7 +88,8 @@ public class SettingsProvider {
         return null;
     }
 
-    @Produces @SettingsValue
+    @Produces
+    @SettingsValue
     public String produceSettingsValue(InjectionPoint injectionPoint) {
         SettingsValue settingsValue = injectionPoint.getAnnotated().getAnnotation(SettingsValue.class);
         String settingsName = settingsValue.value();

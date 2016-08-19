@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,6 +25,8 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.websocket.*;
 
+import java.time.Clock;
+
 import static org.qaclana.filter.control.SocketClientStarter.UNDEPLOYMENT;
 
 /**
@@ -46,6 +48,9 @@ public class SocketClient {
     @Inject
     Event<ConnectToSocketServer> connectToSocketServerEvent;
 
+    @Inject
+    Clock clock;
+
     @OnOpen
     public void onOpen(Session session) {
         log.firewallSocketOpened(session.getId());
@@ -65,7 +70,7 @@ public class SocketClient {
                 UNDEPLOYMENT.getReasonPhrase().equals(reason.getReasonPhrase()))) {
             // if *we* are going away, we don't want to try to connect to the server again
             // otherwise, we want to start retrying right
-            connectToSocketServerEvent.fire(new ConnectToSocketServer(reason, System.currentTimeMillis()));
+            connectToSocketServerEvent.fire(new ConnectToSocketServer(reason, clock.millis()));
         }
         log.firewallSocketClosed(reason.toString());
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Clock;
 
 /**
  * Place where application resources are defined.
@@ -31,11 +32,18 @@ import java.net.URISyntaxException;
  */
 @ApplicationScoped
 public class ApplicationResources {
-    @Inject @SettingsValue("qaclana.server.socket.endpoint")
+    @Inject
+    @SettingsValue("qaclana.server.socket.endpoint")
     String serverSocketEndpoint;
 
-    @Produces @SocketServerEndpointUri
+    @Produces
+    @SocketServerEndpointUri
     public URI getSocketServerEndpointUri() throws URISyntaxException {
         return new URI(serverSocketEndpoint);
+    }
+
+    @Produces
+    public Clock getClock() {
+        return Clock.systemUTC();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,6 +39,7 @@ import org.qaclana.services.messagesender.SocketMessagePropagator;
 
 import javax.ejb.Singleton;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -47,6 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.websocket.DeploymentException;
 import java.io.File;
 import java.io.IOException;
+import java.time.Clock;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -74,6 +76,9 @@ public class FirewallFilterTest {
 
     @Inject
     SocketClient socketClient;
+
+    @Produces
+    static Clock clock = Clock.systemUTC();
 
     @Deployment
     public static WebArchive createDeployment() {

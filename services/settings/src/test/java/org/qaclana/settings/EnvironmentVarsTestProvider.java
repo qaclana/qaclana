@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,9 @@ import java.util.Map;
 public class EnvironmentVarsTestProvider {
     private Map<String, String> properties = new HashMap<>();
 
-    @Produces @Alternative @EnvironmentVars
+    @Produces
+    @Alternative
+    @EnvironmentVars
     public Map<String, String> getEnvironmentVars() {
         return properties;
     }

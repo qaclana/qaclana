@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,15 +22,16 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Basic contract for request/response processors. The firewall will run each processor twice, one once the request
  * first comes in, and again when the response is ready to be sent to the client.
- *
+ * <p>
  * Implementations should self instantiate and register themselves with the {@link ProcessorRegistry}
  *
- * @see ProcessorRegistry
  * @author Juraci Paixão Kröhling
+ * @see ProcessorRegistry
  */
 public interface Processor {
     // TODO: we will need different types of processors, such as score-based processor, accept/reject processor
 
     FirewallOutcome process(HttpServletRequest request);
+
     FirewallOutcome process(HttpServletResponse response);
 }

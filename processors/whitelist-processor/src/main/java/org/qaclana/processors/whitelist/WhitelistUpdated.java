@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,10 +22,6 @@ import org.qaclana.api.entity.IpRange;
  * @author Juraci Paixão Kröhling
  */
 public class WhitelistUpdated {
-    enum OperationType {
-        ADDED, REMOVED
-    }
-
     private OperationType type;
     private IpRange ipRange;
 
@@ -40,5 +36,9 @@ public class WhitelistUpdated {
 
     public IpRange getIpRange() {
         return ipRange;
+    }
+
+    enum OperationType {
+        ADDED, REMOVED
     }
 }

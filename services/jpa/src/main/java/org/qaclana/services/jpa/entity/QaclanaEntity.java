@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,10 +28,9 @@ import java.util.UUID;
  */
 @MappedSuperclass
 public class QaclanaEntity implements Serializable {
+    private final ZonedDateTime createdAt = ZonedDateTime.now();
     @Id
     private UUID id;
-
-    private final ZonedDateTime createdAt = ZonedDateTime.now();
     private ZonedDateTime updatedAt = createdAt;
 
     public QaclanaEntity() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,7 +34,8 @@ import java.net.URL;
 public class EmergingThreatsInputStreamProvider {
     private static final String BLOCK_LIST = "https://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt";
 
-    @Produces @EmergingThreats
+    @Produces
+    @EmergingThreats
     public InputStream produceEmergingThreatsInputStream() throws IOException {
         return new URL(BLOCK_LIST).openStream();
     }

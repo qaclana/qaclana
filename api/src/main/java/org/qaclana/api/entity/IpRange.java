@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,8 +46,8 @@ public class IpRange {
     /**
      * Constructs a new IP range, based on a starting and ending IP expressed as longs.
      *
-     * @param startIp    the start IP boundary, as long. Required.
-     * @param endIp      the upper IP boundary, as long. Required.
+     * @param startIp the start IP boundary, as long. Required.
+     * @param endIp   the upper IP boundary, as long. Required.
      */
     public IpRange(BigInteger startIp, BigInteger endIp) {
         if (null == startIp || null == endIp) {
@@ -62,14 +62,6 @@ public class IpRange {
         this.end = endIp;
     }
 
-    public BigInteger getStart() {
-        return start;
-    }
-
-    public BigInteger getEnd() {
-        return end;
-    }
-
     /**
      * Creates a new IP Range based on a CIDR string. Formats understood by this method:
      * IPv4/Bits, ie, 192.168.0.1/32
@@ -77,7 +69,7 @@ public class IpRange {
      * IPv6/Bits, ie, ::1
      * IPv6/128, ie, ::1 (becomes ::1/128)
      *
-     * @param cidr    the CIDR to be parsed
+     * @param cidr the CIDR to be parsed
      * @return a new IpRange instance based on the CIDR data
      */
     public static IpRange fromString(String cidr) {
@@ -114,7 +106,7 @@ public class IpRange {
             }
 
             if (routingPrefix > maxRoutingPrefix || routingPrefix <= 0) {
-                throw new IllegalArgumentException("Invalid routing prefix (/"+routingPrefix+") on CIDR "+cidr);
+                throw new IllegalArgumentException("Invalid routing prefix (/" + routingPrefix + ") on CIDR " + cidr);
             }
 
             BigInteger ipAsNumeric = ipToBigInteger(ipBase);
@@ -163,6 +155,14 @@ public class IpRange {
             ipAsNumeric = ipAsNumeric.or(BigInteger.valueOf(b & 0xFF));
         }
         return ipAsNumeric;
+    }
+
+    public BigInteger getStart() {
+        return start;
+    }
+
+    public BigInteger getEnd() {
+        return end;
     }
 
     @Override

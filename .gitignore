@@ -2,6 +2,7 @@ build
 .gradle
 .idea
 generated-src
+generated_src
 *.iml
 *.ipr
 *.iws

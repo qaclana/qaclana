@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,6 +35,7 @@ import javax.websocket.DeploymentException;
 import javax.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
+import java.time.Clock;
 import java.time.Instant;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -67,9 +68,12 @@ public class SocketClientStarter {
     @Inject
     Event<ConnectToSocketServer> connectToSocketServerEvent;
 
+    @Inject
+    Clock clock;
+
     @PostConstruct
     public void connect() {
-        connectToSocketServerEvent.fire(new ConnectToSocketServer(null, System.currentTimeMillis()));
+        connectToSocketServerEvent.fire(new ConnectToSocketServer(null, clock.millis()));
     }
 
     @PreDestroy
@@ -101,7 +105,7 @@ public class SocketClientStarter {
                 log.cannotOpenSocketToServer(e);
 
                 long nextAttemptIn = Math.min(MAX_WAIT, connectToSocketServer.getAttempt() * 1000);
-                long nextAttemptAt = System.currentTimeMillis() + nextAttemptIn;
+                long nextAttemptAt = clock.millis() + nextAttemptIn;
                 connectToSocketServer.setNextAttempt(nextAttemptAt);
                 connectToSocketServer.increaseAttempt();
                 log.failedToReconnect(Instant.ofEpochMilli(nextAttemptAt).toString());

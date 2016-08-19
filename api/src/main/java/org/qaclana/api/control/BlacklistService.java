@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,13 +31,15 @@ import java.util.List;
 public interface BlacklistService {
     /**
      * Lists all known IP Ranges in the blacklist.
+     *
      * @return a list of {@link IpRange} on the blacklist
      */
     List<IpRange> list();
 
     /**
      * Checks whether a given {@link IpRange} is in the blacklist
-     * @param ipRange    the {@link IpRange} to be checked
+     *
+     * @param ipRange the {@link IpRange} to be checked
      * @return true if the range is in the blacklist
      */
     boolean isInBlacklist(IpRange ipRange);
@@ -45,14 +47,16 @@ public interface BlacklistService {
     /**
      * Adds the IP Range to the storage. If the operation is successful, the CDI event {@link IpRangeAddedToBlacklist}
      * is emitted.
-     * @param ipRange    the {@link IpRange} to add to the blacklist
+     *
+     * @param ipRange the {@link IpRange} to add to the blacklist
      */
     void add(IpRange ipRange);
 
     /**
      * Removes the IP Range from the storage. If the operation is successful, the CDI event
      * {@link IpRangeRemovedFromBlacklist} is emitted.
-     * @param ipRange    the {@link IpRange} to remove from the blacklist
+     *
+     * @param ipRange the {@link IpRange} to remove from the blacklist
      */
     void remove(IpRange ipRange);
 }

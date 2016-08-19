@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,21 +42,18 @@ import java.util.Map;
 @Stateless
 public class SystemStateChangePropagator {
     private static final MsgLogger log = MsgLogger.LOGGER;
-
-    @Resource
-    private ManagedExecutorService executor;
-
-    @Inject @Firewall
+    @Inject
+    @Firewall
     Instance<Map<String, Session>> firewallSessionsInstance;
-
-    @Inject @Frontend
+    @Inject
+    @Frontend
     Instance<Map<String, Session>> frontendSessionsInstance;
-
     @Inject
     Event<SendMessage> sendMessageEvent;
-
     @Inject
     SystemStateContainer systemStateInstance;
+    @Resource
+    private ManagedExecutorService executor;
 
     @Asynchronous
     public void propagate(@Observes SystemStateChange changeEvent) {
@@ -68,7 +65,8 @@ public class SystemStateChangePropagator {
 
     /**
      * Whenever we get a new instance registered, we want to propagate the current state of the system to it.
-     * @param newFirewallInstanceRegistered    the event with the new session
+     *
+     * @param newFirewallInstanceRegistered the event with the new session
      */
     @Asynchronous
     public void propagate(@Observes NewFirewallInstanceRegistered newFirewallInstanceRegistered) {

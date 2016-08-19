@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,10 +35,12 @@ import org.qaclana.filter.entity.IncomingHttpRequest;
 import org.qaclana.filter.entity.OutgoingHttpResponse;
 
 import javax.ejb.Singleton;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.time.Clock;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -53,6 +55,9 @@ import static org.mockito.Mockito.when;
 public class RejectedOutcomeFilterTest {
     @Inject
     Firewall firewall;
+
+    @Produces
+    static Clock clock = Clock.systemUTC();
 
     @Deployment
     public static WebArchive createDeployment() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -65,7 +65,8 @@ public class NewFirewallInstanceReceivesSystemStateTest {
     @Inject
     FirewallSocket firewallSocket;
 
-    @Inject @Firewall
+    @Inject
+    @Firewall
     private Instance<Map<String, Session>> sessionsInstance;
 
     @Deployment

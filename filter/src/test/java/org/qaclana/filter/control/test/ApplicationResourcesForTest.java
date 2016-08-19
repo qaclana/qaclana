@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Clock;
 
 /**
  * @author Juraci Paixão Kröhling
@@ -34,7 +35,8 @@ public class ApplicationResourcesForTest {
     @Inject
     ContextPathContainer contextPathContainer;
 
-    @Produces @SocketServerEndpointUri
+    @Produces
+    @SocketServerEndpointUri
     public URI getSocketServerEndpointUri() throws URISyntaxException {
         String defaultUri = "ws://localhost:8080" + contextPathContainer.getContextPath() + "/ws/instance";
         String uri = System.getProperty("org.qaclana.server.socket.endpoint", defaultUri);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,18 +33,21 @@ import java.util.Map;
  */
 @ApplicationScoped
 public class ApplicationResources {
+    @Inject
+    Instance<SystemStateContainer> systemStateContainerInstance;
     private Map<String, Session> frontendSessions = new HashMap<>();
     private Map<String, Session> firewallSessions = new HashMap<>();
 
-    @Inject
-    Instance<SystemStateContainer> systemStateContainerInstance;
-
-    @Produces @Frontend @ApplicationScoped
+    @Produces
+    @Frontend
+    @ApplicationScoped
     public Map<String, Session> getFrontendSessions() {
         return frontendSessions;
     }
 
-    @Produces @Firewall @ApplicationScoped
+    @Produces
+    @Firewall
+    @ApplicationScoped
     public Map<String, Session> getFirewallSessions() {
         return firewallSessions;
     }

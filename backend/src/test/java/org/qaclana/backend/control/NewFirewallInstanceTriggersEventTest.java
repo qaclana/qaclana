@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
+ * Copyright 2016 Juraci Paixão Kröhling
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -67,9 +67,10 @@ public class NewFirewallInstanceTriggersEventTest {
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
-    @Test @Ignore("This test is ignored because of a possible bug in Wildfly: WFLY-3313")
+    @Test
+    @Ignore("This test is ignored because of a possible bug in Wildfly: WFLY-3313")
     public void makeNewConnection() throws Exception {
-        String url = "ws://"+baseURL.getHost()+":"+baseURL.getPort()+baseURL.getPath()+"ws/instance";
+        String url = "ws://" + baseURL.getHost() + ":" + baseURL.getPort() + baseURL.getPath() + "ws/instance";
 
         final AtomicReference<String> message = new AtomicReference<>();
         final CountDownLatch latch = new CountDownLatch(1);
@@ -77,12 +78,9 @@ public class NewFirewallInstanceTriggersEventTest {
         Endpoint endpoint = new Endpoint() {
             @Override
             public void onOpen(Session session, EndpointConfig config) {
-                session.addMessageHandler(new MessageHandler.Whole<String>() {
-                    @Override
-                    public void onMessage(String content) {
-                        message.set(content);
-                        latch.countDown();
-                    }
+                session.addMessageHandler((MessageHandler.Whole<String>) content -> {
+                    message.set(content);
+                    latch.countDown();
                 });
             }
         };
