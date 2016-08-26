@@ -94,4 +94,12 @@ public interface MsgLogger {
     @LogMessage(level = Logger.Level.INFO)
     @Message(id = 10016, value = "Received a request to remove an IP Range from the whitelist. IP Range: [%s]")
     void removeIpRangeFromWhitelist(String ipRange);
+
+    @LogMessage(level = Logger.Level.WARN)
+    @Message(id = 10017, value = "CORS handler is enabled. For production environments, it should be handled by the Auth/Authz service.")
+    void corsEnabled();
+
+    @LogMessage(level = Logger.Level.INFO)
+    @Message(id = 10018, value = "CORS handler is disabled. Value from the configuration: [%s]")
+    void corsDisabled(String value);
 }

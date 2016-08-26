@@ -31,6 +31,7 @@ import org.qaclana.api.entity.ws.SystemStateChangeMessage;
 import org.qaclana.backend.boundary.FirewallSocket;
 import org.qaclana.backend.boundary.SystemStateEndpoint;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
+import org.qaclana.backend.entity.event.NewFrontendInstanceRegistered;
 import org.qaclana.backend.entity.rest.ErrorResponse;
 import org.qaclana.backend.entity.rest.SystemStateRequest;
 import org.qaclana.services.messagesender.SocketMessagePropagator;
@@ -74,6 +75,7 @@ public class SystemStateEndpointTest {
                 .addClass(MsgLogger.class)
                 .addClass(MsgLogger_$logger.class)
                 .addClass(NewFirewallInstanceRegistered.class)
+                .addClass(NewFrontendInstanceRegistered.class)
                 .addClass(RunAsAdmin.class)
                 .addClass(RunAsAdmin.class)
                 .addClass(SendMessage.class)

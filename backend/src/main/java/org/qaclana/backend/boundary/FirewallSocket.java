@@ -20,6 +20,7 @@ import org.qaclana.backend.control.Firewall;
 import org.qaclana.backend.control.MsgLogger;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
 import org.qaclana.services.messagesender.SocketMessagePropagator;
+import org.qaclana.settings.SettingsValue;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
@@ -41,10 +42,13 @@ import java.util.Map;
 @Stateless
 public class FirewallSocket {
     private static final MsgLogger log = MsgLogger.LOGGER;
+
     @Inject
     Event<NewFirewallInstanceRegistered> newFirewallInstanceRegisteredEvent;
+
     @Inject
     SocketMessagePropagator socketMessagePropagator;
+
     @Inject
     @Firewall
     private Instance<Map<String, Session>> sessionsInstance;

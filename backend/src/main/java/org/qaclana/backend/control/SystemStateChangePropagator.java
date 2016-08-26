@@ -22,6 +22,7 @@ import org.qaclana.api.entity.event.SystemStateChange;
 import org.qaclana.api.entity.ws.BasicMessage;
 import org.qaclana.api.entity.ws.SystemStateChangeMessage;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
+import org.qaclana.backend.entity.event.NewFrontendInstanceRegistered;
 
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
@@ -42,16 +43,21 @@ import java.util.Map;
 @Stateless
 public class SystemStateChangePropagator {
     private static final MsgLogger log = MsgLogger.LOGGER;
+
     @Inject
     @Firewall
     Instance<Map<String, Session>> firewallSessionsInstance;
+
     @Inject
     @Frontend
     Instance<Map<String, Session>> frontendSessionsInstance;
+
     @Inject
     Event<SendMessage> sendMessageEvent;
+
     @Inject
     SystemStateContainer systemStateInstance;
+
     @Resource
     private ManagedExecutorService executor;
 
@@ -73,6 +79,19 @@ public class SystemStateChangePropagator {
         BasicMessage message = new SystemStateChangeMessage(systemStateInstance.getState());
         executor.submit(
                 () -> sendMessageEvent.fire(new SendMessage(newFirewallInstanceRegistered.getSession(), message))
+        );
+    }
+
+    /**
+     * Whenever we get a new instance registered, we want to propagate the current state of the system to it.
+     *
+     * @param newFrontendInstanceRegistered the event with the new session
+     */
+    @Asynchronous
+    public void propagate(@Observes NewFrontendInstanceRegistered newFrontendInstanceRegistered) {
+        BasicMessage message = new SystemStateChangeMessage(systemStateInstance.getState());
+        executor.submit(
+                () -> sendMessageEvent.fire(new SendMessage(newFrontendInstanceRegistered.getSession(), message))
         );
     }
 

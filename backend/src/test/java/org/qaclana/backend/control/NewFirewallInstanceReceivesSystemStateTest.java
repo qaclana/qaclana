@@ -32,6 +32,7 @@ import org.qaclana.api.entity.ws.SystemStateChangeMessage;
 import org.qaclana.backend.boundary.FirewallSocket;
 import org.qaclana.backend.boundary.SystemStateEndpoint;
 import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
+import org.qaclana.backend.entity.event.NewFrontendInstanceRegistered;
 import org.qaclana.backend.entity.rest.SystemStateRequest;
 import org.qaclana.services.messagesender.SocketMessagePropagator;
 
@@ -81,6 +82,7 @@ public class NewFirewallInstanceReceivesSystemStateTest {
                 .addClass(MsgLogger.class)
                 .addClass(MsgLogger_$logger.class)
                 .addClass(NewFirewallInstanceRegistered.class)
+                .addClass(NewFrontendInstanceRegistered.class)
                 .addClass(IpRangeRemovedFromBlacklist.class)
                 .addClass(SendMessage.class)
                 .addClass(SystemState.class)

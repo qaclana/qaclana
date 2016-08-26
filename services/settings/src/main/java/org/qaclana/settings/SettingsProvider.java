@@ -42,9 +42,11 @@ public class SettingsProvider {
     private static final String JNDI_BASE = "java:global/qaclana";
     private static final String CONFIG_FILE_PATH = "/etc/qaclana.conf";
     private static final MsgLogger logger = MsgLogger.LOGGER;
+
     @Inject
     @EnvironmentVars
     Map<String, String> envVars;
+
     private Map<String, String> properties = new HashMap<>();
     private Map<String, String> fromJNDI = new HashMap<>();
     private Properties fromConfigurationFile = new Properties();

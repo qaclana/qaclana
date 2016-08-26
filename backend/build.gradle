@@ -7,6 +7,7 @@ dependencies {
     compile project(':add-ons/blacklist-updater')
     compile project(':services/audit-event-recorder')
     compile project(':services/jpa')
+    compile project(':services/settings')
     compile project(':services/system-state-propagator')
     compile project(':services/message-sender')
 

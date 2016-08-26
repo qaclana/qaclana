@@ -18,8 +18,11 @@ package org.qaclana.backend.boundary;
 
 import org.qaclana.backend.control.Frontend;
 import org.qaclana.backend.control.MsgLogger;
+import org.qaclana.backend.entity.event.NewFirewallInstanceRegistered;
+import org.qaclana.backend.entity.event.NewFrontendInstanceRegistered;
 
 import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.websocket.OnClose;
@@ -40,6 +43,9 @@ public class FrontendSocket {
     private static final MsgLogger log = MsgLogger.LOGGER;
 
     @Inject
+    Event<NewFrontendInstanceRegistered> newFrontendInstanceRegisteredEvent;
+
+    @Inject
     @Frontend
     private Instance<Map<String, Session>> sessionsInstance;
 
@@ -47,6 +53,7 @@ public class FrontendSocket {
     public void onOpen(Session session) {
         log.frontendSocketOpened();
         sessionsInstance.get().put(session.getId(), session);
+        newFrontendInstanceRegisteredEvent.fire(new NewFrontendInstanceRegistered(session));
     }
 
     @OnMessage
