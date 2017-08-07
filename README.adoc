@@ -1,0 +1,86 @@
+= Qaclana Web Application Firewall
+
+Qaclana is an adaptive cloud native Web Application Firewall. It can be deployed on Kubernetes
+and OpenShift and can easily scale horizontally.
+
+== Components
+
+Qaclana is split into different components, such as:
+
+* Backend -- the interface where admins interact with and is used to manage the cluster
+* Firewall Server -- the "head" of the firewall instances, where the firewall state is stored and distributed
+* Firewall Instance, or Proxy -- the actual workers, sitting in front of the target application
+
+Each one of those can scale and survive independently from the others: for a highly distributed but low traffic
+service, there might be several firewall instances sitting in front of each target deployment/pod, but one single
+firewall service might suffice.
+
+Usually, the backend will be a single instance, but scaling this component is also possible.
+
+Some of the data is stored only in-memory, whereas others are stored into a persistent storage. The database of
+choice is link:https://github.com/cockroachdb/cockroach[CockroachDB], which provides a cloud native SQL database
+compatible with PostgreSQL drivers.
+
+
+== Getting started
+
+To try it out, we recommend using the link:https://gitlab.com/qaclana/qaclana-deployment/[qaclana/qaclana-deployment]
+repository.
+
+== Developing
+
+To start developing, you'll need link:https://github.com/google/protobuf#protocol-compiler-installation[protobuf].
+
+This project follows the Go conventions and tools, so, it can be build like this:
+
+[source,bash]
+----
+go get . ./...
+go build -o _output/qaclana
+----
+
+Once it's built, it can be invoked as:
+
+[source,bash]
+----
+./_output/qaclana
+----
+
+Alternatively, you can use the Go runner, which will compile and run the application:
+[source,bash]
+----
+go run main.go
+----
+
+See the `help` output for all available commands.
+
+=== Backend requirements
+
+The backend requires a CockroachDB instance, which can be set like this:
+[source,bash]
+----
+docker run --rm -p 26257:26257 -p 8080:8080 cockroachdb/cockroach:v1.0.4 start --insecure
+docker run --rm -e COCKROACHDB_HOST=${YOUR_IP} -e WAIT_TIMEOUT=1 qaclana/qaclana-create-schema
+----
+
+Where `YOUR_IP` is your IP, visible from inside Docker containers (like, `192.168.1.x`).
+
+== License
+
+Qaclana is released under Apache License, Version 2.0 as described in the link:LICENSE[LICENSE] document
+
+----
+   Copyright © 2016-2017 The Qaclana Authors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+----

@@ -25,7 +25,7 @@ compile:
     - (! go fmt ./... 2>&1 | read) || echo "Some files need formatting. Failing."
     - protoc -I . pkg/proto/*.proto --go_out=plugins=grpc:.
     - GOBIN=${GOPATH}/go go get . ./...
-    - go test $(go list ./...)
+    - go test $(go list ./...) -timeout 1s
     - CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o _output/${CI_PROJECT_NAME}
   artifacts:
     when: on_success
