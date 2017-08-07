@@ -1,6 +1,6 @@
-FROM centos:7
+FROM scratch
 EXPOSE 8000 9000 10000
 
-COPY _output/qaclana /qaclana/
+ADD _output/qaclana /
 
-CMD ["/qaclana/qaclana"]
+CMD ["/qaclana"]
