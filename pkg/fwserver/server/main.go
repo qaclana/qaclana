@@ -24,8 +24,8 @@ import (
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 
-	"gitlab.com/qaclana/qaclana-server/pkg/client"
-	"gitlab.com/qaclana/qaclana-server/pkg/handler"
+	"gitlab.com/qaclana/qaclana/pkg/fwserver/client"
+	"gitlab.com/qaclana/qaclana/pkg/fwserver/handler"
 	hcServer "gitlab.com/qaclana/qaclana/pkg/healthcheck/server"
 )
 

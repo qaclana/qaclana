@@ -43,7 +43,7 @@ func Start() {
 	}()
 	go func() {
 		serverHostname := viper.GetString("server-hostname")
-		client.Start(serverHostname)
+		client.Start(serverHostname, 10000)
 	}()
 
 	select {

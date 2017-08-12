@@ -26,9 +26,9 @@ var (
 	serverHostname string
 )
 
-func Start(serverHostname string) {
-	log.Printf("Connecting to the server at %s:10000", serverHostname)
-	conn, err := grpc.Dial(fmt.Sprintf("%s:10000", serverHostname), grpc.WithInsecure())
+func Start(serverHostname string, grpcPort int) {
+	log.Printf("Connecting to the server at %s:%d", serverHostname, grpcPort)
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", serverHostname, grpcPort), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
