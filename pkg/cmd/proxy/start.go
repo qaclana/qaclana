@@ -41,9 +41,11 @@ func NewStartProxyCommand() *cobra.Command {
 	cmd.Flags().IntP("port", "p", 8000, "The port to bind the proxy to")
 	cmd.Flags().IntP("healthcheck-port", "", 9000, "The port to bind the healthcheck server to")
 	cmd.Flags().StringP("server-hostname", "u", "qaclana-server.qaclana-infra.svc.cluster.local", "The hostname to the Qaclana Server")
+	cmd.Flags().StringP("target", "t", "http://localhost:80/", "The URL to the target to protect")
 	viper.BindPFlag("port", cmd.Flags().Lookup("port"))
 	viper.BindPFlag("healthcheck-port", cmd.Flags().Lookup("healthcheck-port"))
 	viper.BindPFlag("server-hostname", cmd.Flags().Lookup("server-hostname"))
+	viper.BindPFlag("target", cmd.Flags().Lookup("target"))
 
 	return cmd
 }
@@ -53,7 +55,7 @@ func start(cmd *cobra.Command, args []string) {
 	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 
 	hc := hcServer.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("healthcheck-port")))
-	s := server.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("port")))
+	s := server.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("port")), viper.GetString("target"))
 
 	select {
 	case <-ch:

@@ -15,28 +15,37 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 )
 
 // Start a new HTTP server bound to the given address
-func Start(bindTo string) *http.Server {
+func Start(bindTo string, target string) *http.Server {
 	log.Print("Starting Qaclana Proxy")
 
+	rpURL, err := url.Parse(target)
+	if err != nil {
+		log.Fatal(err)
+	}
+	p := httputil.NewSingleHostReverseProxy(rpURL)
+	d := p.Director
+	p.Director = func(req *http.Request) {
+		log.Printf("Setting host to: %s", rpURL.Host)
+		d(req)
+		req.Header.Add("Host", rpURL.Host)
+	}
+
 	mu := http.NewServeMux()
-	mu.HandleFunc("/", handler)
+	mu.HandleFunc("/", p.ServeHTTP)
 
 	h := &http.Server{Handler: mu}
 
-	log.Printf("Started Proxy at %s", bindTo)
+	log.Printf("Started Proxy at %s, protecting %s", bindTo, target)
 	go func() {
 		log.Printf("unable to serve: %v", http.ListenAndServe(bindTo, mu))
 	}()
 
 	return h
-}
-
-func handler(w http.ResponseWriter, _ *http.Request) {
-	fmt.Fprintln(w, "OK")
 }
