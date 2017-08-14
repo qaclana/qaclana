@@ -16,7 +16,6 @@
 package client
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -26,39 +25,48 @@ import (
 	"gitlab.com/qaclana/qaclana/pkg/proto"
 )
 
-var connected = make(chan struct{})
+// Client represents a client connection to the backend
+type Client struct {
+	conn *grpc.ClientConn
+}
 
-// Start starts a connection to the backend server
-func Start(backendHostname string, backendGrpcPort int) {
-	// try to immediately start and connect
-	// if this returns, it means it failed, so, we retry
-	doStart(backendHostname, backendGrpcPort)
-	log.Printf("Retrying to connect to %s:%d", backendHostname, backendGrpcPort)
+// Start a new connection on a new client
+func Start(backend string) *Client {
+	c := &Client{}
+	c.connect(backend)
+	go c.doStart()
+	return c
+}
 
-	// we could use a more sophisticated logic here, but for now,
-	// attempting every second is OK
-	tick := time.Tick(1 * time.Second)
-	for {
-		select {
-		case <-tick:
-			doStart(backendHostname, backendGrpcPort)
-		}
+// Close the underlying connection for this client
+func (c *Client) Close() {
+	if c.conn != nil {
+		c.conn.Close()
 	}
 }
 
-func doStart(backendHostname string, backendGrpcPort int) {
-	log.Printf("Connecting to the backend server at %s:%d", backendHostname, backendGrpcPort)
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", backendHostname, backendGrpcPort), grpc.WithInsecure())
+func (c *Client) connect(address string) {
+	log.Printf("Connecting to the backend server at %s", address)
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		log.Printf("did not connect: %v", err)
 		return
 	}
-	defer conn.Close()
 
-	c := qaclana.NewSystemStateServiceClient(conn)
-	stream, err := c.Receive(context.Background(), &qaclana.Empty{})
+	c.conn = conn
+}
+
+func (c *Client) doStart() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	client := qaclana.NewSystemStateServiceClient(c.conn)
+	stream, err := client.Receive(ctx, &qaclana.Empty{})
 	if err != nil {
 		log.Printf("could not receive event: %v", err)
+		// we could use a more sophisticated logic here, but for now,
+		// attempting every second is OK
+		c.retry()
 		return
 	}
 
@@ -66,9 +74,17 @@ func doStart(backendHostname string, backendGrpcPort int) {
 		state, err := stream.Recv()
 		if err != nil {
 			log.Printf("unexpected error: %v", err)
+			c.retry()
 			return
 		}
 
 		log.Printf("received state %s from the server", state.State)
 	}
+}
+
+func (c *Client) retry() {
+	// we could use a more sophisticated logic here, but for now,
+	// attempting every second is OK
+	<-time.Tick(time.Second)
+	c.doStart()
 }

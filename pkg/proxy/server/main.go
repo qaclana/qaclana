@@ -10,52 +10,33 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// Package server has all components required to build and start a proxy server
 package server
 
 import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-
-	"github.com/spf13/viper"
-
-	"gitlab.com/qaclana/qaclana/pkg/fwserver/client"
-	hcServer "gitlab.com/qaclana/qaclana/pkg/healthcheck/server"
 )
 
-func Start() {
+// Start a new HTTP server bound to the given address
+func Start(bindTo string) *http.Server {
 	log.Print("Starting Qaclana Proxy")
-	hcServer.Start(viper.GetInt("healthcheck-port"))
 
-	var serverChannel = make(chan os.Signal, 0)
-	signal.Notify(serverChannel, os.Interrupt, syscall.SIGTERM)
+	mu := http.NewServeMux()
+	mu.HandleFunc("/", handler)
 
+	h := &http.Server{Handler: mu}
+
+	log.Printf("Started Proxy at %s", bindTo)
 	go func() {
-		mainServerMux := http.NewServeMux()
-		mainServerMux.HandleFunc("/", handler)
-		port := viper.GetInt("port")
-		address := fmt.Sprintf("0.0.0.0:%d", port)
-		log.Printf("Started Proxy at %s", address)
-		log.Fatal(http.ListenAndServe(address, mainServerMux))
-	}()
-	go func() {
-		serverHostname := viper.GetString("server-hostname")
-		client.Start(serverHostname, 10000)
+		log.Printf("unable to serve: %v", http.ListenAndServe(bindTo, mu))
 	}()
 
-	select {
-	case <-serverChannel:
-		log.Println("Qaclana Proxy is finishing")
-	}
+	return h
 }
 
 func handler(w http.ResponseWriter, _ *http.Request) {
-	fmt.Fprintln(w, "OK")
-}
-
-func healthCheckHandler(w http.ResponseWriter, _ *http.Request) {
 	fmt.Fprintln(w, "OK")
 }

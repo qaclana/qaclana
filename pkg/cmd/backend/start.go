@@ -14,10 +14,18 @@
 package backend
 
 import (
+	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
 	"gitlab.com/qaclana/qaclana/pkg/backend/server"
+	"gitlab.com/qaclana/qaclana/pkg/backend/sysstate"
+	hcServer "gitlab.com/qaclana/qaclana/pkg/healthcheck/server"
 )
 
 // NewStartBackendCommand initializes a command that can be used to start the backend server
@@ -44,5 +52,21 @@ func NewStartBackendCommand() *cobra.Command {
 }
 
 func start(cmd *cobra.Command, args []string) {
-	server.Start()
+	var ch = make(chan os.Signal, 0)
+	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
+
+	hc := hcServer.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("healthcheck-port")))
+	s := server.StartHttpServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("port")))
+	g, _ := server.StartGrpcServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("grpc-port")))
+	sysstate.StartBroadcaster()
+
+	select {
+	case <-ch:
+		log.Println("Qaclana Backend is finishing")
+		s.Close()
+		hc.Close()
+		g.Stop()
+		sysstate.Stop()
+		log.Println("Qaclana Backend finished")
+	}
 }

@@ -13,19 +13,25 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
 	"gitlab.com/qaclana/qaclana/pkg/healthcheck/handler"
 )
 
-func Start(port int) {
+// Start a new HTTP server with the health check handler
+func Start(bindTo string) *http.Server {
+	log.Print("Starting the health check server")
+
+	mu := http.NewServeMux()
+	mu.HandleFunc("/", handler.HealthCheckHandler)
+
+	h := &http.Server{Handler: mu}
+
 	go func() {
-		healthCheckMux := http.NewServeMux()
-		healthCheckMux.HandleFunc("/", handler.HealthCheckHandler)
-		address := fmt.Sprintf("0.0.0.0:%d", port)
-		log.Printf("Started Health Check Server at %s", address)
-		log.Fatal(http.ListenAndServe(address, healthCheckMux))
+		log.Printf("Started Health Check Server at %s", bindTo)
+		log.Fatal(http.ListenAndServe(bindTo, mu))
 	}()
+
+	return h
 }

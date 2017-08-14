@@ -26,9 +26,11 @@ var (
 	entering    = make(chan client)
 	leaving     = make(chan client)
 	messages    = make(chan qaclana.State)
+	stop        = make(chan struct{})
 
 	mu = sync.Mutex{}
 	co = sync.NewCond(&mu)
+	wg = sync.WaitGroup{}
 )
 
 func StartBroadcaster() {
@@ -61,10 +63,20 @@ func ListenForUpdates(cl chan qaclana.State) {
 	entering <- cl
 }
 
+func Stop() {
+	log.Println("Stopping the broadcaster")
+	wg.Add(1)
+	stop <- struct{}{}
+	wg.Wait()
+	log.Println("Stopped the broadcaster")
+}
+
 func broadcaster() {
 	clients := make(map[client]bool)
-	log.Println("Preparing the broadcaster")
+	log.Println("Starting the broadcaster")
 	co.Broadcast()
+
+f:
 	for {
 		select {
 		case state := <-messages:
@@ -80,8 +92,17 @@ func broadcaster() {
 			log.Println("Client unregistered")
 			delete(clients, cli)
 			close(cli)
+
+		case <-stop:
+			break f
 		}
 	}
 
 	log.Println("Finishing broadcaster")
+
+	for client := range clients {
+		delete(clients, client)
+		close(client)
+	}
+	wg.Done()
 }

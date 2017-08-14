@@ -14,9 +14,16 @@
 package proxy
 
 import (
+	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	hcServer "gitlab.com/qaclana/qaclana/pkg/healthcheck/server"
 	"gitlab.com/qaclana/qaclana/pkg/proxy/server"
 )
 
@@ -42,5 +49,17 @@ func NewStartProxyCommand() *cobra.Command {
 }
 
 func start(cmd *cobra.Command, args []string) {
-	server.Start()
+	var ch = make(chan os.Signal, 0)
+	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
+
+	hc := hcServer.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("healthcheck-port")))
+	s := server.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("port")))
+
+	select {
+	case <-ch:
+		log.Println("Qaclana Proxy is finishing")
+		hc.Close()
+		s.Close()
+		log.Println("Qaclana Proxy Server finished")
+	}
 }

@@ -13,59 +13,43 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 
-	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 
-	"gitlab.com/qaclana/qaclana/pkg/fwserver/client"
 	"gitlab.com/qaclana/qaclana/pkg/fwserver/handler"
-	hcServer "gitlab.com/qaclana/qaclana/pkg/healthcheck/server"
 )
 
-func Start() {
-	log.Print("Starting Qaclana Server")
-	hcServer.Start(viper.GetInt("healthcheck-port"))
+func StartHttpServer(bindTo string) *http.Server {
+	log.Printf("Starting HTTP interface at %s", bindTo)
 
-	var serverChannel = make(chan os.Signal, 0)
-	signal.Notify(serverChannel, os.Interrupt, syscall.SIGTERM)
+	mu := http.NewServeMux()
+	mu.HandleFunc("/", handler.HttpHandler)
 
-	go func() {
-		mainServerMux := http.NewServeMux()
-		mainServerMux.HandleFunc("/", handler.HttpHandler)
-		port := viper.GetInt("port")
-		address := fmt.Sprintf("0.0.0.0:%d", port)
-		log.Printf("Started Server at %s", address)
-		log.Fatal(http.ListenAndServe(address, mainServerMux))
-	}()
-	go func() {
-		port := viper.GetInt("grpc-port")
-		address := fmt.Sprintf("0.0.0.0:%d", port)
-		log.Printf("Started gRPC interface at %s", address)
+	h := &http.Server{Handler: mu}
 
-		listener, err := net.Listen("tcp", address)
-		if err != nil {
-			log.Fatalf("Failed to listen at: %v", err)
-		}
-		server := grpc.NewServer()
-		handler.RegisterGrpcHandler(server)
+	// go log.Fatal(http.ListenAndServe(bindTo, mu))
 
-		if err := server.Serve(listener); err != nil {
-			log.Fatalf("Failed to serve: %v", err)
-		}
-	}()
-	go func() {
-		client.Start(viper.GetString("backend-hostname"), viper.GetInt("backend-grpc-port"))
-	}()
+	log.Printf("Started  HTTP interface at %s", bindTo)
+	return h
+}
 
-	select {
-	case <-serverChannel:
-		log.Println("Qaclana Server is finishing")
+func StartGrpcServer(bindTo string) (*grpc.Server, error) {
+	log.Printf("Starting gRPC interface at %s", bindTo)
+
+	_, err := net.Listen("tcp", bindTo)
+	if err != nil {
+		log.Printf("failed to listen at: %v", err)
+		return nil, err
 	}
+
+	server := grpc.NewServer()
+	handler.RegisterGrpcHandler(server)
+
+	// go log.Fatalf("Failed to serve: %v", server.Serve(listener))
+
+	log.Printf("Started gRPC interface at %s", bindTo)
+	return server, nil
 }

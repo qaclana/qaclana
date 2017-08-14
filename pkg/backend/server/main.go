@@ -15,63 +15,52 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 
 	"gitlab.com/qaclana/qaclana/pkg/backend/handler"
 	"gitlab.com/qaclana/qaclana/pkg/backend/sysstate"
-	hcServer "gitlab.com/qaclana/qaclana/pkg/healthcheck/server"
 )
 
-// Start initializes all the required handlers for the backend server.
-func Start() {
+func StartHttpServer(bindTo string) *http.Server {
 	log.Print("Starting Qaclana Backend")
-	hcServer.Start(viper.GetInt("healthcheck-port"))
-	sysstate.StartBroadcaster()
 
-	var serverChannel = make(chan os.Signal, 0)
-	signal.Notify(serverChannel, os.Interrupt, syscall.SIGTERM)
+	// TODO: this looks bad at first, but this is the simplest thing that works, once we know what else we need, we'll change this
+	dbURL := viper.GetString("database-url")
+	sysstate.DatabaseUrl = dbURL
 
+	mu := http.NewServeMux()
+	mu.HandleFunc("/", handler.RootHttpHandler)
+	mu.HandleFunc("/v1/system-state", handler.SystemStateHandler)
+
+	h := &http.Server{Handler: mu}
+
+	log.Printf("Started Backend at %s", bindTo)
 	go func() {
-		// TODO: this looks bad at first, but this is the simplest thing that works, once we know what else we need, we'll change this
-		dbURL := viper.GetString("database-url")
-		sysstate.DatabaseUrl = dbURL
-
-		mainServerMux := http.NewServeMux()
-		mainServerMux.HandleFunc("/", handler.RootHttpHandler)
-		mainServerMux.HandleFunc("/v1/system-state", handler.SystemStateHandler)
-		port := viper.GetInt("port")
-		address := fmt.Sprintf("0.0.0.0:%d", port)
-		log.Printf("Started Backend at %s", address)
-		log.Fatal(http.ListenAndServe(address, mainServerMux))
-	}()
-	go func() {
-		port := viper.GetInt("grpc-port")
-		address := fmt.Sprintf("0.0.0.0:%d", port)
-		log.Printf("Started gRPC interface at %s", address)
-
-		listener, err := net.Listen("tcp", address)
-		if err != nil {
-			log.Fatalf("Failed to listen at: %v", err)
-		}
-		server := grpc.NewServer()
-		handler.RegisterGrpcHandler(server)
-
-		if err := server.Serve(listener); err != nil {
-			log.Fatalf("Failed to serve: %v", err)
-		}
+		log.Printf("failed to serve: %v", http.ListenAndServe(bindTo, mu))
 	}()
 
-	select {
-	case <-serverChannel:
-		log.Println("Qaclana Backend is finishing")
+	return h
+}
+
+func StartGrpcServer(bindTo string) (*grpc.Server, error) {
+	log.Printf("Starting gRPC interface at %s", bindTo)
+
+	listener, err := net.Listen("tcp", bindTo)
+	if err != nil {
+		log.Printf("failed to listen at: %v", err)
+		return nil, err
 	}
+
+	server := grpc.NewServer()
+	handler.RegisterGrpcHandler(server)
+	go func() {
+		log.Printf("Failed to serve: %v", server.Serve(listener))
+	}()
+
+	return server, nil
 }

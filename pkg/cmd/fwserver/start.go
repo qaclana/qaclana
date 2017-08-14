@@ -14,10 +14,18 @@
 package fwserver
 
 import (
+	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"gitlab.com/qaclana/qaclana/pkg/backend/client"
 	"gitlab.com/qaclana/qaclana/pkg/fwserver/server"
+	hcServer "gitlab.com/qaclana/qaclana/pkg/healthcheck/server"
 )
 
 // NewStartFirewallServerCommand initializes a command that can be used to start the firewall server
@@ -47,5 +55,21 @@ func NewStartFirewallServerCommand() *cobra.Command {
 }
 
 func start(cmd *cobra.Command, args []string) {
-	server.Start()
+	var ch = make(chan os.Signal, 0)
+	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
+
+	hc := hcServer.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("healthcheck-port")))
+	s := server.StartHttpServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("port")))
+	g, _ := server.StartGrpcServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("grpc-port")))
+	c := client.Start(fmt.Sprintf("%s:%d", viper.GetString("backend-hostname"), viper.GetInt("backend-grpc-port")))
+
+	select {
+	case <-ch:
+		log.Println("Qaclana Firewall Server is finishing")
+		hc.Close()
+		s.Close()
+		g.Stop()
+		c.Close()
+		log.Println("Qaclana Firewall Server finished")
+	}
 }
