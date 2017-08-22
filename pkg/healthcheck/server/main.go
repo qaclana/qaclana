@@ -28,8 +28,8 @@ func Start(bindTo string) *http.Server {
 
 	h := &http.Server{Handler: mu}
 
+	log.Printf("Started Health Check Server at %s", bindTo)
 	go func() {
-		log.Printf("Started Health Check Server at %s", bindTo)
 		log.Fatal(http.ListenAndServe(bindTo, mu))
 	}()
 

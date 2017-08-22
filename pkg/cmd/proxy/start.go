@@ -55,13 +55,13 @@ func start(cmd *cobra.Command, args []string) {
 	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 
 	hc := hcServer.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("healthcheck-port")))
+	defer hc.Close()
+
 	s := server.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("port")), viper.GetString("target"))
+	defer s.Close()
 
 	select {
 	case <-ch:
-		log.Println("Qaclana Proxy is finishing")
-		hc.Close()
-		s.Close()
 		log.Println("Qaclana Proxy Server finished")
 	}
 }

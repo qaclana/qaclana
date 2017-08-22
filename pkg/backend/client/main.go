@@ -27,15 +27,20 @@ import (
 
 // Client represents a client connection to the backend
 type Client struct {
-	conn *grpc.ClientConn
+	OnConnect func()
+	conn      *grpc.ClientConn
+	backend   string
+}
+
+// NewClient constructs a new client to connect to the backend
+func NewClient(backend string) *Client {
+	return &Client{backend: backend, OnConnect: func() {}}
 }
 
 // Start a new connection on a new client
-func Start(backend string) *Client {
-	c := &Client{}
-	c.connect(backend)
+func (c *Client) Start() {
+	c.connect()
 	go c.doStart()
-	return c
 }
 
 // Close the underlying connection for this client
@@ -45,9 +50,9 @@ func (c *Client) Close() {
 	}
 }
 
-func (c *Client) connect(address string) {
-	log.Printf("Connecting to the backend server at %s", address)
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
+func (c *Client) connect() {
+	log.Printf("Connecting to the backend server at %s", c.backend)
+	conn, err := grpc.Dial(c.backend, grpc.WithInsecure())
 	if err != nil {
 		log.Printf("did not connect: %v", err)
 		return
@@ -69,6 +74,8 @@ func (c *Client) doStart() {
 		c.retry()
 		return
 	}
+
+	c.OnConnect()
 
 	for {
 		state, err := stream.Recv()

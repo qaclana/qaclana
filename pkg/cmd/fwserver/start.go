@@ -59,17 +59,20 @@ func start(cmd *cobra.Command, args []string) {
 	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 
 	hc := hcServer.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("healthcheck-port")))
+	defer hc.Close()
+
 	s := server.StartHttpServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("port")))
+	defer s.Close()
+
 	g, _ := server.StartGrpcServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("grpc-port")))
-	c := client.Start(fmt.Sprintf("%s:%d", viper.GetString("backend-hostname"), viper.GetInt("backend-grpc-port")))
+	defer g.Stop()
+
+	c := client.NewClient(fmt.Sprintf("%s:%d", viper.GetString("backend-hostname"), viper.GetInt("backend-grpc-port")))
+	c.Start()
+	defer c.Close()
 
 	select {
 	case <-ch:
-		log.Println("Qaclana Firewall Server is finishing")
-		hc.Close()
-		s.Close()
-		g.Stop()
-		c.Close()
 		log.Println("Qaclana Firewall Server finished")
 	}
 }
