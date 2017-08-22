@@ -22,10 +22,10 @@ compile:
     - mkdir -p /go/src/gitlab.com/qaclana
     - ln -s ${CI_PROJECT_DIR} /go/src/gitlab.com/qaclana/${CI_PROJECT_NAME}
     - cd /go/src/gitlab.com/qaclana/${CI_PROJECT_NAME}
-    - (! go fmt ./... 2>&1 | read) || echo "Some files need formatting. Failing."
-    - protoc -I . pkg/proto/*.proto --go_out=plugins=grpc:.
-    - GOBIN=${GOPATH}/go go get . ./...
-    - go test $(go list ./...) -timeout 1s
+    - (! go fmt . ./cmd/... ./pkg/... 2>&1 | read) || echo "Some files need formatting. Failing."
+    - protoc -I . ./pkg/proto/*.proto --go_out=plugins=grpc:.
+    - dep ensure
+    - go test $(go list . ./cmd/... ./pkg/...) -timeout 1s
     - CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o _output/${CI_PROJECT_NAME}
   artifacts:
     when: on_success
