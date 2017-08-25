@@ -14,6 +14,7 @@
 package backend
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
@@ -24,8 +25,8 @@ import (
 	"github.com/spf13/viper"
 
 	"gitlab.com/qaclana/qaclana/pkg/backend/server"
-	"gitlab.com/qaclana/qaclana/pkg/backend/sysstate"
 	hcServer "gitlab.com/qaclana/qaclana/pkg/healthcheck/server"
+	"gitlab.com/qaclana/qaclana/pkg/sysstate/database"
 )
 
 // NewStartBackendCommand initializes a command that can be used to start the backend server
@@ -55,18 +56,22 @@ func start(cmd *cobra.Command, args []string) {
 	var ch = make(chan os.Signal, 0)
 	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 
+	db, _ := sql.Open("postgres", viper.GetString("database-url"))
+	defer db.Close()
+
+	storage := database.WithDB(db)
+
 	hc := hcServer.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("healthcheck-port")))
-	s := server.StartHttpServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("port")))
-	g, _ := server.StartGrpcServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("grpc-port")))
-	sysstate.StartBroadcaster()
+	defer hc.Close()
+
+	s := server.StartHTTPServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("port")), storage)
+	defer s.Close()
+
+	g, _ := server.StartGrpcServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("grpc-port")), storage)
+	defer g.Stop()
 
 	select {
 	case <-ch:
-		log.Println("Qaclana Backend is finishing")
-		s.Close()
-		hc.Close()
-		g.Stop()
-		sysstate.Stop()
 		log.Println("Qaclana Backend finished")
 	}
 }

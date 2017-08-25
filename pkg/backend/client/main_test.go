@@ -23,11 +23,39 @@ import (
 	"google.golang.org/grpc"
 
 	"gitlab.com/qaclana/qaclana/pkg/backend/handler"
+	"gitlab.com/qaclana/qaclana/pkg/proto"
+	"gitlab.com/qaclana/qaclana/pkg/sysstate/inmemory"
 )
 
 func TestClientCanConnect(t *testing.T) {
+	listener, err := net.Listen("tcp", "localhost:0")
+	if err != nil {
+		t.Fatalf("failed to listen at: %v", err)
+	}
+	p := listener.Addr().(*net.TCPAddr).Port
+
 	wg := sync.WaitGroup{}
-	p := startServer(t)
+	startServer(t, listener)
+	c := NewClient(fmt.Sprintf("localhost:%d", p))
+	defer c.Close()
+
+	wg.Add(1)
+	c.OnConnect = func() {
+		wg.Done()
+		log.Println("Connected to the backend.")
+	}
+
+	c.Start()
+	wg.Wait()
+}
+func TestClientCanReconnect(t *testing.T) {
+	listener, err := net.Listen("tcp", "localhost:0")
+	if err != nil {
+		t.Fatalf("failed to listen at: %v", err)
+	}
+	p := listener.Addr().(*net.TCPAddr).Port
+
+	wg := sync.WaitGroup{}
 	c := NewClient(fmt.Sprintf("localhost:%d", p))
 	defer c.Close()
 
@@ -41,17 +69,12 @@ func TestClientCanConnect(t *testing.T) {
 	wg.Wait()
 }
 
-func startServer(t *testing.T) int {
-	listener, err := net.Listen("tcp", "localhost:0")
-	if err != nil {
-		t.Fatalf("failed to listen at: %v", err)
-	}
+func startServer(t *testing.T, listener net.Listener) {
 	server := grpc.NewServer()
-	handler.RegisterGrpcHandler(server)
+	handler.RegisterGrpcHandler(server, inmemory.WithState(qaclana.State_DISABLED))
 	go func() {
 		if err := server.Serve(listener); err != nil {
 			t.Fatalf("failed to serve: %v", err)
 		}
 	}()
-	return listener.Addr().(*net.TCPAddr).Port
 }

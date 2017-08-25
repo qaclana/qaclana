@@ -20,12 +20,14 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
-	"gitlab.com/qaclana/qaclana/pkg/backend/sysstate"
 	"gitlab.com/qaclana/qaclana/pkg/proto"
+	"gitlab.com/qaclana/qaclana/pkg/sysstate"
 )
 
 // QaclanaGrpcBackend is a representation of the operations available remotely
-type QaclanaGrpcBackend struct{}
+type QaclanaGrpcBackend struct {
+	storage sysstate.Storage
+}
 
 // Receive updates to the system state, retrieving first the current state and blocking until further updates
 // are available
@@ -36,11 +38,10 @@ func (s *QaclanaGrpcBackend) Receive(in *qaclana.Empty, stream qaclana.SystemSta
 	}()
 
 	// sending the current state:
-	current, _ := sysstate.Current()
+	current, _ := s.storage.Current()
 	stream.Send(&qaclana.SystemState{State: current})
 
-	c := make(chan qaclana.State)
-	sysstate.ListenForUpdates(c)
+	c, _ := s.storage.Notifier()
 	for {
 		select {
 		case state := <-c:
@@ -51,7 +52,7 @@ func (s *QaclanaGrpcBackend) Receive(in *qaclana.Empty, stream qaclana.SystemSta
 }
 
 // RegisterGrpcHandler self registers this handler with the GRPC server
-func RegisterGrpcHandler(s *grpc.Server) {
-	qaclana.RegisterSystemStateServiceServer(s, &QaclanaGrpcBackend{})
+func RegisterGrpcHandler(s *grpc.Server, storage sysstate.Storage) {
+	qaclana.RegisterSystemStateServiceServer(s, &QaclanaGrpcBackend{storage: storage})
 	reflection.Register(s)
 }

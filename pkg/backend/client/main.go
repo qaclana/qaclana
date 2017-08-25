@@ -78,14 +78,12 @@ func (c *Client) doStart() {
 	c.OnConnect()
 
 	for {
-		state, err := stream.Recv()
+		_, err := stream.Recv()
 		if err != nil {
 			log.Printf("unexpected error: %v", err)
 			c.retry()
 			return
 		}
-
-		log.Printf("received state %s from the server", state.State)
 	}
 }
 

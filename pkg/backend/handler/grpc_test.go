@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package handler_test
+package handler
 
 import (
 	"fmt"
@@ -20,10 +20,11 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
-	"gitlab.com/qaclana/qaclana/pkg/backend/handler"
-	"gitlab.com/qaclana/qaclana/pkg/backend/sysstate"
 	"gitlab.com/qaclana/qaclana/pkg/proto"
+	"gitlab.com/qaclana/qaclana/pkg/sysstate/inmemory"
 )
+
+var st = inmemory.WithState(qaclana.State_DISABLED)
 
 func TestQaclanaGrpcBackend_ReceiveOnConnect(t *testing.T) {
 	port := startServer(t)
@@ -47,7 +48,6 @@ func TestQaclanaGrpcBackend_ReceiveOnConnect(t *testing.T) {
 }
 
 func TestQaclanaGrpcBackend_ReceiveOnChange(t *testing.T) {
-	sysstate.StartBroadcaster()
 	port := startServer(t)
 	conn, err := grpc.Dial(fmt.Sprintf("0.0.0.0:%d", port), grpc.WithInsecure())
 	if err != nil {
@@ -66,7 +66,7 @@ func TestQaclanaGrpcBackend_ReceiveOnChange(t *testing.T) {
 		stream.Recv()
 
 		// second test: check that we receive updates whenever the system state has changed
-		sysstate.Set(qaclana.State_ENFORCING)
+		st.Store(context.Background(), qaclana.State_ENFORCING)
 		state, _ := stream.Recv()
 		if state.State != qaclana.State_ENFORCING {
 			t.Fatalf("state should have been ENFORCING, but is %s", state.State)
@@ -80,7 +80,7 @@ func startServer(t *testing.T) int {
 		t.Fatalf("failed to listen at: %v", err)
 	}
 	server := grpc.NewServer()
-	handler.RegisterGrpcHandler(server)
+	RegisterGrpcHandler(server, st)
 	go func() {
 		if err := server.Serve(listener); err != nil {
 			t.Fatalf("failed to serve: %v", err)

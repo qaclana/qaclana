@@ -10,33 +10,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package handler
+package sysstate
 
 import (
-	"fmt"
-	"net/http"
+	"context"
 
-	"gitlab.com/qaclana/qaclana/pkg/backend/sysstate"
 	"gitlab.com/qaclana/qaclana/pkg/proto"
 )
 
-func RootHttpHandler(w http.ResponseWriter, _ *http.Request) {
-	fmt.Fprintln(w, "OK")
-}
+// Storage is a contract that concrete backing storages should implement
+type Storage interface {
+	// Stores a new system state
+	Store(context.Context, qaclana.State) error
 
-func SystemStateHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		st, _ := sysstate.Current()
-		fmt.Fprintln(w, st)
-		return
-	}
+	// Notify the caller on changes on the underlying system state
+	Notifier() (<-chan qaclana.State, error)
 
-	if r.Method == "PUT" {
-		sysstate.Set(qaclana.State_ENFORCING)
-		st, _ := sysstate.Current()
-		fmt.Fprintln(w, st)
-		return
-	}
-
-	fmt.Fprintln(w, "Sorry, I don't know what you want to do...")
+	// Current gets the currently set system state
+	Current() (qaclana.State, error)
 }

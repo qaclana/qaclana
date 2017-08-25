@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/cockroachdb/cockroach-go"
+  packages = ["testserver"]
+  revision = "c806b484b8611fc587b6abc07f8bb0f7824a78d6"
+
+[[projects]]
   name = "github.com/fsnotify/fsnotify"
   packages = ["."]
   revision = "629574ca2a5df945712d3079857300b5e4da0236"
@@ -136,6 +142,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6069d36d50f953889b475cbd1f03133fe61d3770d0c05a9b0476d463131b6ed1"
+  inputs-digest = "f200dbba576ca63b9400f07d51a453b1f9cf136d220bdfa8294f60eaeaf08a6d"
   solver-name = "gps-cdcl"
   solver-version = 1

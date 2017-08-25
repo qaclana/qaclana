@@ -58,6 +58,16 @@ go run main.go
 
 See the `help` output for all available commands.
 
+=== Testing
+
+To run the tests, a `cockroach` binary has to be available on the path. It can be accomplished by:
+
+```bash
+wget https://binaries.cockroachdb.com/cockroach-v1.0.4.linux-amd64.tgz
+tar xzf cockroach-v1.0.4.linux-amd64.tgz
+sudo mv cockroach-v1.0.4.linux-amd64/cockroach /usr/local/bin
+```
+
 === Backend requirements
 
 The backend requires a CockroachDB instance, which can be set like this:

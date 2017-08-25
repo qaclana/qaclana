@@ -19,23 +19,19 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 
 	"gitlab.com/qaclana/qaclana/pkg/backend/handler"
-	"gitlab.com/qaclana/qaclana/pkg/backend/sysstate"
+	"gitlab.com/qaclana/qaclana/pkg/sysstate"
 )
 
-func StartHttpServer(bindTo string) *http.Server {
+// StartHTTPServer starts a new HTTP server with all the backend handlers
+func StartHTTPServer(bindTo string, storage sysstate.Storage) *http.Server {
 	log.Print("Starting Qaclana Backend")
-
-	// TODO: this looks bad at first, but this is the simplest thing that works, once we know what else we need, we'll change this
-	dbURL := viper.GetString("database-url")
-	sysstate.DatabaseUrl = dbURL
+	s := handler.NewSysStateHandler(storage)
 
 	mu := http.NewServeMux()
-	mu.HandleFunc("/", handler.RootHttpHandler)
-	mu.HandleFunc("/v1/system-state", handler.SystemStateHandler)
+	mu.Handle("/v1/system-state", s)
 
 	h := &http.Server{Handler: mu}
 
@@ -47,7 +43,8 @@ func StartHttpServer(bindTo string) *http.Server {
 	return h
 }
 
-func StartGrpcServer(bindTo string) (*grpc.Server, error) {
+// StartGrpcServer starts a new GRPC server with all backend handlers
+func StartGrpcServer(bindTo string, storage sysstate.Storage) (*grpc.Server, error) {
 	log.Printf("Starting gRPC interface at %s", bindTo)
 
 	listener, err := net.Listen("tcp", bindTo)
@@ -57,7 +54,7 @@ func StartGrpcServer(bindTo string) (*grpc.Server, error) {
 	}
 
 	server := grpc.NewServer()
-	handler.RegisterGrpcHandler(server)
+	handler.RegisterGrpcHandler(server, storage)
 	go func() {
 		log.Printf("Failed to serve: %v", server.Serve(listener))
 	}()
