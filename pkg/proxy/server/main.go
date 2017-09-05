@@ -17,28 +17,18 @@ package server
 import (
 	"log"
 	"net/http"
-	"net/http/httputil"
-	"net/url"
+
+	_ "gitlab.com/qaclana/qaclana/pkg/processor/whitelist" // just load the processor for self-registration
+	"gitlab.com/qaclana/qaclana/pkg/proxy/handler"
 )
 
 // Start a new HTTP server bound to the given address
 func Start(bindTo string, target string) *http.Server {
 	log.Print("Starting Qaclana Proxy")
-
-	rpURL, err := url.Parse(target)
-	if err != nil {
-		log.Fatal(err)
-	}
-	p := httputil.NewSingleHostReverseProxy(rpURL)
-	d := p.Director
-	p.Director = func(req *http.Request) {
-		log.Printf("Setting host to: %s", rpURL.Host)
-		d(req)
-		req.Header.Add("Host", rpURL.Host)
-	}
+	s := handler.NewProxyHandler(target)
 
 	mu := http.NewServeMux()
-	mu.HandleFunc("/", p.ServeHTTP)
+	mu.Handle("/", s)
 
 	h := &http.Server{Handler: mu}
 

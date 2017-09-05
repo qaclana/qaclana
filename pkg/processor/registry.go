@@ -50,10 +50,10 @@ func Register(p Processor) {
 // GetOutcome for the given request, stopping after the first non-neutral outcome
 func GetOutcome(req *http.Request) Outcome {
 	timeout := 50 * time.Millisecond
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := context.WithTimeout(req.Context(), timeout)
 
 	for _, p := range Get().List() {
-		o, err := p.Process(ctx, req)
+		o, err := p.Process(req.WithContext(ctx))
 		if err != nil {
 			log.Printf("registry: %s", err)
 		}

@@ -15,11 +15,12 @@
 package whitelist
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net"
 	"net/http"
+
+	opentracing "github.com/opentracing/opentracing-go"
 
 	"gitlab.com/qaclana/qaclana/pkg/processor"
 )
@@ -32,7 +33,10 @@ type pr struct {
 }
 
 // Process an incoming request, matching its remote address with the white list
-func (p *pr) Process(ctx context.Context, req *http.Request) (processor.Outcome, error) {
+func (p *pr) Process(req *http.Request) (processor.Outcome, error) {
+	sp, _ := opentracing.StartSpanFromContext(req.Context(), "processor-whitelist")
+	defer sp.Finish()
+
 	ip, _, err := net.SplitHostPort(req.RemoteAddr)
 	if err != nil {
 		log.Printf("whitelist: %s", err)

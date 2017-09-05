@@ -13,7 +13,6 @@
 package processor
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"testing"
@@ -148,19 +147,19 @@ type errorAll struct {
 	o Outcome
 }
 
-func (p *blockAll) Process(ctx context.Context, req *http.Request) (Outcome, error) {
+func (p *blockAll) Process(req *http.Request) (Outcome, error) {
 	return BLOCK, nil
 }
 
-func (p *errorAll) Process(ctx context.Context, req *http.Request) (Outcome, error) {
+func (p *errorAll) Process(req *http.Request) (Outcome, error) {
 	return p.o, p.e
 }
 
-func (p *allowAll) Process(ctx context.Context, req *http.Request) (Outcome, error) {
+func (p *allowAll) Process(req *http.Request) (Outcome, error) {
 	return ALLOW, nil
 }
 
-func (p *neutralAll) Process(ctx context.Context, req *http.Request) (Outcome, error) {
+func (p *neutralAll) Process(req *http.Request) (Outcome, error) {
 	p.c = true
 	return NEUTRAL, nil
 }

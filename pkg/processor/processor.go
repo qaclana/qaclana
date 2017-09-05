@@ -14,11 +14,10 @@
 package processor
 
 import (
-	"context"
 	"net/http"
 )
 
 // Processor defines a common interface for all processors
 type Processor interface {
-	Process(ctx context.Context, req *http.Request) (Outcome, error)
+	Process(req *http.Request) (Outcome, error)
 }

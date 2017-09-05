@@ -11,31 +11,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package processor
+package director
 
-// Outcome represents the possible outcomes for a request processor
-type Outcome int
+import (
+	"net/http"
+	"testing"
 
-const (
-	// ALLOW means that the request is known to be OK
-	ALLOW Outcome = iota
-
-	// BLOCK means that the request is known to be NOK
-	BLOCK
-
-	// NEUTRAL means that the processor can't know for sure whether the request is good
-	NEUTRAL
+	opentracing "github.com/opentracing/opentracing-go"
+	"github.com/opentracing/opentracing-go/mocktracer"
 )
 
-func (o Outcome) String() string {
-	switch o {
-	case ALLOW:
-		return "Allow"
-	case BLOCK:
-		return "Block"
-	case NEUTRAL:
-		return "Neutral"
-	}
+func TestTracingIntegration(t *testing.T) {
+	// prepare
+	tracer := mocktracer.New()
+	opentracing.InitGlobalTracer(tracer)
+	defer tracer.Reset()
 
-	return "Unknown"
+	s := NewRoundTripper(nil)
+	req := &http.Request{}
+
+	// test
+	s.RoundTrip(req)
+
+	// spans:
+	// - parent span
+	// - request
+	// - backend
+	// - response
+	if len(tracer.FinishedSpans()) != 4 {
+		t.Fail()
+	}
 }

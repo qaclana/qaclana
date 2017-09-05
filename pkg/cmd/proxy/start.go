@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	hcServer "gitlab.com/qaclana/qaclana/pkg/healthcheck/server"
 	"gitlab.com/qaclana/qaclana/pkg/proxy/server"
+	"gitlab.com/qaclana/qaclana/pkg/tracer"
 )
 
 // NewStartProxyCommand initializes a command that can be used to start the firewall server
@@ -54,8 +54,8 @@ func start(cmd *cobra.Command, args []string) {
 	var ch = make(chan os.Signal, 0)
 	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 
-	hc := hcServer.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("healthcheck-port")))
-	defer hc.Close()
+	t := tracer.NewTracing().Start()
+	defer t.Close()
 
 	s := server.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("port")), viper.GetString("target"))
 	defer s.Close()

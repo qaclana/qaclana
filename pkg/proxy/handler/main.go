@@ -11,31 +11,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package processor
+package handler
 
-// Outcome represents the possible outcomes for a request processor
-type Outcome int
+import (
+	"log"
+	"net/http"
+	"net/http/httputil"
+	"net/url"
 
-const (
-	// ALLOW means that the request is known to be OK
-	ALLOW Outcome = iota
-
-	// BLOCK means that the request is known to be NOK
-	BLOCK
-
-	// NEUTRAL means that the processor can't know for sure whether the request is good
-	NEUTRAL
+	"gitlab.com/qaclana/qaclana/pkg/proxy/director"
 )
 
-func (o Outcome) String() string {
-	switch o {
-	case ALLOW:
-		return "Allow"
-	case BLOCK:
-		return "Block"
-	case NEUTRAL:
-		return "Neutral"
+// NewProxyHandler creates a handler that filters the incoming request and outgoing responses
+func NewProxyHandler(target string) http.Handler {
+	rpURL, err := url.Parse(target)
+	if err != nil {
+		log.Fatal(err)
 	}
+	p := httputil.NewSingleHostReverseProxy(rpURL)
+	p.Transport = director.NewRoundTripper(p.Transport)
 
-	return "Unknown"
+	return p
 }
