@@ -63,3 +63,15 @@ release-final-image-to-dockerhub:
     - docker push $CI_PROJECT_PATH
   only:
     - master@qaclana/qaclana
+
+codequality:
+  image: docker:latest
+  stage: build
+  variables:
+    DOCKER_DRIVER: overlay
+  services:
+    - docker:dind
+  script:
+    - docker run --env CODECLIMATE_CODE="$PWD" --volume "$PWD":/code --volume /var/run/docker.sock:/var/run/docker.sock --volume /tmp/cc:/tmp/cc codeclimate/codeclimate analyze -f json > codeclimate.json
+  artifacts:
+    paths: [codeclimate.json]
