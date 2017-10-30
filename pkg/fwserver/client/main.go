@@ -10,6 +10,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// Package client provides facilities to creating a new firewall client
 package client
 
 import (
@@ -26,6 +28,7 @@ var (
 	serverHostname string
 )
 
+// Start a new client connection with the firewall server
 func Start(serverHostname string, grpcPort int) {
 	log.Printf("Connecting to the server at %s:%d", serverHostname, grpcPort)
 	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", serverHostname, grpcPort), grpc.WithInsecure())

@@ -10,6 +10,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// Package handler provides the HTTP handlers for the health check
 package handler
 
 import (
@@ -17,6 +19,7 @@ import (
 	"net/http"
 )
 
+// HealthCheckHandler handles an HTTP request coming to the health check endpoint
 func HealthCheckHandler(w http.ResponseWriter, _ *http.Request) {
 	fmt.Fprintln(w, "OK")
 }

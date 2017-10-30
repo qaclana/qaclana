@@ -10,6 +10,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// Package server contains utility code for starting new firewall servers
 package server
 
 import (
@@ -22,11 +24,12 @@ import (
 	"gitlab.com/qaclana/qaclana/pkg/fwserver/handler"
 )
 
-func StartHttpServer(bindTo string) *http.Server {
+// StartHTTPServer starts a new HTTP server based on the given bind directions
+func StartHTTPServer(bindTo string) *http.Server {
 	log.Printf("Starting HTTP interface at %s", bindTo)
 
 	mu := http.NewServeMux()
-	mu.HandleFunc("/", handler.HttpHandler)
+	mu.HandleFunc("/", handler.HTTPHandler)
 
 	h := &http.Server{Handler: mu}
 
@@ -36,7 +39,8 @@ func StartHttpServer(bindTo string) *http.Server {
 	return h
 }
 
-func StartGrpcServer(bindTo string) (*grpc.Server, error) {
+// StartGRPCServer starts a new GRPC server based on the given bind directions
+func StartGRPCServer(bindTo string) (*grpc.Server, error) {
 	log.Printf("Starting gRPC interface at %s", bindTo)
 
 	_, err := net.Listen("tcp", bindTo)

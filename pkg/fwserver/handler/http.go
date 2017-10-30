@@ -10,6 +10,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// Package handler has a set of handlers for different purposes, like gRPC and regular HTTP
 package handler
 
 import (
@@ -17,6 +19,7 @@ import (
 	"net/http"
 )
 
-func HttpHandler(w http.ResponseWriter, _ *http.Request) {
+// HTTPHandler handles an HTTP request
+func HTTPHandler(w http.ResponseWriter, _ *http.Request) {
 	fmt.Fprintln(w, "OK")
 }

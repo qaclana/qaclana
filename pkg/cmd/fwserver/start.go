@@ -61,10 +61,10 @@ func start(cmd *cobra.Command, args []string) {
 	hc := hcServer.Start(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("healthcheck-port")))
 	defer hc.Close()
 
-	s := server.StartHttpServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("port")))
+	s := server.StartHTTPServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("port")))
 	defer s.Close()
 
-	g, _ := server.StartGrpcServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("grpc-port")))
+	g, _ := server.StartGRPCServer(fmt.Sprintf("0.0.0.0:%d", viper.GetInt("grpc-port")))
 	defer g.Stop()
 
 	c := client.NewClient(fmt.Sprintf("%s:%d", viper.GetString("backend-hostname"), viper.GetInt("backend-grpc-port")))

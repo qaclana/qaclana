@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package testutils provide a simple harness suite for ensuring conformance by implementations
 package testutils
 
 import (
@@ -23,6 +24,7 @@ import (
 	"gitlab.com/qaclana/qaclana/pkg/sysstate"
 )
 
+// SimpleUpdate does a simple storage of a system state
 func SimpleUpdate(t *testing.T, s sysstate.Storage) {
 	err := s.Store(context.Background(), qaclana.State_ENFORCING)
 	if err != nil {
@@ -30,6 +32,7 @@ func SimpleUpdate(t *testing.T, s sysstate.Storage) {
 	}
 }
 
+// StoreCallsNotifiers ensures the registered notifiers are called
 func StoreCallsNotifiers(t *testing.T, s sysstate.Storage) {
 	c, _ := s.Notifier()
 	wg := &sync.WaitGroup{}
@@ -63,6 +66,7 @@ func StoreCallsNotifiers(t *testing.T, s sysstate.Storage) {
 	}
 }
 
+// MultipleChanges makes sure we get notifications for multiple changes
 func MultipleChanges(t *testing.T, s sysstate.Storage) {
 	c, _ := s.Notifier()
 	wg := &sync.WaitGroup{}
