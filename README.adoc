@@ -1,3 +1,6 @@
+image:https://gitlab.com/qaclana/qaclana/badges/master/pipeline.svg[link="https://gitlab.com/qaclana/qaclana/commits/master",title="pipeline status"]
+image:https://gitlab.com/qaclana/qaclana/badges/master/coverage.svg[link="https://gitlab.com/qaclana/qaclana/commits/master",title="coverage report"]
+
 = Qaclana Web Application Firewall
 
 Qaclana is an adaptive cloud native Web Application Firewall. It can be deployed on Kubernetes
