@@ -41,9 +41,11 @@ func NewStartFirewallServerCommand() *cobra.Command {
 
 	cmd.Flags().IntP("port", "p", 8000, "The port to bind the main server to")
 	cmd.Flags().IntP("healthcheck-port", "", 9000, "The port to bind the healthcheck server to")
+	cmd.Flags().StringP("thehoneypot-apikey", "", "", "The API key for The Honeypot Project")
 	cmd.Flags().IntP("grpc-port", "", 10000, "The port to bind the gRPC interface to")
 	viper.BindPFlag("port", cmd.Flags().Lookup("port"))
 	viper.BindPFlag("healthcheck-port", cmd.Flags().Lookup("healthcheck-port"))
+	viper.BindPFlag("thehoneypot-apikey", cmd.Flags().Lookup("thehoneypot-apikey"))
 	viper.BindPFlag("grpc-port", cmd.Flags().Lookup("grpc-port"))
 
 	cmd.Flags().StringP("backend-hostname", "u", "qaclana-backend.qaclana-infra.svc.cluster.local", "The hostname to the Qaclana Backend")
